@@ -49,7 +49,7 @@ export function SuperAdminRoute({ children }: { children: ReactNode }) {
     );
   }
 
-  if (!user) return <Navigate to="/login" state={{ from: location }} replace />;
+  if (!user) return <Navigate to="/superadmin" state={{ from: location }} replace />;
   if (!isSuperAdmin) return <Navigate to="/403" replace />;
   
   return <>{children}</>;

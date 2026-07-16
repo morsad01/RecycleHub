@@ -297,7 +297,7 @@ export function SellNewPage() {
 
     try {
       // Run AI Fake / Counterfeit check
-      let finalStatus = asDraft ? 'draft' : 'active';
+      let finalStatus = asDraft ? 'draft' : 'pending';
       let isFlagged = false;
       let riskScore = 0.05;
 

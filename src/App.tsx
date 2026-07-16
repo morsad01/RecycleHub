@@ -57,6 +57,11 @@ const AdminManagementPage = lazy(() => import('./pages/superadmin/AdminManagemen
 const RoleManagementPage = lazy(() => import('./pages/superadmin/RoleManagementPage').then((m) => ({ default: m.RoleManagementPage })));
 const SystemSettingsPage = lazy(() => import('./pages/superadmin/SystemSettingsPage').then((m) => ({ default: m.SystemSettingsPage })));
 const SecurityCenterPage = lazy(() => import('./pages/superadmin/SecurityCenterPage').then((m) => ({ default: m.SecurityCenterPage })));
+const SuperAdminEntryPage = lazy(() => import('./pages/superadmin/SuperAdminEntryPage').then((m) => ({ default: m.SuperAdminEntryPage })));
+const UserManagementPage = lazy(() => import('./pages/superadmin/UserManagementPage').then((m) => ({ default: m.UserManagementPage })));
+const ProductModerationPage = lazy(() => import('./pages/superadmin/ProductModerationPage').then((m) => ({ default: m.ProductModerationPage })));
+const ContentModerationPage = lazy(() => import('./pages/superadmin/ContentModerationPage').then((m) => ({ default: m.ContentModerationPage })));
+const DatabaseStatusPage = lazy(() => import('./pages/superadmin/DatabaseStatusPage').then((m) => ({ default: m.DatabaseStatusPage })));
 
 export default function App() {
   const loadingSkeleton = (
@@ -122,11 +127,15 @@ export default function App() {
           <Route path="/admin/content" element={<AdminRoute><AdminContentPage /></AdminRoute>} />
 
           {/* Super Admin */}
-          <Route path="/superadmin" element={<SuperAdminRoute><SuperAdminLayout><PlatformHealthPage /></SuperAdminLayout></SuperAdminRoute>} />
+          <Route path="/superadmin" element={<SuperAdminEntryPage />} />
+          <Route path="/superadmin/users" element={<SuperAdminRoute><SuperAdminLayout><UserManagementPage /></SuperAdminLayout></SuperAdminRoute>} />
           <Route path="/superadmin/admins" element={<SuperAdminRoute><SuperAdminLayout><AdminManagementPage /></SuperAdminLayout></SuperAdminRoute>} />
+          <Route path="/superadmin/products" element={<SuperAdminRoute><SuperAdminLayout><ProductModerationPage /></SuperAdminLayout></SuperAdminRoute>} />
+          <Route path="/superadmin/content" element={<SuperAdminRoute><SuperAdminLayout><ContentModerationPage /></SuperAdminLayout></SuperAdminRoute>} />
           <Route path="/superadmin/roles" element={<SuperAdminRoute><SuperAdminLayout><RoleManagementPage /></SuperAdminLayout></SuperAdminRoute>} />
           <Route path="/superadmin/settings" element={<SuperAdminRoute><SuperAdminLayout><SystemSettingsPage /></SuperAdminLayout></SuperAdminRoute>} />
           <Route path="/superadmin/security" element={<SuperAdminRoute><SuperAdminLayout><SecurityCenterPage /></SuperAdminLayout></SuperAdminRoute>} />
+          <Route path="/superadmin/database" element={<SuperAdminRoute><SuperAdminLayout><DatabaseStatusPage /></SuperAdminLayout></SuperAdminRoute>} />
 
           {/* Catch-all 404 */}
           <Route path="*" element={<NotFoundPage />} />
