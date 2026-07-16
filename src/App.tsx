@@ -2,7 +2,7 @@ import { lazy, Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { Layout } from './components/Layout';
 import { ChatbotWidget } from './components/ChatbotWidget';
-import { ProtectedRoute, AdminRoute } from './components/ProtectedRoute';
+import { ProtectedRoute, AdminRoute, SuperAdminRoute } from './components/ProtectedRoute';
 
 // Lazy load pages to optimize performance
 const HomePage = lazy(() => import('./pages/HomePage').then((m) => ({ default: m.HomePage })));
@@ -49,6 +49,14 @@ const AdminCategoriesPage = lazy(() => import('./pages/admin/AdminCategoriesPage
 const AdminReportsPage = lazy(() => import('./pages/admin/AdminReportsPage').then((m) => ({ default: m.AdminReportsPage })));
 const AdminOrdersPage = lazy(() => import('./pages/admin/AdminOrdersPage').then((m) => ({ default: m.AdminOrdersPage })));
 const AdminContentPage = lazy(() => import('./pages/admin/AdminContentPage').then((m) => ({ default: m.AdminContentPage })));
+
+// Super Admin pages
+const SuperAdminLayout = lazy(() => import('./pages/superadmin/SuperAdminLayout').then((m) => ({ default: m.SuperAdminLayout })));
+const PlatformHealthPage = lazy(() => import('./pages/superadmin/PlatformHealthPage').then((m) => ({ default: m.PlatformHealthPage })));
+const AdminManagementPage = lazy(() => import('./pages/superadmin/AdminManagementPage').then((m) => ({ default: m.AdminManagementPage })));
+const RoleManagementPage = lazy(() => import('./pages/superadmin/RoleManagementPage').then((m) => ({ default: m.RoleManagementPage })));
+const SystemSettingsPage = lazy(() => import('./pages/superadmin/SystemSettingsPage').then((m) => ({ default: m.SystemSettingsPage })));
+const SecurityCenterPage = lazy(() => import('./pages/superadmin/SecurityCenterPage').then((m) => ({ default: m.SecurityCenterPage })));
 
 export default function App() {
   const loadingSkeleton = (
@@ -112,6 +120,13 @@ export default function App() {
           <Route path="/admin/reports" element={<AdminRoute><AdminReportsPage /></AdminRoute>} />
           <Route path="/admin/orders" element={<AdminRoute><AdminOrdersPage /></AdminRoute>} />
           <Route path="/admin/content" element={<AdminRoute><AdminContentPage /></AdminRoute>} />
+
+          {/* Super Admin */}
+          <Route path="/superadmin" element={<SuperAdminRoute><SuperAdminLayout><PlatformHealthPage /></SuperAdminLayout></SuperAdminRoute>} />
+          <Route path="/superadmin/admins" element={<SuperAdminRoute><SuperAdminLayout><AdminManagementPage /></SuperAdminLayout></SuperAdminRoute>} />
+          <Route path="/superadmin/roles" element={<SuperAdminRoute><SuperAdminLayout><RoleManagementPage /></SuperAdminLayout></SuperAdminRoute>} />
+          <Route path="/superadmin/settings" element={<SuperAdminRoute><SuperAdminLayout><SystemSettingsPage /></SuperAdminLayout></SuperAdminRoute>} />
+          <Route path="/superadmin/security" element={<SuperAdminRoute><SuperAdminLayout><SecurityCenterPage /></SuperAdminLayout></SuperAdminRoute>} />
 
           {/* Catch-all 404 */}
           <Route path="*" element={<NotFoundPage />} />

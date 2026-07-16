@@ -180,17 +180,25 @@ export function SellNewPage() {
     if (!user) return;
     setUploading(true);
     const newImages: UploadedImage[] = [];
-    for (const file of Array.from(files)) {
-      const ext = file.name.split('.').pop();
-      const path = `${user.id}/${crypto.randomUUID()}.${ext}`;
-      const { error } = await supabase.storage.from('product-images').upload(path, file);
-      if (!error) {
-        const { data: { publicUrl } } = supabase.storage.from('product-images').getPublicUrl(path);
-        newImages.push({ url: publicUrl, path });
+    
+    try {
+      const { uploadToGoogleDrive } = await import('../lib/googleDrive');
+      for (const file of Array.from(files)) {
+        try {
+          const directUrl = await uploadToGoogleDrive(file);
+          newImages.push({ url: directUrl, path: '' });
+        } catch (error: any) {
+          console.error("Google Drive Upload Error:", error);
+          alert("Error uploading image: " + (error.message || error));
+        }
       }
+      setImages((prev) => [...prev, ...newImages]);
+    } catch (err: any) {
+      console.error("Upload exception:", err);
+      alert("Failed to upload image. Please try again.");
+    } finally {
+      setUploading(false);
     }
-    setImages((prev) => [...prev, ...newImages]);
-    setUploading(false);
 
     // Trigger AI analysis if first images
     if (newImages.length > 0) {

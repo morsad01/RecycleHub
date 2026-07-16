@@ -1,4 +1,4 @@
-export type UserRole = 'user' | 'admin';
+export type UserRole = 'user' | 'admin' | 'super_admin';
 export type LanguagePref = 'en' | 'bn';
 export type ProductCondition = 'new' | 'excellent' | 'good' | 'fair' | 'poor';
 export type ProductStatus = 'draft' | 'pending' | 'active' | 'sold' | 'rejected' | 'flagged';

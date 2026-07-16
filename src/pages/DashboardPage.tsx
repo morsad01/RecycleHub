@@ -291,29 +291,30 @@ export function DashboardPage() {
     setSubmittingVerification(true);
 
     try {
+      const { uploadToGoogleDrive } = await import('../lib/googleDrive');
       let nidUrl = '';
       let selfieUrl = '';
       let licenseUrl = '';
 
       if (nidFile) {
-        const path = `${user.id}/nid-${crypto.randomUUID()}.${nidFile.name.split('.').pop()}`;
-        const { error } = await supabase.storage.from('verification-documents').upload(path, nidFile);
-        if (!error) {
-          nidUrl = supabase.storage.from('verification-documents').getPublicUrl(path).data.publicUrl;
+        try {
+          nidUrl = await uploadToGoogleDrive(nidFile);
+        } catch (error: any) {
+          console.error("NID upload failed:", error);
         }
       }
       if (selfieFile) {
-        const path = `${user.id}/selfie-${crypto.randomUUID()}.${selfieFile.name.split('.').pop()}`;
-        const { error } = await supabase.storage.from('verification-documents').upload(path, selfieFile);
-        if (!error) {
-          selfieUrl = supabase.storage.from('verification-documents').getPublicUrl(path).data.publicUrl;
+        try {
+          selfieUrl = await uploadToGoogleDrive(selfieFile);
+        } catch (error: any) {
+          console.error("Selfie upload failed:", error);
         }
       }
       if (licenseFile) {
-        const path = `${user.id}/license-${crypto.randomUUID()}.${licenseFile.name.split('.').pop()}`;
-        const { error } = await supabase.storage.from('verification-documents').upload(path, licenseFile);
-        if (!error) {
-          licenseUrl = supabase.storage.from('verification-documents').getPublicUrl(path).data.publicUrl;
+        try {
+          licenseUrl = await uploadToGoogleDrive(licenseFile);
+        } catch (error: any) {
+          console.error("License upload failed:", error);
         }
       }
 

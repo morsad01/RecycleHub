@@ -66,13 +66,18 @@ export function ProfilePage() {
   const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files?.[0] || !user) return;
     const file = e.target.files[0];
-    const path = `${user.id}/avatar.${file.name.split('.').pop()}`;
-    const { error } = await supabase.storage.from('product-images').upload(path, file, { upsert: true });
-    if (!error) {
-      const { data: { publicUrl } } = supabase.storage.from('product-images').getPublicUrl(path);
-      await supabase.from('profiles').update({ avatar_url: publicUrl }).eq('id', user.id);
-      refreshProfile();
-      toast('Avatar updated', 'success');
+    try {
+      const { uploadToGoogleDrive } = await import('../lib/googleDrive');
+      const directUrl = await uploadToGoogleDrive(file);
+      const { error } = await supabase.from('profiles').update({ avatar_url: directUrl }).eq('id', user.id);
+      if (!error) {
+        refreshProfile();
+        toast('Avatar updated', 'success');
+      } else {
+        toast('Failed to update avatar: ' + error.message, 'error');
+      }
+    } catch (err: any) {
+      toast('Failed to upload avatar: ' + (err.message || err), 'error');
     }
   };
 
@@ -115,11 +120,13 @@ export function ProfilePage() {
   const uploadNidImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files?.[0] || !user) return;
     const file = e.target.files[0];
-    const path = `${user.id}/nid-${crypto.randomUUID()}.${file.name.split('.').pop()}`;
-    const { error } = await supabase.storage.from('product-images').upload(path, file);
-    if (!error) {
-      const { data: { publicUrl } } = supabase.storage.from('product-images').getPublicUrl(path);
-      setNidImage(publicUrl);
+    try {
+      const { uploadToGoogleDrive } = await import('../lib/googleDrive');
+      const directUrl = await uploadToGoogleDrive(file);
+      setNidImage(directUrl);
+      toast('NID image uploaded successfully', 'success');
+    } catch (err: any) {
+      toast('Failed to upload NID image: ' + (err.message || err), 'error');
     }
   };
 

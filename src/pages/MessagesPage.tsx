@@ -117,16 +117,12 @@ export function MessagesPage() {
     setUploadingImage(true);
 
     try {
-      const ext = file.name.split('.').pop();
-      const path = `${user.id}/chat-${crypto.randomUUID()}.${ext}`;
-      const { error } = await supabase.storage.from('product-images').upload(path, file);
-      if (!error) {
-        const { data: { publicUrl } } = supabase.storage.from('product-images').getPublicUrl(path);
-        sendMessage(publicUrl);
-        toast('Image sent successfully', 'success');
-      }
-    } catch {
-      toast('Failed to upload image', 'error');
+      const { uploadToGoogleDrive } = await import('../lib/googleDrive');
+      const directUrl = await uploadToGoogleDrive(file);
+      sendMessage(directUrl);
+      toast('Image sent successfully', 'success');
+    } catch (err: any) {
+      toast('Failed to upload image: ' + (err.message || err), 'error');
     } finally {
       setUploadingImage(false);
     }

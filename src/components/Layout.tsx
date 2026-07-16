@@ -94,13 +94,17 @@ export function Layout({ children }: { children: ReactNode }) {
 
   const isActive = (path: string) => location.pathname === path || (path !== '/' && location.pathname.startsWith(path));
 
+  const isDashboardLayout = location.pathname.startsWith('/admin') || location.pathname.startsWith('/superadmin');
+
   return (
     <div className="min-h-screen flex flex-col bg-neutral-50">
       {/* Skip to main content - Accessibility */}
       <a href="#main-content" className="skip-link">Skip to main content</a>
-      {/* Header */}
-      <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-sm border-b border-neutral-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+      
+      {/* Header - Hidden in admin dashboards */}
+      {!isDashboardLayout && (
+        <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-sm border-b border-neutral-100">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="flex items-center justify-between h-16 gap-4">
             {/* Logo */}
             <Link to="/" className="flex items-center gap-2 shrink-0">
@@ -259,6 +263,7 @@ export function Layout({ children }: { children: ReactNode }) {
           </nav>
         )}
       </header>
+      )}
 
       {/* Mobile menu */}
       {mobileMenuOpen && (
@@ -293,10 +298,11 @@ export function Layout({ children }: { children: ReactNode }) {
       {/* Main content */}
       <main id="main-content" className="flex-1">{children}</main>
 
-      {/* Footer */}
-      <footer className="bg-neutral-900 text-neutral-300 mt-12">
-        <div className="max-w-7xl mx-auto px-6 py-12">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+      {/* Footer - Hidden in admin dashboards */}
+      {!isDashboardLayout && (
+        <footer className="bg-neutral-900 text-neutral-300 mt-12">
+          <div className="max-w-7xl mx-auto px-6 py-12">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             <div>
               <div className="flex items-center gap-2 mb-4">
                 <div className="w-8 h-8 rounded-lg bg-primary-500 flex items-center justify-center">
@@ -343,6 +349,7 @@ export function Layout({ children }: { children: ReactNode }) {
           </div>
         </div>
       </footer>
+      )}
     </div>
   );
 }
