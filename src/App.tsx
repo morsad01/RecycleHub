@@ -62,6 +62,16 @@ const UserManagementPage = lazy(() => import('./pages/superadmin/UserManagementP
 const ProductModerationPage = lazy(() => import('./pages/superadmin/ProductModerationPage').then((m) => ({ default: m.ProductModerationPage })));
 const ContentModerationPage = lazy(() => import('./pages/superadmin/ContentModerationPage').then((m) => ({ default: m.ContentModerationPage })));
 const DatabaseStatusPage = lazy(() => import('./pages/superadmin/DatabaseStatusPage').then((m) => ({ default: m.DatabaseStatusPage })));
+const HomepageBuilderPage = lazy(() => import('./pages/superadmin/HomepageBuilderPage').then((m) => ({ default: m.HomepageBuilderPage })));
+const BannerManagementPage = lazy(() => import('./pages/superadmin/BannerManagementPage').then((m) => ({ default: m.BannerManagementPage })));
+const BlogManagementPage = lazy(() => import('./pages/superadmin/BlogManagementPage').then((m) => ({ default: m.BlogManagementPage })));
+const AnnouncementCenterPage = lazy(() => import('./pages/superadmin/AnnouncementCenterPage').then((m) => ({ default: m.AnnouncementCenterPage })));
+const MediaLibraryPage = lazy(() => import('./pages/superadmin/MediaLibraryPage').then((m) => ({ default: m.MediaLibraryPage })));
+const SeoPage = lazy(() => import('./pages/superadmin/SeoPage').then((m) => ({ default: m.SeoPage })));
+const CrmPage = lazy(() => import('./pages/superadmin/CrmPage').then((m) => ({ default: m.CrmPage })));
+const CouponsPage = lazy(() => import('./pages/superadmin/CouponsPage').then((m) => ({ default: m.CouponsPage })));
+const ReferralsPage = lazy(() => import('./pages/superadmin/ReferralsPage').then((m) => ({ default: m.ReferralsPage })));
+const NewsletterPage = lazy(() => import('./pages/superadmin/NewsletterPage').then((m) => ({ default: m.NewsletterPage })));
 
 export default function App() {
   const loadingSkeleton = (
@@ -136,6 +146,16 @@ export default function App() {
           <Route path="/superadmin/settings" element={<SuperAdminRoute><SuperAdminLayout><SystemSettingsPage /></SuperAdminLayout></SuperAdminRoute>} />
           <Route path="/superadmin/security" element={<SuperAdminRoute><SuperAdminLayout><SecurityCenterPage /></SuperAdminLayout></SuperAdminRoute>} />
           <Route path="/superadmin/database" element={<SuperAdminRoute><SuperAdminLayout><DatabaseStatusPage /></SuperAdminLayout></SuperAdminRoute>} />
+          <Route path="/superadmin/homepage" element={<SuperAdminRoute><SuperAdminLayout><HomepageBuilderPage /></SuperAdminLayout></SuperAdminRoute>} />
+          <Route path="/superadmin/banners" element={<SuperAdminRoute><SuperAdminLayout><BannerManagementPage /></SuperAdminLayout></SuperAdminRoute>} />
+          <Route path="/superadmin/blogs" element={<SuperAdminRoute><SuperAdminLayout><BlogManagementPage /></SuperAdminLayout></SuperAdminRoute>} />
+          <Route path="/superadmin/announcements" element={<SuperAdminRoute><SuperAdminLayout><AnnouncementCenterPage /></SuperAdminLayout></SuperAdminRoute>} />
+          <Route path="/superadmin/media" element={<SuperAdminRoute><SuperAdminLayout><MediaLibraryPage /></SuperAdminLayout></SuperAdminRoute>} />
+          <Route path="/superadmin/seo" element={<SuperAdminRoute><SuperAdminLayout><SeoPage /></SuperAdminLayout></SuperAdminRoute>} />
+          <Route path="/superadmin/crm" element={<SuperAdminRoute><SuperAdminLayout><CrmPage /></SuperAdminLayout></SuperAdminRoute>} />
+          <Route path="/superadmin/coupons" element={<SuperAdminRoute><SuperAdminLayout><CouponsPage /></SuperAdminLayout></SuperAdminRoute>} />
+          <Route path="/superadmin/referrals" element={<SuperAdminRoute><SuperAdminLayout><ReferralsPage /></SuperAdminLayout></SuperAdminRoute>} />
+          <Route path="/superadmin/newsletter" element={<SuperAdminRoute><SuperAdminLayout><NewsletterPage /></SuperAdminLayout></SuperAdminRoute>} />
 
           {/* Catch-all 404 */}
           <Route path="*" element={<NotFoundPage />} />
