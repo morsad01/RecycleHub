@@ -124,10 +124,6 @@ export function HomePage() {
         </div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 py-16 sm:py-24">
           <div className="max-w-2xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-sm text-sm mb-6">
-              <Sparkles size={14} />
-              <span>AI-Powered Resale Marketplace</span>
-            </div>
             <h1 className="text-4xl sm:text-5xl font-bold font-display leading-tight mb-4">
               {t('home.heroTitle')}
             </h1>
