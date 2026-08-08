@@ -322,7 +322,7 @@ export function CheckoutPage() {
 
               <div className="flex items-center gap-2 p-3 bg-success-50 text-success-800 rounded-2xl border border-success-100">
                 <ShieldCheck size={18} className="shrink-0" />
-                <span className="text-2xs font-semibold">RecycleHub secure buyer protection guarantees authentic products.</span>
+                <span className="text-2xs font-semibold">ResellBD secure buyer protection guarantees authentic products.</span>
               </div>
             </div>
           )}

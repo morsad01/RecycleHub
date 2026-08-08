@@ -1,5 +1,6 @@
-import { lazy, Suspense } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { lazy, Suspense, useEffect } from 'react';
+import { Routes, Route, useNavigate } from 'react-router-dom';
+import { supabase } from './lib/supabase';
 import { Layout } from './components/Layout';
 import { ChatbotWidget } from './components/ChatbotWidget';
 import { ProtectedRoute, AdminRoute, SuperAdminRoute } from './components/ProtectedRoute';
@@ -73,7 +74,38 @@ const CouponsPage = lazy(() => import('./pages/superadmin/CouponsPage').then((m)
 const ReferralsPage = lazy(() => import('./pages/superadmin/ReferralsPage').then((m) => ({ default: m.ReferralsPage })));
 const NewsletterPage = lazy(() => import('./pages/superadmin/NewsletterPage').then((m) => ({ default: m.NewsletterPage })));
 
+import { useToast } from './components/ui/Toast';
+
 export default function App() {
+  const navigate = useNavigate();
+  const { toast } = useToast();
+
+  useEffect(() => {
+    // Check if the link has an error (like expired or already used link)
+    if (window.location.hash.includes('error=')) {
+      const params = new URLSearchParams(window.location.hash.substring(1));
+      const description = params.get('error_description') || 'This password reset link is invalid or has expired.';
+      toast(description.replace(/\+/g, ' '), 'error');
+      // Clean up hash from URL
+      window.history.replaceState(null, '', window.location.pathname);
+      navigate('/forgot-password');
+      return;
+    }
+
+    // Automatically redirect to reset-password page if recovery token is present in the URL hash
+    if (window.location.hash.includes('type=recovery') || window.location.hash.includes('access_token=')) {
+      navigate('/reset-password');
+    }
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
+      if (event === 'PASSWORD_RECOVERY') {
+        navigate('/reset-password');
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [navigate, toast]);
+
   const loadingSkeleton = (
     <div className="flex justify-center items-center h-[60vh]">
       <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-500" />

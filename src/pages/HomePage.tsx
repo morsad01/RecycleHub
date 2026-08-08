@@ -114,7 +114,7 @@ export function HomePage() {
     <div>
       <SEO
         title="Home"
-        description="RecycleHub — AI-Powered Smart Resale Marketplace. Buy and sell pre-loved items with AI pricing, condition assessment, and verified sellers."
+        description="ResellBD — AI-Powered Smart Resale Marketplace. Buy and sell pre-loved items with AI pricing, condition assessment, and verified sellers."
       />
       {/* Hero */}
       <section className="relative bg-gradient-to-br from-primary-500 to-primary-700 text-white overflow-hidden">

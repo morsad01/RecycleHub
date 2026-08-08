@@ -162,7 +162,7 @@ export class AIService {
     const features: string[] = [
       'Stunning build quality with premium materials',
       'Extremely durable design built for second-life reuse',
-      'Inspected and sanitized by RecycleHub verified standards'
+      'Inspected and sanitized by ResellBD verified standards'
     ];
 
     if (category.toLowerCase().includes('elect')) {
@@ -194,7 +194,7 @@ export class AIService {
     await this.logUsage('chatbot_assistant', 0.98, true);
 
     if (lower.includes('return') || lower.includes('refund') || lower.includes('policy')) {
-      return 'RecycleHub acts as a smart peer-to-peer resale platform. Return and refund policies depend on individual negotiations between the buyer and the seller. However, if you receive a counterfeit or fake product, you can report the listing immediately, and our admin team will review it for buyer protection.';
+      return 'ResellBD acts as a smart peer-to-peer resale platform. Return and refund policies depend on individual negotiations between the buyer and the seller. However, if you receive a counterfeit or fake product, you can report the listing immediately, and our admin team will review it for buyer protection.';
     }
 
     if (lower.includes('verify') || lower.includes('verification') || lower.includes('badge')) {
@@ -206,9 +206,9 @@ export class AIService {
     }
 
     if (lower.includes('sell') || lower.includes('list') || lower.includes('add')) {
-      return 'To sell an item, click on "Start Selling" in the top bar. You can upload photos of your item, and RecycleHub\'s AI will automatically suggest the category, condition estimates, and recommended price!';
+      return 'To sell an item, click on "Start Selling" in the top bar. You can upload photos of your item, and ResellBD\'s AI will automatically suggest the category, condition estimates, and recommended price!';
     }
 
-    return 'Hello! I am your RecycleHub Smart AI Assistant. I can guide you on buying and selling pre-loved items, verifying your seller account, resolving order disputes, or analyzing listing prices. What would you like to explore?';
+    return 'Hello! I am your ResellBD Smart AI Assistant. I can guide you on buying and selling pre-loved items, verifying your seller account, resolving order disputes, or analyzing listing prices. What would you like to explore?';
   }
 }

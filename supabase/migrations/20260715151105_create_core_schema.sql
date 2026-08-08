@@ -1,8 +1,8 @@
 /*
-# RecycleHub — Core Schema (Profiles, Categories, Products, Images, Wishlist)
+# ResellBD — Core Schema (Profiles, Categories, Products, Images, Wishlist)
 
 ## Summary
-Creates the foundational tables for the RecycleHub marketplace:
+Creates the foundational tables for the ResellBD marketplace:
 - `profiles` — extends auth.users with full name, role, seller verification, rating, language pref, ban status.
 - `categories` — hierarchical product categories (self-referencing parent_id).
 - `products` — seller listings with AI fields (suggested price, condition, category confidence, risk score), status workflow.

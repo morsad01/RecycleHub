@@ -1,4 +1,4 @@
-const CACHE_NAME = 'recyclehub-cache-v1';
+const CACHE_NAME = 'resellbd-cache-v1';
 const ASSETS = [
   '/',
   '/index.html',

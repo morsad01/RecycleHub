@@ -9,7 +9,7 @@ interface I18nContextValue {
 
 const I18nContext = createContext<I18nContextValue | undefined>(undefined);
 
-const STORAGE_KEY = 'recyclehub-lang';
+const STORAGE_KEY = 'resellbd-lang';
 
 export function I18nProvider({ children }: { children: ReactNode }) {
   const [lang, setLangState] = useState<Lang>(() => {

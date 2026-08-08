@@ -23,7 +23,7 @@ function logoHeader(): string {
   return `
     <div style="text-align:center; margin-bottom:24px;">
       <span style="background:#10b981; color:#fff; padding:10px 18px; border-radius:10px; font-weight:800; font-size:18px;">
-        🌿 RecycleHub
+        🌿 ResellBD
       </span>
     </div>
   `;
@@ -32,7 +32,7 @@ function logoHeader(): string {
 function footer(): string {
   return `
     <div style="text-align:center; margin-top:32px; font-size:12px; color:#9ca3af;">
-      © ${new Date().getFullYear()} RecycleHub. All rights reserved.<br/>
+      © ${new Date().getFullYear()} ResellBD. All rights reserved.<br/>
       AI-Powered Smart Resale Marketplace
     </div>
   `;
@@ -43,11 +43,11 @@ export function welcomeEmailTemplate(name: string): string {
     <div style="${BASE_STYLES}">
       <div style="${CARD_STYLES}">
         ${logoHeader()}
-        <h2 style="font-size:22px; font-weight:800; margin:0 0 12px;">Welcome to RecycleHub, ${name}! 🎉</h2>
+        <h2 style="font-size:22px; font-weight:800; margin:0 0 12px;">Welcome to ResellBD, ${name}! 🎉</h2>
         <p style="color:#6b7280; line-height:1.6; margin:0 0 24px;">
           Thank you for joining the smarter way to buy and sell. Start listing your items today and discover amazing deals from verified sellers near you.
         </p>
-        <a href="https://recyclehub.app/products" style="${BUTTON_STYLES}">Browse Marketplace</a>
+        <a href="https://resellbd.app/products" style="${BUTTON_STYLES}">Browse Marketplace</a>
         ${footer()}
       </div>
     </div>
@@ -70,7 +70,7 @@ export function orderConfirmationTemplate(name: string, orderId: string, items: 
         </ul>
         <div style="font-weight:800; font-size:16px; text-align:right;">Total: ${total}</div>
         <br/>
-        <a href="https://recyclehub.app/orders" style="${BUTTON_STYLES}">Track Your Order</a>
+        <a href="https://resellbd.app/orders" style="${BUTTON_STYLES}">Track Your Order</a>
         ${footer()}
       </div>
     </div>
@@ -88,7 +88,7 @@ export function shipmentEmailTemplate(name: string, orderId: string, trackingNum
           <p style="font-size:12px; color:#6b7280; margin:0 0 4px;">TRACKING NUMBER</p>
           <p style="font-weight:800; font-size:18px; color:#10b981; margin:0;">${trackingNumber}</p>
         </div>
-        <a href="https://recyclehub.app/orders" style="${BUTTON_STYLES}">View Order #${orderId.slice(0,8).toUpperCase()}</a>
+        <a href="https://resellbd.app/orders" style="${BUTTON_STYLES}">View Order #${orderId.slice(0,8).toUpperCase()}</a>
         ${footer()}
       </div>
     </div>
@@ -104,7 +104,7 @@ export function deliveryEmailTemplate(name: string, orderId: string): string {
         <h2 style="font-size:22px; font-weight:800; margin:0 0 8px;">Order Delivered! 🎉</h2>
         <p style="color:#6b7280; margin:0 0 20px;">Hi ${name}, your order #${shortId} has been delivered successfully. We hope you love it!</p>
         <p style="color:#6b7280; font-size:14px; margin:0 0 24px;">Please leave a review to help other buyers make informed decisions.</p>
-        <a href="https://recyclehub.app/orders" style="${BUTTON_STYLES}">Leave a Review</a>
+        <a href="https://resellbd.app/orders" style="${BUTTON_STYLES}">Leave a Review</a>
         ${footer()}
       </div>
     </div>
@@ -132,8 +132,8 @@ export function verificationApprovedTemplate(name: string): string {
       <div style="${CARD_STYLES}">
         ${logoHeader()}
         <h2 style="font-size:22px; font-weight:800; margin:0 0 8px;">Seller Verified! ✅</h2>
-        <p style="color:#6b7280; margin:0 0 20px;">Congratulations ${name}! Your seller account has been verified. You can now list products on RecycleHub with a verified badge.</p>
-        <a href="https://recyclehub.app/sell/new" style="${BUTTON_STYLES}">Start Selling</a>
+        <p style="color:#6b7280; margin:0 0 20px;">Congratulations ${name}! Your seller account has been verified. You can now list products on ResellBD with a verified badge.</p>
+        <a href="https://resellbd.app/sell/new" style="${BUTTON_STYLES}">Start Selling</a>
         ${footer()}
       </div>
     </div>
@@ -152,7 +152,7 @@ export function verificationRejectedTemplate(name: string, reason: string): stri
           <p style="font-size:14px; color:#dc2626; margin:0;">${reason}</p>
         </div>
         <p style="color:#6b7280; font-size:14px; margin:0 0 24px;">Please update your documents and resubmit for verification.</p>
-        <a href="https://recyclehub.app/dashboard" style="${BUTTON_STYLES}">Go to Dashboard</a>
+        <a href="https://resellbd.app/dashboard" style="${BUTTON_STYLES}">Go to Dashboard</a>
         ${footer()}
       </div>
     </div>

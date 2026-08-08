@@ -1055,7 +1055,7 @@ export function DashboardPage() {
           <div className="space-y-6 p-2 text-neutral-800" id="invoice-print-area">
             <div className="flex justify-between items-start pb-4 border-b border-neutral-100 flex-wrap gap-4">
               <div>
-                <h1 className="text-xl font-bold text-neutral-900">RECYCLEHUB INVOICE</h1>
+                <h1 className="text-xl font-bold text-neutral-900">RESELLBD INVOICE</h1>
                 <p className="text-xs text-neutral-400 mt-1">Invoice Ref: #{selectedOrder.id.slice(0, 8).toUpperCase()}</p>
                 <p className="text-xs text-neutral-400">Date: {formatDate(selectedOrder.created_at)}</p>
               </div>

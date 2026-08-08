@@ -85,7 +85,7 @@ export function NotificationsPage() {
 
   return (
     <>
-      <SEO title="Notifications" description="View all your RecycleHub notifications for orders, messages, payments, and more." />
+      <SEO title="Notifications" description="View all your ResellBD notifications for orders, messages, payments, and more." />
       <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">

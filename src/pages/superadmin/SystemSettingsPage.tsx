@@ -10,7 +10,7 @@ export function SystemSettingsPage() {
   const [saving, setSaving] = useState(false);
   
   // Settings State
-  const [platformName, setPlatformName] = useState('RecycleHub');
+  const [platformName, setPlatformName] = useState('ResellBD');
   const [commissionRate, setCommissionRate] = useState(5);
   const [currency, setCurrency] = useState('BDT');
   const [defaultLanguage, setDefaultLanguage] = useState('en');

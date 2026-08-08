@@ -277,9 +277,9 @@ export function ProductDetailPage() {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
       <SEO
         title={product.title}
-        description={product.description ?? `Buy ${product.title} on RecycleHub. Condition: ${product.condition}. Price: ৳${product.price}.`}
+        description={product.description ?? `Buy ${product.title} on ResellBD. Condition: ${product.condition}. Price: ৳${product.price}.`}
         image={images[0]?.url}
-        canonical={`https://recyclehub.app/products/${product.id}`}
+        canonical={`https://resellbd.app/products/${product.id}`}
         schema={{
           "@context": "https://schema.org",
           "@type": "Product",

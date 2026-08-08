@@ -6,7 +6,7 @@ export function CommunityPage() {
         <div className="prose prose-neutral max-w-none">
           <p className="text-neutral-600 mb-4">Last updated: {new Date().toLocaleDateString()}</p>
           <p className="text-neutral-600 mb-4">
-            RecycleHub is a community built on trust. Be respectful in your communications. Hate speech, harassment, and inappropriate content will not be tolerated.
+            ResellBD is a community built on trust. Be respectful in your communications. Hate speech, harassment, and inappropriate content will not be tolerated.
           </p>
         </div>
       </div>

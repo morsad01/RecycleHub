@@ -1,10 +1,10 @@
-# RecycleHub API Documentation
+# ResellBD API Documentation
 
-This document describes the API interactions for RecycleHub. The platform communicates primarily with a managed Supabase Postgres backend using the Supabase Javascript Client.
+This document describes the API interactions for ResellBD. The platform communicates primarily with a managed Supabase Postgres backend using the Supabase Javascript Client.
 
 ## Authentication APIs (Supabase Auth)
 
-RecycleHub utilizes Supabase GoTrue for authentication.
+ResellBD utilizes Supabase GoTrue for authentication.
 
 ### `signInWithPassword(email, password)`
 Authenticates a user and establishes a secure session.
@@ -52,7 +52,7 @@ const { data } = await supabase
 
 ## Messages & Notifications (Realtime)
 
-RecycleHub heavily leverages Supabase Realtime for chat.
+ResellBD heavily leverages Supabase Realtime for chat.
 
 ### Subscribe to Conversation
 ```typescript

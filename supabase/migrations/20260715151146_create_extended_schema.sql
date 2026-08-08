@@ -1,8 +1,8 @@
 /*
-# RecycleHub — Extended Schema (Messaging, Orders, Reviews, Reports, Notifications, Verifications, Chatbot, Content)
+# ResellBD — Extended Schema (Messaging, Orders, Reviews, Reports, Notifications, Verifications, Chatbot, Content)
 
 ## Summary
-Creates the remaining tables for RecycleHub:
+Creates the remaining tables for ResellBD:
 - `conversations` — buyer-seller chat threads scoped to a product.
 - `messages` — individual chat messages with read tracking.
 - `addresses` — user delivery address book with default flag.

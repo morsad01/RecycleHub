@@ -194,7 +194,7 @@ export function NewsletterPage() {
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement('a');
     link.setAttribute('href', encodedUri);
-    link.setAttribute('download', `recyclehub_subscribers_${new Date().toISOString().split('T')[0]}.csv`);
+    link.setAttribute('download', `resellbd_subscribers_${new Date().toISOString().split('T')[0]}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -322,7 +322,7 @@ export function NewsletterPage() {
               <Input
                 label="Email Address"
                 type="email"
-                placeholder="customer@recyclehub.com"
+                placeholder="customer@resellbd.com"
                 value={newEmail}
                 onChange={(e) => setNewEmail(e.target.value)}
                 className="bg-gray-950 border-gray-800 text-white"
@@ -354,7 +354,7 @@ export function NewsletterPage() {
                 <label className="block text-3xs font-mono text-gray-400 mb-1">SUBSCRIBERS EMAIL STREAM:</label>
                 <textarea
                   rows={8}
-                  placeholder="admin@recyclehub.com, user2@recyclehub.com, user3@recyclehub.com"
+                  placeholder="admin@resellbd.com, user2@resellbd.com, user3@resellbd.com"
                   value={batchEmails}
                   onChange={(e) => setBatchEmails(e.target.value)}
                   className="w-full bg-gray-950 border border-gray-800 rounded-xl text-xs text-white p-3 font-mono focus:outline-none focus:border-red-500"

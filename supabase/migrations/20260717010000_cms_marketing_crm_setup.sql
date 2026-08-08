@@ -1,5 +1,5 @@
 -- =============================================================================
--- RecycleHub — Enterprise CMS, CRM and Marketing Schema
+-- ResellBD — Enterprise CMS, CRM and Marketing Schema
 -- =============================================================================
 
 -- 1. HOMEPAGE SECTIONS BUILDER

@@ -1,10 +1,10 @@
 # Enterprise Backup and Disaster Recovery Strategy
 
-This document outlines the backup and recovery procedures for the RecycleHub enterprise platform.
+This document outlines the backup and recovery procedures for the ResellBD enterprise platform.
 
 ## 1. Database Backups (Supabase)
 
-RecycleHub utilizes Supabase's managed Postgres infrastructure.
+ResellBD utilizes Supabase's managed Postgres infrastructure.
 - **Automated PITR (Point-in-Time Recovery):** Enabled. Ensures the database can be restored to any exact minute within the last 7 days.
 - **Daily Logical Backups:** Automated `pg_dump` backups are taken daily at 02:00 AM UTC and stored securely in an external AWS S3 bucket.
 

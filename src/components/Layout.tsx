@@ -111,7 +111,7 @@ export function Layout({ children }: { children: ReactNode }) {
               <div className="w-9 h-9 rounded-xl bg-primary-500 flex items-center justify-center">
                 <Leaf size={20} className="text-white" />
               </div>
-              <span className="font-display font-bold text-lg text-neutral-900 hidden sm:block">RecycleHub</span>
+              <span className="font-display font-bold text-lg text-neutral-900 hidden sm:block">ResellBD</span>
             </Link>
 
             {/* Search bar */}
@@ -308,7 +308,7 @@ export function Layout({ children }: { children: ReactNode }) {
                 <div className="w-8 h-8 rounded-lg bg-primary-500 flex items-center justify-center">
                   <Leaf size={18} className="text-white" />
                 </div>
-                <span className="font-display font-bold text-white">RecycleHub</span>
+                <span className="font-display font-bold text-white">ResellBD</span>
               </div>
               <p className="text-sm text-neutral-400">AI-powered resale marketplace for a sustainable future.</p>
             </div>
@@ -341,7 +341,7 @@ export function Layout({ children }: { children: ReactNode }) {
           </div>
           <div className="mt-8 pt-8 border-t border-neutral-800 flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-neutral-500">
             <div>
-              © {new Date().getFullYear()} RecycleHub. All rights reserved.
+              © {new Date().getFullYear()} ResellBD. All rights reserved.
             </div>
             <div className="flex gap-4">
               <Link to="/pricing" className="hover:text-primary-400">Pricing</Link>

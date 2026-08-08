@@ -1,6 +1,6 @@
-# RecycleHub Database Schema Documentation
+# ResellBD Database Schema Documentation
 
-This document provides a high-level overview of the Postgres schema structure powering RecycleHub.
+This document provides a high-level overview of the Postgres schema structure powering ResellBD.
 
 ## Core Tables
 

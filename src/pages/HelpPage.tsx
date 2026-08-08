@@ -60,7 +60,7 @@ export function HelpPage() {
             {[
               { q: 'How do I sell an item?', a: 'Click "Sell" in the navigation, upload photos of your item, and our AI will suggest a category, condition, and price. Fill in the details and publish.' },
               { q: 'How do I become a verified seller?', a: 'Go to your Profile page and submit your NID or business info under "Become a Verified Seller". An admin will review your submission.' },
-              { q: 'Is it safe to buy on RecycleHub?', a: 'Yes! We use AI to detect fake listings, verified seller badges for trust, and in-app messaging so you never have to share personal contact info.' },
+              { q: 'Is it safe to buy on ResellBD?', a: 'Yes! We use AI to detect fake listings, verified seller badges for trust, and in-app messaging so you never have to share personal contact info.' },
               { q: 'How does delivery work?', a: 'After placing an order, the seller confirms and ships it. You can track the status (Pending → Confirmed → Shipped → Delivered) in your Orders page.' },
               { q: 'Can I cancel an order?', a: 'Yes, you can cancel while the order is still in "Pending" status. Once confirmed, contact the seller through messages.' },
             ].map((faq, i) => (
@@ -91,12 +91,12 @@ export function HelpPage() {
             )}
             {tab === 'privacy' && (
               <p className="text-sm text-neutral-600">
-                RecycleHub respects your privacy. We collect only the information necessary to provide our marketplace services. Your data is protected by Row Level Security policies and is never shared with third parties without consent. You can request data deletion at any time.
+                ResellBD respects your privacy. We collect only the information necessary to provide our marketplace services. Your data is protected by Row Level Security policies and is never shared with third parties without consent. You can request data deletion at any time.
               </p>
             )}
             {tab === 'terms' && (
               <p className="text-sm text-neutral-600">
-                By using RecycleHub, you agree to: list only items you own, provide accurate descriptions, not post prohibited items, respect other users, and follow our community guidelines. RecycleHub reserves the right to remove listings and suspend accounts that violate these terms.
+                By using ResellBD, you agree to: list only items you own, provide accurate descriptions, not post prohibited items, respect other users, and follow our community guidelines. ResellBD reserves the right to remove listings and suspend accounts that violate these terms.
               </p>
             )}
           </div>

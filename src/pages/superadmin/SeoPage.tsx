@@ -325,7 +325,7 @@ export function SeoPage() {
 
               <Input
                 label="Meta Title Override"
-                placeholder="About RecycleHub — Bangladesh Recycling Platform"
+                placeholder="About ResellBD — Bangladesh Recycling Platform"
                 value={formFields.title}
                 onChange={(e) => setFormFields(prev => ({ ...prev, title: e.target.value }))}
                 className="bg-gray-950 border-gray-800 text-white"
@@ -336,7 +336,7 @@ export function SeoPage() {
                 <label className="block text-2xs font-mono text-gray-400 mb-1">Meta Description</label>
                 <textarea
                   rows={3}
-                  placeholder="Learn about RecycleHub's mission to reduce waste in Dhaka and across Bangladesh..."
+                  placeholder="Learn about ResellBD's mission to reduce waste in Dhaka and across Bangladesh..."
                   value={formFields.description}
                   onChange={(e) => setFormFields(prev => ({ ...prev, description: e.target.value }))}
                   className="w-full bg-gray-950 border border-gray-800 rounded-xl text-xs text-white p-3 focus:outline-none focus:border-red-500"

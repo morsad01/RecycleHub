@@ -1,5 +1,5 @@
 -- =========================================================================
--- RECYCLEHUB CONSOLIDATED SCHEMA INITIALIZATION SCRIPT
+-- RESELLBD CONSOLIDATED SCHEMA INITIALIZATION SCRIPT
 -- Run this script in the Supabase Dashboard SQL Editor to set up all tables, 
 -- functions, storage buckets, RLS policies, and realtime subscriptions.
 -- =========================================================================

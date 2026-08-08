@@ -17,4 +17,4 @@ Disallow: /wishlist
 Disallow: /my-listings
 Disallow: /reset-password
 
-Sitemap: https://recyclehub.app/sitemap.xml
+Sitemap: https://resellbd.app/sitemap.xml

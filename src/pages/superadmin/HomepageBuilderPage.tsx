@@ -78,7 +78,7 @@ export function HomepageBuilderPage() {
           content = {
             title: 'Trusted by Thousand Recyclers',
             reviews: [
-              { name: 'Morsadul Islam', role: 'Premium Buyer', text: 'RecycleHub has completely optimized our inventory sourcing!', rating: 5 }
+              { name: 'Morsadul Islam', role: 'Premium Buyer', text: 'ResellBD has completely optimized our inventory sourcing!', rating: 5 }
             ]
           };
           break;

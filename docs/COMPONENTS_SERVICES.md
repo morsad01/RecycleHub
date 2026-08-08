@@ -1,6 +1,6 @@
 # UI Components and Services Guide
 
-RecycleHub maintains a custom suite of reusable UI components and abstracted service layers.
+ResellBD maintains a custom suite of reusable UI components and abstracted service layers.
 
 ## Reusable UI Components (`src/components/ui/`)
 

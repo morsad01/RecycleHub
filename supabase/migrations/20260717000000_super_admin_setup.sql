@@ -205,7 +205,7 @@ FOR EACH ROW EXECUTE FUNCTION log_audit_event();
 
 -- 9. SEED DEFAULT SYSTEM SETTINGS IF MISSING
 INSERT INTO public.system_settings (key, value, updated_at) VALUES
-('platform_name', '"RecycleHub"'::jsonb, now()),
+('platform_name', '"ResellBD"'::jsonb, now()),
 ('commission_rate', '5'::jsonb, now()),
 ('currency', '"BDT"'::jsonb, now()),
 ('default_language', '"en"'::jsonb, now()),

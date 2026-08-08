@@ -1,6 +1,6 @@
-# RecycleHub Developer Guide
+# ResellBD Developer Guide
 
-Welcome to the RecycleHub engineering team! This guide will help you understand the architecture, setup process, and contribution standards.
+Welcome to the ResellBD engineering team! This guide will help you understand the architecture, setup process, and contribution standards.
 
 ## Architecture Diagram
 

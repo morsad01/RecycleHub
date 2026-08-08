@@ -57,7 +57,7 @@ export function SuperAdminLoginPage() {
               icon={<Mail size={18} className="text-gray-500" />}
               required
               className="bg-gray-950 border-gray-800 text-white placeholder-gray-600 focus:border-red-500/50"
-              placeholder="admin@recyclehub.com"
+              placeholder="admin@resellbd.com"
             />
             
             <Input

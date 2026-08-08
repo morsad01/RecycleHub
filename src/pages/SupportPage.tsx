@@ -6,7 +6,7 @@ export function SupportPage() {
 
   const faqs = [
     { q: 'How do I list an item?', a: 'Click the "Sell" button in the navigation bar and follow the AI-guided listing process.' },
-    { q: 'Is it safe to buy on RecycleHub?', a: 'Yes! We verify our sellers and offer secure payment and delivery options.' },
+    { q: 'Is it safe to buy on ResellBD?', a: 'Yes! We verify our sellers and offer secure payment and delivery options.' },
     { q: 'How do I get paid as a seller?', a: 'Payments are held securely and released to you once the buyer confirms delivery.' }
   ];
 

@@ -11,7 +11,7 @@ interface SEOProps {
 export function SEO({ title, description, image, canonical, schema }: SEOProps) {
   useEffect(() => {
     // 1. Update Title
-    const formattedTitle = `${title} | RecycleHub`;
+    const formattedTitle = `${title} | ResellBD`;
     document.title = formattedTitle;
 
     // Helper to find or create meta tag

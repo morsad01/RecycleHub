@@ -8,7 +8,7 @@ export function TermsPage() {
           
           <h2 className="text-xl font-bold mt-8 mb-4">1. Acceptance of Terms</h2>
           <p className="text-neutral-600 mb-4">
-            By accessing or using RecycleHub, you agree to be bound by these Terms of Service. If you disagree with any part of the terms, you may not access the service.
+            By accessing or using ResellBD, you agree to be bound by these Terms of Service. If you disagree with any part of the terms, you may not access the service.
           </p>
 
           <h2 className="text-xl font-bold mt-8 mb-4">2. User Accounts</h2>
@@ -23,7 +23,7 @@ export function TermsPage() {
           
           <h2 className="text-xl font-bold mt-8 mb-4">4. Platform Rules</h2>
           <p className="text-neutral-600 mb-4">
-            RecycleHub is a marketplace connecting buyers and sellers. We do not take ownership of the items listed and are not responsible for the quality, safety, or legality of the items.
+            ResellBD is a marketplace connecting buyers and sellers. We do not take ownership of the items listed and are not responsible for the quality, safety, or legality of the items.
           </p>
         </div>
       </div>

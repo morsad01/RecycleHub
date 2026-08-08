@@ -286,8 +286,8 @@ export const translations = {
     'chatbot.title': 'RecycleHub Assistant',
     'chatbot.placeholder': 'Ask me anything about RecycleHub...',
     'chatbot.welcome': 'Hi! I\'m here to help with questions about buying, selling, safety, and more. How can I assist you today?',
-    'chatbot.escalate': 'I\'ll connect you with a human support agent. In the meantime, you can email support@recyclehub.bd',
-    'chatbot.unavailable': 'AI assistant is currently unavailable. Please try again later or contact support@recyclehub.bd',
+    'chatbot.escalate': 'I\'ll connect you with a human support agent. In the meantime, you can email support@resellbd.bd',
+    'chatbot.unavailable': 'AI assistant is currently unavailable. Please try again later or contact support@resellbd.bd',
 
     // Help
     'help.title': 'Help & Safety',
@@ -641,8 +641,8 @@ export const translations = {
     'chatbot.title': 'রিসাইকেলহাব সহায়ক',
     'chatbot.placeholder': 'রিসাইকেলহাব সম্পর্কে কিছু জিজ্ঞাসা করুন...',
     'chatbot.welcome': 'হ্যালো! আমি কেনা, বেচা, নিরাপত্তা ইত্যাদি বিষয়ে সাহায্য করতে পারি। আমি কীভাবে সাহায্য করতে পারি?',
-    'chatbot.escalate': 'আমি আপনাকে একজন মানব সাপোর্ট এজেন্টের সাথে সংযুক্ত করব। এদিকে, support@recyclehub.bd ইমেইল করতে পারেন',
-    'chatbot.unavailable': 'এআই সহায়ক বর্তমানে অনুপলব্ধ। পরে আবার চেষ্টা করুন বা support@recyclehub.bd যোগাযোগ করুন',
+    'chatbot.escalate': 'আমি আপনাকে একজন মানব সাপোর্ট এজেন্টের সাথে সংযুক্ত করব। এদিকে, support@resellbd.bd ইমেইল করতে পারেন',
+    'chatbot.unavailable': 'এআই সহায়ক বর্তমানে অনুপলব্ধ। পরে আবার চেষ্টা করুন বা support@resellbd.bd যোগাযোগ করুন',
 
     'help.title': 'সাহায্য ও নিরাপত্তা',
     'help.safetyTitle': 'নিরাপত্তা নির্দেশিকা',

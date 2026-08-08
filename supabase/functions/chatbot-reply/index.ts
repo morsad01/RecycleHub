@@ -6,15 +6,15 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "Content-Type, Authorization, X-Client-Info, Apikey",
 };
 
-const SYSTEM_PROMPT = `You are the RecycleHub assistant, a helpful support chatbot for an AI-powered second-hand resale marketplace. Your knowledge is scoped to:
-- How to buy and sell items on RecycleHub
+const SYSTEM_PROMPT = `You are the ResellBD assistant, a helpful support chatbot for an AI-powered second-hand resale marketplace. Your knowledge is scoped to:
+- How to buy and sell items on ResellBD
 - How AI features work (image analysis, price suggestions, condition assessment, fake detection)
 - How to become a verified seller
 - How messaging, orders, and delivery work
 - Safety guidelines and best practices
 - Account and profile management
 
-Keep responses concise and friendly. If a user asks something outside your scope, politely redirect them to the relevant RecycleHub feature or suggest contacting support@recyclehub.bd for human assistance. Never provide pricing advice for specific items outside the platform.`;
+Keep responses concise and friendly. If a user asks something outside your scope, politely redirect them to the relevant ResellBD feature or suggest contacting support@resellbd.bd for human assistance. Never provide pricing advice for specific items outside the platform.`;
 
 Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") {
@@ -37,7 +37,7 @@ Deno.serve(async (req: Request) => {
     if (!apiKey) {
       return new Response(
         JSON.stringify({
-          reply: "AI assistant is currently unavailable. Please try again later or contact support@recyclehub.bd for help.",
+          reply: "AI assistant is currently unavailable. Please try again later or contact support@resellbd.bd for help.",
           fallback: true,
         }),
         { headers: { ...corsHeaders, "Content-Type": "application/json" } }
@@ -49,7 +49,7 @@ Deno.serve(async (req: Request) => {
     if (lowerMsg.includes("human") || lowerMsg.includes("agent") || lowerMsg.includes("support person")) {
       return new Response(
         JSON.stringify({
-          reply: "I'll connect you with a human support agent. In the meantime, you can email support@recyclehub.bd and our team will get back to you within 24 hours.",
+          reply: "I'll connect you with a human support agent. In the meantime, you can email support@resellbd.bd and our team will get back to you within 24 hours.",
         }),
         { headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
@@ -108,7 +108,7 @@ Deno.serve(async (req: Request) => {
   } catch (err) {
     return new Response(
       JSON.stringify({
-        reply: "I'm having trouble responding right now. Please try again later or contact support@recyclehub.bd",
+        reply: "I'm having trouble responding right now. Please try again later or contact support@resellbd.bd",
         error: err.message,
       }),
       {
