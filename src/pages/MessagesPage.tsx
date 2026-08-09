@@ -476,10 +476,8 @@ export function MessagesPage() {
         <SafeMeetupModal
           open={showSafeMeetup}
           onClose={() => setShowSafeMeetup(false)}
-          product={activeConvo.product as any}
-          sellerName={otherUser?.full_name || 'Seller'}
           onConfirm={(details) => {
-            sendMessage(`🛡️ **PROPOSED SAFE MEETUP**:\n📍 Spot: ${details.spot.name} (${details.spot.address})\n📅 Time: ${details.dateTime}\n${details.notes ? `📝 Note: ${details.notes}` : ''}`);
+            sendMessage(details);
             toast('Meetup details posted to conversation', 'success');
           }}
         />

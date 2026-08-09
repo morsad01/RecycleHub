@@ -24,10 +24,7 @@ interface StorageFile {
   updated_at: string;
   created_at: string;
   last_accessed_at: string;
-  metadata: {
-    size: number;
-    mimetype: string;
-  } | null;
+  metadata?: Record<string, any> | null;
 }
 
 export function MediaLibraryPage() {

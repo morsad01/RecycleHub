@@ -9,13 +9,15 @@ import { useToast } from '../components/ui/Toast';
 import { Button, Input, Select, Textarea, Badge } from '../components/ui';
 import type { Category, ProductWithRelations } from '../types';
 import { useAiDescription, useAiPricing, useAiFakeDetector } from '../features/ai/hooks/useAi';
-import { formatPrice } from '../lib/utils';
+import { formatPrice, toDirectGoogleDriveUrl } from '../lib/utils';
 
 const ANALYZE_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/analyze-product-image`;
 
 interface UploadedImage {
   url: string;
   path: string;
+  previewUrl?: string;
+  isUploading?: boolean;
 }
 
 interface AIResult {

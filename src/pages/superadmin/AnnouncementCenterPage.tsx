@@ -9,7 +9,6 @@ import {
   Users, 
   ShieldAlert, 
   Wrench, 
-  Notification,
   FileText
 } from 'lucide-react';
 

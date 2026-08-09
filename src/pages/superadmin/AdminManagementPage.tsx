@@ -59,11 +59,12 @@ export function AdminManagementPage() {
       return;
     }
 
+    const adminId = selectedAdmin.id;
     async function fetchAdminLogs() {
       const { data } = await supabase
         .from('audit_logs')
         .select('*')
-        .eq('user_id', selectedAdmin.id)
+        .eq('user_id', adminId)
         .order('created_at', { ascending: false })
         .limit(10);
       setAdminLogs(data || []);

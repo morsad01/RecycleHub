@@ -5,7 +5,8 @@ import {
   Package, Shield, Award, BarChart3, ShoppingCart,
   Settings, Plus, FileText, Trash2, Download, FileDown,
   Sparkles, CheckCircle, AlertTriangle, FileSpreadsheet,
-  CreditCard, Globe, Car, Lock, CheckCircle2, Clock, XCircle, ArrowRight
+  CreditCard, Globe, Car, Lock, CheckCircle2, Clock, XCircle, ArrowRight,
+  Edit2, Copy
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../auth/AuthContext';
@@ -281,57 +282,7 @@ export function DashboardPage() {
     }
   };
 
-  // Document upload & Verification submission
-  const handleVerificationSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!user || !nidNumber.trim()) return;
-    setSubmittingVerification(true);
 
-    try {
-      const { uploadToGoogleDrive } = await import('../lib/googleDrive');
-      let nidUrl = '';
-      let selfieUrl = '';
-      let licenseUrl = '';
-
-      if (nidFile) {
-        try {
-          nidUrl = await uploadToGoogleDrive(nidFile);
-        } catch (error: any) {
-          console.error("NID upload failed:", error);
-        }
-      }
-      if (selfieFile) {
-        try {
-          selfieUrl = await uploadToGoogleDrive(selfieFile);
-        } catch (error: any) {
-          console.error("Selfie upload failed:", error);
-        }
-      }
-      if (licenseFile) {
-        try {
-          licenseUrl = await uploadToGoogleDrive(licenseFile);
-        } catch (error: any) {
-          console.error("License upload failed:", error);
-        }
-      }
-
-      await supabase.from('seller_verifications').insert({
-        seller_id: user.id,
-        nid_number: nidNumber,
-        nid_image_url: nidUrl || null,
-        selfie_image_url: selfieUrl || null,
-        license_image_url: licenseUrl || null,
-        status: 'pending',
-      });
-
-      toast('Verification document submitted', 'success');
-      queryClient.invalidateQueries({ queryKey: ['seller-verification'] });
-    } catch (err: any) {
-      toast(err.message || 'Error uploading documents', 'error');
-    } finally {
-      setSubmittingVerification(false);
-    }
-  };
 
   // Export listings to CSV
   const exportListings = () => {
@@ -1266,11 +1217,4 @@ export function DashboardPage() {
   );
 }
 
-// Inline SVG Icon replacements for type correctness
-function Edit2({ size }: { size: number }) {
-  return <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>;
-}
 
-function Copy({ size }: { size: number }) {
-  return <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>;
-}

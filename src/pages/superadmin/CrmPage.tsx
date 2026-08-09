@@ -75,9 +75,8 @@ export function CrmPage() {
   useEffect(() => {
     if (!selectedCust) return;
 
+    const uId = selectedCust.id;
     async function loadCrmHistory() {
-      const uId = selectedCust.id;
-      
       // 1. Fetch Orders & Calculate CLV (Customer Lifetime Value)
       const { data: orderData } = await supabase
         .from('orders')

@@ -1,4 +1,4 @@
-export type UserRole = 'user' | 'admin' | 'super_admin';
+export type UserRole = 'user' | 'admin' | 'super_admin' | 'moderator' | 'support';
 export type LanguagePref = 'en' | 'bn';
 export type ProductCondition = 'new' | 'excellent' | 'good' | 'fair' | 'poor';
 export type ProductStatus = 'draft' | 'pending' | 'active' | 'sold' | 'rejected' | 'flagged';
@@ -201,6 +201,7 @@ export interface Review {
   comment: string | null;
   created_at: string;
   reviewer?: Profile;
+  product?: Product;
 }
 
 export interface Report {

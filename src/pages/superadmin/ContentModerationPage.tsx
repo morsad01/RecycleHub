@@ -239,7 +239,7 @@ export function ContentModerationPage() {
                       <span className="text-3xs text-gray-500 font-mono">REPORTED ITEM/LISTING</span>
                       <p className="text-xs font-semibold text-white flex items-center gap-1"><ShoppingBag size={12} /> {selectedReport.reported_product.title}</p>
                       <p className="text-3xs text-gray-500 font-mono">ID: {selectedReport.reported_product_id}</p>
-                      <p className="text-3xs text-red-400 font-mono">Price: ৳{selectedProduct?.price}</p>
+                      <p className="text-3xs text-red-400 font-mono">Price: ৳{selectedReport.reported_product.price}</p>
                     </div>
                   )}
                 </div>

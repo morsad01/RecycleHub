@@ -4,7 +4,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   Heart, MapPin, Shield, Sparkles, MessageCircle, Flag, Eye,
   ChevronLeft, ChevronRight, Package, Share2, Copy, Facebook,
-  Send, Twitter
+  Send, Twitter, Tag
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../auth/AuthContext';

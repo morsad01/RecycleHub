@@ -80,9 +80,8 @@ export function UserManagementPage() {
       return;
     }
 
+    const userId = selectedUser.id;
     async function loadUserDetails() {
-      const userId = selectedUser.id;
-      
       // 1. Fetch Login History
       const { data: hist } = await supabase
         .from('login_history')
