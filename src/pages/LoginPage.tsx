@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Mail, Lock, Sparkles, AlertCircle } from 'lucide-react';
+import { Mail, Lock, AlertCircle } from 'lucide-react';
 import { useAuth } from '../auth/AuthContext';
 import { useI18n } from '../i18n/I18nContext';
 import { useToast } from '../components/ui/Toast';
 import { Input, Button } from '../components/ui';
+import logoImg from '../Image/logo.jpeg';
 
 export function LoginPage() {
   const { signIn } = useAuth();
@@ -53,9 +54,13 @@ export function LoginPage() {
     <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <div className="inline-flex w-14 h-14 rounded-2xl bg-primary-500 items-center justify-center mb-4 shadow-lg">
-            <Sparkles size={28} className="text-white" />
-          </div>
+          <Link to="/" className="inline-block group mb-3">
+            <img
+              src={logoImg}
+              alt="ResellBD Logo"
+              className="w-16 h-16 object-contain rounded-2xl shadow-md mx-auto group-hover:scale-105 transition-transform"
+            />
+          </Link>
           <h1 className="text-2xl font-bold text-neutral-900">{t('auth.loginTitle')}</h1>
           <p className="text-sm text-neutral-500 mt-1">{t('auth.loginSubtitle')}</p>
         </div>

@@ -11,6 +11,7 @@ import { Avatar } from './ui/Avatar';
 import { Badge } from './ui/Badge';
 import { supabase } from '../lib/supabase';
 import { useQuery } from '@tanstack/react-query';
+import logoImg from '../Image/logo.jpeg';
 
 export function Layout({ children }: { children: ReactNode }) {
   const { user, profile, signOut } = useAuth();
@@ -109,10 +110,12 @@ export function Layout({ children }: { children: ReactNode }) {
           <div className="max-w-7xl mx-auto px-4 sm:px-6">
             <div className="flex items-center justify-between h-16 gap-4">
               {/* Logo */}
-              <Link to="/" className="flex items-center gap-2 shrink-0">
-                <div className="w-9 h-9 rounded-xl bg-primary-500 flex items-center justify-center shadow-sm">
-                  <Sparkles size={20} className="text-white" />
-                </div>
+              <Link to="/" className="flex items-center gap-2.5 shrink-0 group">
+                <img
+                  src={logoImg}
+                  alt="ResellBD Logo"
+                  className="w-9 h-9 object-contain rounded-xl shadow-xs group-hover:scale-105 transition-transform"
+                />
                 <div>
                   <span className="font-display font-bold text-lg text-neutral-900 leading-none block">ResellBD</span>
                   <span className="text-[9px] text-neutral-400 font-semibold uppercase tracking-wider hidden sm:block">Second-Hand E-Commerce</span>
@@ -321,11 +324,13 @@ export function Layout({ children }: { children: ReactNode }) {
           <div className="max-w-7xl mx-auto px-6 py-12">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
               <div>
-                <div className="flex items-center gap-2 mb-4">
-                  <div className="w-8 h-8 rounded-lg bg-primary-500 flex items-center justify-center">
-                    <Sparkles size={18} className="text-white" />
-                  </div>
-                  <span className="font-display font-bold text-white">ResellBD</span>
+                <div className="flex items-center gap-2.5 mb-4">
+                  <img
+                    src={logoImg}
+                    alt="ResellBD Logo"
+                    className="w-9 h-9 object-contain rounded-xl bg-white p-0.5"
+                  />
+                  <span className="font-display font-bold text-white text-lg">ResellBD</span>
                 </div>
                 <p className="text-sm text-neutral-400 leading-relaxed">
                   Buy smarter. Sell better. Trust more. Bangladesh's premier AI-powered, trust-verified second-hand marketplace.

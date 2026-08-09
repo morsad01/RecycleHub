@@ -1,8 +1,9 @@
 import { ReactNode } from 'react';
 import { NavLink, Link, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Users, Package, ShieldCheck, FolderTree, Flag, ShoppingCart, FileText, LogOut, Home, Shield } from 'lucide-react';
+import { LayoutDashboard, Users, Package, ShieldCheck, FolderTree, Flag, ShoppingCart, FileText, LogOut, Home } from 'lucide-react';
 import { useI18n } from '../../i18n/I18nContext';
 import { useAuth } from '../../auth/AuthContext';
+import logoImg from '../../Image/logo.jpeg';
 
 export function AdminLayout({ children }: { children: ReactNode }) {
   const { t } = useI18n();
@@ -30,10 +31,13 @@ export function AdminLayout({ children }: { children: ReactNode }) {
       {/* Smart Topbar */}
       <header className="bg-white border-b border-neutral-200 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Shield className="text-primary-600" />
-            <h1 className="text-xl font-bold text-neutral-900">Admin Dashboard</h1>
-          </div>
+          <Link to="/" className="flex items-center gap-2.5 group">
+            <img src={logoImg} alt="ResellBD Logo" className="w-9 h-9 object-contain rounded-xl shadow-xs group-hover:scale-105 transition-transform" />
+            <div>
+              <h1 className="text-lg font-bold text-neutral-900 leading-tight">Admin Dashboard</h1>
+              <span className="text-[10px] text-neutral-400 font-semibold uppercase tracking-wider block">ResellBD Control</span>
+            </div>
+          </Link>
           <div className="flex items-center gap-4">
             <Link to="/" className="text-sm font-medium text-neutral-600 hover:text-neutral-900 flex items-center gap-2">
               <Home size={16} /> Back to Site

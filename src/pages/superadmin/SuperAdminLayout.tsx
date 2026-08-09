@@ -25,6 +25,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../../auth/AuthContext';
 import { useToast } from '../../components/ui/Toast';
+import logoImg from '../../Image/logo.jpeg';
 
 export function SuperAdminLayout({ children }: { children: ReactNode }) {
   const { signOut, user } = useAuth();
@@ -77,9 +78,7 @@ export function SuperAdminLayout({ children }: { children: ReactNode }) {
       <header className="bg-gray-900 border-b border-gray-800 sticky top-0 z-50 shadow-lg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-red-950 border border-red-500/30 flex items-center justify-center shadow-[0_0_10px_rgba(220,38,38,0.2)]">
-              <Lock className="text-red-500" size={16} />
-            </div>
+            <img src={logoImg} alt="ResellBD Logo" className="w-8 h-8 object-contain rounded-lg bg-white/10 p-0.5 shadow-sm" />
             <div>
               <h1 className="text-md font-bold tracking-tight text-white">Super Admin Control Center</h1>
               <p className="text-3xs font-mono text-red-500/80 uppercase tracking-widest leading-none">Ops Dashboard</p>
