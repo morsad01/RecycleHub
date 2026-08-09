@@ -1,6 +1,0 @@
-# GitHub Linguist language overrides
-src/** linguist-detectable=false
-supabase/** linguist-detectable=false
-*.ts linguist-detectable=false
-*.tsx linguist-detectable=false
-*.sql linguist-detectable=false

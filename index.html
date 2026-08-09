@@ -1,163 +1,21 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ResellBD — Bangladesh's #1 Verified Secondary Marketplace</title>
-  <meta name="description" content="Buy and sell verified pre-loved electronics, phones, laptops and goods in Bangladesh with AI price intelligence, condition checks, and verified sellers." />
-  <link rel="stylesheet" href="/css/main.css" />
-  <link rel="stylesheet" href="/css/components.css" />
-</head>
-<body>
-
-  <!-- Dynamic Global Header -->
-  <div id="app-header"></div>
-
-  <main>
-    <!-- Hero Section -->
-    <section style="background:linear-gradient(180deg,#ffffff 0%,var(--neutral-50) 100%);padding:4rem 0 3rem;border-bottom:1px solid var(--neutral-100);">
-      <div class="container-custom">
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:3rem;align-items:center;">
-          
-          <!-- Hero Text -->
-          <div class="animate-fade-in">
-            <div class="badge badge-primary" style="margin-bottom:1rem;font-size:0.75rem;padding:0.375rem 0.875rem;">
-              <span>🛡️ Bangladesh's AI-Powered ReCommerce</span>
-            </div>
-            <h1 style="font-size: clamp(2.25rem, 5vw, 3.75rem);font-weight:900;letter-spacing:-0.03em;color:var(--neutral-900);line-height:1.1;margin-bottom:1.25rem;" data-i18n="home.heroTitle">
-              Give Things a Second Life
-            </h1>
-            <p style="font-size:1.125rem;color:var(--neutral-600);line-height:1.6;margin-bottom:2rem;max-width:34rem;" data-i18n="home.heroSubtitle">
-              Buy and sell pre-loved goods with AI-powered pricing, condition checks, and trusted verified sellers across Bangladesh.
-            </p>
-
-            <div style="display:flex;flex-wrap:wrap;gap:1rem;align-items:center;">
-              <a href="/sell.html" class="btn btn-accent btn-lg" style="box-shadow:0 4px 14px rgba(244,163,64,0.4);" data-i18n="home.heroCta">
-                Start Selling
-              </a>
-              <a href="/products.html" class="btn btn-outline btn-lg" data-i18n="home.heroBrowse">
-                Browse Marketplace →
-              </a>
-            </div>
-
-            <!-- Trust highlights -->
-            <div style="display:flex;flex-wrap:wrap;gap:1.5rem;margin-top:2.5rem;padding-top:1.5rem;border-top:1px solid var(--neutral-200);font-size:0.8125rem;color:var(--neutral-600);">
-              <div style="display:flex;align-items:center;gap:0.5rem;">
-                <span style="color:var(--primary-500);font-weight:700;">✓</span> 100% Verified Sellers (KYC)
-              </div>
-              <div style="display:flex;align-items:center;gap:0.5rem;">
-                <span style="color:var(--primary-500);font-weight:700;">✓</span> AI Price Intelligence
-              </div>
-              <div style="display:flex;align-items:center;gap:0.5rem;">
-                <span style="color:var(--primary-500);font-weight:700;">✓</span> Safe Public Meetups
-              </div>
-            </div>
-          </div>
-
-          <!-- Hero Visual Banner Card -->
-          <div class="animate-scale-in" style="position:relative;">
-            <div class="card" style="padding:1.5rem;background:linear-gradient(135deg,rgba(15,122,92,0.05),rgba(244,163,64,0.08));border:1.5px solid var(--primary-100);box-shadow:var(--shadow-xl);border-radius:1.5rem;">
-              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;">
-                <div style="display:flex;align-items:center;gap:0.75rem;">
-                  <div style="width:2.5rem;height:2.5rem;border-radius:0.75rem;background:var(--primary-500);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;">AI</div>
-                  <div>
-                    <div style="font-weight:800;font-size:0.9375rem;">Smart Deal Intelligence</div>
-                    <div style="font-size:0.75rem;color:var(--neutral-500);">Live Bangladesh Secondary Market Benchmarks</div>
-                  </div>
-                </div>
-                <span class="badge badge-success">Live Active</span>
-              </div>
-
-              <!-- Metrics Showcase -->
-              <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;margin-bottom:1.25rem;">
-                <div class="card" style="padding:1rem;background:#fff;">
-                  <div style="font-size:0.75rem;color:var(--neutral-500);font-weight:600;">Average Seller Markup Saved</div>
-                  <div style="font-size:1.5rem;font-weight:900;color:var(--primary-600);margin-top:0.25rem;">৳ 4,850</div>
-                  <div style="font-size:0.6875rem;color:var(--success-600);font-weight:600;margin-top:0.25rem;">↑ Fair Market Pricing</div>
-                </div>
-                <div class="card" style="padding:1rem;background:#fff;">
-                  <div style="font-size:0.75rem;color:var(--neutral-500);font-weight:600;">KYC Verified Listings</div>
-                  <div style="font-size:1.5rem;font-weight:900;color:var(--neutral-900);margin-top:0.25rem;">98.4%</div>
-                  <div style="font-size:0.6875rem;color:var(--primary-600);font-weight:600;margin-top:0.25rem;">✓ NID & Face Match</div>
-                </div>
-              </div>
-
-              <div style="background:rgba(255,255,255,0.8);backdrop-filter:blur(6px);border-radius:1rem;padding:0.875rem 1rem;border:1px solid rgba(0,0,0,0.05);display:flex;align-items:center;justify-content:space-between;">
-                <div style="font-size:0.8125rem;font-weight:700;color:var(--neutral-800);">Looking for fair deals in Dhaka, Chittagong, Sylhet?</div>
-                <a href="/products.html" class="btn btn-primary btn-sm">Explore Now</a>
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </section>
-
-    <!-- Categories Section -->
-    <section style="padding:3.5rem 0;" class="container-custom">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;">
-        <div>
-          <h2 style="font-size:1.5rem;font-weight:800;" data-i18n="home.categories">Shop by Category</h2>
-          <p style="font-size:0.875rem;color:var(--neutral-500);margin-top:0.25rem;">Explore high-demand pre-loved items categorized for fast discovery</p>
-        </div>
-        <a href="/products.html" style="font-size:0.875rem;font-weight:700;color:var(--primary-600);" data-i18n="home.viewAll">View All →</a>
-      </div>
-
-      <div id="categories-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:1rem;">
-        <!-- Filled dynamically by home.js -->
-        <div class="card" style="height:6rem;background:var(--neutral-100);" class="animate-pulse"></div>
-      </div>
-    </section>
-
-    <!-- Featured Verified Products -->
-    <section style="padding:1rem 0 4rem;" class="container-custom">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;">
-        <div>
-          <h2 style="font-size:1.5rem;font-weight:800;" data-i18n="home.featured">Featured Verified Listings</h2>
-          <p style="font-size:0.875rem;color:var(--neutral-500);margin-top:0.25rem;">Inspected products from trusted sellers with verified government IDs</p>
-        </div>
-        <a href="/products.html" class="btn btn-outline btn-sm">Explore All Listings</a>
-      </div>
-
-      <div id="featured-products-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:1.5rem;">
-        <!-- Filled dynamically by home.js -->
-        <div class="card" style="height:18rem;background:var(--neutral-100);" class="animate-pulse"></div>
-      </div>
-    </section>
-
-    <!-- How It Works -->
-    <section style="background:#ffffff;padding:4rem 0;border-top:1px solid var(--neutral-100);border-bottom:1px solid var(--neutral-100);">
-      <div class="container-custom text-center" style="max-width:48rem;margin-bottom:3rem;">
-        <h2 style="font-size:1.875rem;font-weight:900;" data-i18n="home.howItWorks">How ResellBD Works</h2>
-        <p style="font-size:0.9375rem;color:var(--neutral-500);margin-top:0.5rem;">Three simple steps to buy and sell pre-loved goods safely in Bangladesh</p>
-      </div>
-
-      <div class="container-custom" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:2rem;">
-        <div class="card text-center" style="padding:2rem;">
-          <div style="width:3.5rem;height:3.5rem;border-radius:1rem;background:var(--primary-50);color:var(--primary-600);display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;font-size:1.5rem;font-weight:900;">1</div>
-          <h3 style="font-size:1.125rem;font-weight:800;margin-bottom:0.5rem;" data-i18n="home.step1Title">List Your Item</h3>
-          <p style="font-size:0.875rem;color:var(--neutral-500);line-height:1.6;" data-i18n="home.step1Desc">Upload photos and let AI suggest the category, condition, and fair market price.</p>
-        </div>
-
-        <div class="card text-center" style="padding:2rem;">
-          <div style="width:3.5rem;height:3.5rem;border-radius:1rem;background:var(--accent-50);color:var(--accent-600);display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;font-size:1.5rem;font-weight:900;">2</div>
-          <h3 style="font-size:1.125rem;font-weight:800;margin-bottom:0.5rem;" data-i18n="home.step2Title">Chat Securely</h3>
-          <p style="font-size:0.875rem;color:var(--neutral-500);line-height:1.6;" data-i18n="home.step2Desc">Negotiate and agree on safe meetup zones through secure in-app messaging.</p>
-        </div>
-
-        <div class="card text-center" style="padding:2rem;">
-          <div style="width:3.5rem;height:3.5rem;border-radius:1rem;background:var(--success-50);color:var(--success-600);display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;font-size:1.5rem;font-weight:900;">3</div>
-          <h3 style="font-size:1.125rem;font-weight:800;margin-bottom:0.5rem;" data-i18n="home.step3Title">Sell & Earn</h3>
-          <p style="font-size:0.875rem;color:var(--neutral-500);line-height:1.6;" data-i18n="home.step3Desc">Complete in-person verification and receive payment with verified buyer reviews.</p>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <!-- Dynamic Global Footer -->
-  <div id="app-footer"></div>
-
-  <!-- Page Logic -->
-  <script type="module" src="/js/pages/home.js"></script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link rel="manifest" href="/manifest.json" />
+    <title>ResellBD — AI-Powered Resale Marketplace</title>
+    <meta name="description" content="Buy and sell second-hand goods with AI-powered pricing, condition assessment, and trust verification." />
+    <meta property="og:title" content="ResellBD — AI-Powered Resale Marketplace" />
+    <meta property="og:description" content="Buy and sell second-hand goods with AI-powered pricing, condition assessment, and trust verification." />
+    <meta property="og:image" content="https://resellbd.com/og-image.jpg" />
+    <meta property="og:url" content="https://resellbd.com" />
+    <meta name="twitter:card" content="summary_large_image" />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
 </html>
