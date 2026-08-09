@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import {
-  Search, Leaf, Camera, MessageCircle, Package, Sparkles,
-  ArrowRight, Shield, Recycle, Smartphone, UserCheck
+  Search, Camera, MessageCircle, Package, Sparkles,
+  ArrowRight, Shield, Smartphone, UserCheck
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../auth/AuthContext';
@@ -152,7 +152,18 @@ export function HomePage() {
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3">
           {topCategories.map((cat) => {
-            const Icon = cat.icon ? (LucideIcons as any)[cat.icon] ?? Smartphone : Smartphone;
+            const getIcon = () => {
+              if (!cat.icon) return Smartphone;
+              const name = cat.icon.trim();
+              const pascal = name.charAt(0).toUpperCase() + name.slice(1);
+              const Comp = (LucideIcons as any)[pascal] || (LucideIcons as any)[name];
+              if (Comp && (typeof Comp === 'function' || typeof Comp === 'object')) {
+                return Comp;
+              }
+              return Smartphone;
+            };
+            const IconComponent = getIcon();
+
             return (
               <Link
                 key={cat.id}
@@ -160,7 +171,7 @@ export function HomePage() {
                 className="flex flex-col items-center gap-2 p-4 bg-white rounded-2xl shadow-card hover:shadow-card-hover transition-all group"
               >
                 <div className="w-12 h-12 rounded-xl bg-primary-50 flex items-center justify-center group-hover:bg-primary-100 transition-colors">
-                  <Icon size={24} className="text-primary-600" />
+                  <IconComponent size={24} className="text-primary-600" />
                 </div>
                 <span className="text-xs font-medium text-neutral-700 text-center line-clamp-2">{cat.name}</span>
               </Link>
@@ -180,11 +191,10 @@ export function HomePage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`pb-4 text-sm font-semibold border-b-2 transition-all ${
-                    active
-                      ? 'border-primary-500 text-primary-600'
-                      : 'border-transparent text-neutral-500 hover:text-neutral-700'
-                  }`}
+                  className={`pb-4 text-sm font-semibold border-b-2 transition-all ${active
+                    ? 'border-primary-500 text-primary-600'
+                    : 'border-transparent text-neutral-500 hover:text-neutral-700'
+                    }`}
                 >
                   {tab.label}
                 </button>
@@ -219,6 +229,9 @@ export function HomePage() {
                 <UserCheck size={20} className="text-primary-600" />
                 <h2 className="text-xl font-bold text-neutral-900">{t('home.verifiedSellers')}</h2>
               </div>
+              <Link to="/kyc" className="text-xs font-semibold text-primary-600 hover:text-primary-700 flex items-center gap-1">
+                Learn About Verification <ArrowRight size={12} />
+              </Link>
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
               {verifiedSellers.map((seller) => (
@@ -284,35 +297,6 @@ export function HomePage() {
         </div>
       </section>
 
-      {/* Sustainability Section */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 py-16">
-        <div className="relative bg-gradient-to-br from-neutral-800 to-neutral-900 rounded-3xl p-8 sm:p-12 overflow-hidden">
-          <div className="absolute top-0 right-0 opacity-5">
-            <Recycle size={200} />
-          </div>
-          <div className="relative max-w-2xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary-500/20 text-primary-300 text-sm mb-4">
-              <Leaf size={14} /> Sustainability
-            </div>
-            <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4">{t('home.sustainabilityTitle')}</h2>
-            <p className="text-neutral-300 mb-6">{t('home.sustainabilityDesc')}</p>
-            <div className="flex flex-wrap gap-6">
-              <div>
-                <div className="text-3xl font-bold text-primary-400">10k+</div>
-                <div className="text-sm text-neutral-400">Items Resold</div>
-              </div>
-              <div>
-                <div className="text-3xl font-bold text-accent-400">500+</div>
-                <div className="text-sm text-neutral-400">Verified Sellers</div>
-              </div>
-              <div>
-                <div className="text-3xl font-bold text-primary-400">2.5t</div>
-                <div className="text-sm text-neutral-400">Waste Reduced</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* Trust badges */}
       <section className="bg-white py-12 border-t border-neutral-100">

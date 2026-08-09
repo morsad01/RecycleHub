@@ -7,6 +7,8 @@ export type PaymentStatus = 'unpaid' | 'paid' | 'refunded';
 export type ReportStatus = 'open' | 'reviewing' | 'resolved' | 'dismissed';
 export type VerificationStatus = 'pending' | 'approved' | 'rejected';
 
+export type VerificationLevel = 'level_1' | 'level_2' | 'level_3' | 'level_4' | 'level_5';
+
 export interface Profile {
   id: string;
   full_name: string;
@@ -14,6 +16,12 @@ export interface Profile {
   avatar_url: string | null;
   role: UserRole;
   is_seller_verified: boolean;
+  identity_verified?: boolean;
+  phone_verified?: boolean;
+  email_verified?: boolean;
+  business_verified?: boolean;
+  verification_level?: VerificationLevel;
+  trust_score?: number;
   bio: string | null;
   address: string | null;
   city: string | null;
@@ -125,6 +133,23 @@ export interface Message {
   is_deleted?: boolean;
   is_reported?: boolean;
   report_reason?: string | null;
+}
+
+export interface ProductOffer {
+  id: string;
+  product_id: string;
+  buyer_id: string;
+  seller_id: string;
+  offer_amount: number;
+  original_price: number;
+  message?: string;
+  status: 'pending' | 'accepted' | 'rejected' | 'countered';
+  counter_amount?: number;
+  created_at: string;
+  updated_at?: string;
+  product?: Product;
+  buyer?: Profile;
+  seller?: Profile;
 }
 
 export interface Address {
@@ -359,3 +384,77 @@ export interface LoginHistory {
   status: 'success' | 'failed';
   created_at: string;
 }
+
+export type KycDocumentType = 'nid' | 'passport' | 'driving_license';
+export type KycStatus = 'pending' | 'under_review' | 'approved' | 'rejected' | 'more_info_needed';
+
+export interface IdentityVerification {
+  id: string;
+  user_id: string;
+  document_type: KycDocumentType;
+  document_storage_path: string;
+  selfie_storage_path: string | null;
+  ocr_data: Record<string, any>;
+  ai_readability_score: number;
+  status: KycStatus;
+  admin_feedback: string | null;
+  reviewer_id: string | null;
+  reviewed_at: string | null;
+  created_at: string;
+  updated_at: string;
+  user?: Profile;
+}
+
+export interface TrustScoreBreakdown {
+  identity: number;
+  phone: number;
+  email: number;
+  transactions: number;
+  rating: number;
+  responsiveness: number;
+}
+
+export interface TrustScore {
+  user_id: string;
+  score: number;
+  level: VerificationLevel;
+  breakdown: TrustScoreBreakdown;
+  updated_at: string;
+}
+
+export type DealRating = 'super_deal' | 'great_deal' | 'good_deal' | 'fair_price' | 'above_market';
+
+export interface ProductDealScore {
+  product_id: string;
+  deal_score: number;
+  deal_rating: DealRating;
+  asking_price: number;
+  estimated_market_value: number;
+  potential_savings: number;
+  calculated_at: string;
+}
+
+export interface SmartAlert {
+  id: string;
+  user_id: string;
+  query_text: string;
+  category_id?: string | null;
+  min_price?: number | null;
+  max_price?: number | null;
+  brand?: string | null;
+  location?: string | null;
+  notify_email: boolean;
+  notify_in_app: boolean;
+  is_active: boolean;
+  created_at: string;
+}
+
+export interface SustainabilityImpact {
+  user_id: string;
+  products_reused_count: number;
+  waste_diverted_kg: number;
+  co2_saved_kg: number;
+  badge_tier: string;
+  updated_at: string;
+}
+

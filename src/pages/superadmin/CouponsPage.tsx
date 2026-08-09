@@ -234,7 +234,7 @@ export function CouponsPage() {
             <form onSubmit={handleCreateCoupon} className="space-y-4 font-mono text-xs">
               <Input
                 label="Coupon Code"
-                placeholder="RECYCLE10"
+                placeholder="RESELL10"
                 value={formData.code}
                 onChange={(e) => setFormData(prev => ({ ...prev, code: e.target.value }))}
                 className="bg-gray-950 border-gray-800 text-white"

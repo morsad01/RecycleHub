@@ -17,6 +17,11 @@ import { formatPrice, formatDate, conditionColors } from '../lib/utils';
 import type { ProductWithRelations, Review } from '../types';
 import { AiBuyerAssistant } from '../features/ai/components/AiBuyerAssistant';
 import { SEO } from '../components/SEO';
+import { VerifiedIdentityBadge } from '../components/trust/VerifiedIdentityBadge';
+import { TrustScoreCard } from '../components/trust/TrustScoreCard';
+import { DealScoreBadge } from '../components/trust/DealScoreBadge';
+import { SafeMeetupModal } from '../components/chat/SafeMeetupModal';
+import { MakeOfferModal } from '../components/chat/MakeOfferModal';
 
 export function ProductDetailPage() {
   const { id } = useParams();
@@ -31,6 +36,8 @@ export function ProductDetailPage() {
   const [reportReason, setReportReason] = useState('');
   const [showShare, setShowShare] = useState(false);
   const [zoomOpen, setZoomOpen] = useState(false);
+  const [showSafeMeetup, setShowSafeMeetup] = useState(false);
+  const [showMakeOffer, setShowMakeOffer] = useState(false);
 
   // Review submission state
   const [showReviewModal, setShowReviewModal] = useState(false);
@@ -364,7 +371,7 @@ export function ProductDetailPage() {
           <div>
             <div className="flex flex-wrap items-center gap-2 mb-2">
               {conditionKey && (
-                <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${conditionColors[product.condition!]}`}>
+                <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${conditionColors[product.condition!] || 'bg-neutral-100 text-neutral-700'}`}>
                   {t(conditionKey as any)}
                 </span>
               )}
@@ -388,18 +395,19 @@ export function ProductDetailPage() {
             </div>
           </div>
 
-          <div className="flex items-baseline gap-3">
+          <div className="flex flex-wrap items-baseline gap-3">
             <span className="text-3xl font-bold text-neutral-900">{formatPrice(product.price)}</span>
             {originalPrice && (
               <span className="text-sm text-neutral-500 line-through">
                 Org: {formatPrice(originalPrice)}
               </span>
             )}
-            {product.ai_suggested_price && product.ai_suggested_price !== product.price && (
-              <span className="text-sm text-neutral-500">
-                {t('product.aiPrice')}: {formatPrice(product.ai_suggested_price)}
-              </span>
-            )}
+            <DealScoreBadge
+              price={product.price}
+              estimatedValue={product.ai_suggested_price || undefined}
+              condition={product.condition}
+              brand={brandName}
+            />
           </div>
 
           {/* Description */}
@@ -428,54 +436,72 @@ export function ProductDetailPage() {
           {/* AI Advisor Panel */}
           <AiBuyerAssistant product={product} />
 
-          {/* Seller card */}
-          <div className="flex items-center gap-3 p-4 bg-white rounded-2xl shadow-card">
-            <Avatar src={product.seller?.avatar_url} name={product.seller?.full_name} size={48} />
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2">
-                <Link to={`/products?seller=${product.seller_id}`} className="font-semibold text-neutral-900 hover:text-primary-600 truncate block">
-                  {product.seller?.full_name}
-                </Link>
-                {product.seller?.is_seller_verified && (
-                  <Badge variant="success" className="shrink-0"><Shield size={10} /> {t('product.verifiedSeller')}</Badge>
-                )}
-              </div>
-              <p className="text-xs text-neutral-400 mt-0.5">Member since: {formatDate(product.seller?.created_at ?? '')}</p>
-              <div className="mt-1">
-                <StarRating rating={product.seller?.rating_avg ?? 0} count={product.seller?.rating_count} size={14} />
+          {/* Seller Trust Profile & Verification Badges */}
+          <div className="p-4 bg-white rounded-2xl shadow-card border border-neutral-100 space-y-3">
+            <div className="flex items-center gap-3">
+              <Avatar src={product.seller?.avatar_url} name={product.seller?.full_name} size={48} />
+              <div className="flex-1 min-w-0">
+                <div className="flex flex-wrap items-center gap-2">
+                  <Link to={`/products?seller=${product.seller_id}`} className="font-semibold text-neutral-900 hover:text-primary-600 truncate block">
+                    {product.seller?.full_name}
+                  </Link>
+                  <VerifiedIdentityBadge
+                    level="level_3"
+                    isSellerVerified={product.seller?.is_seller_verified}
+                    size="sm"
+                  />
+                </div>
+                <p className="text-2xs text-neutral-400 mt-0.5">Member since {formatDate(product.seller?.created_at ?? '')}</p>
+                <div className="mt-1">
+                  <StarRating rating={product.seller?.rating_avg ?? 0} count={product.seller?.rating_count} size={13} />
+                </div>
               </div>
             </div>
+
+            <TrustScoreCard profile={product.seller} />
           </div>
 
           {/* Actions */}
           {!isOwner && (
-            <div className="flex gap-3">
+            <div className="flex flex-wrap gap-2.5">
               {user ? (
-                <Button onClick={startChat} size="lg" className="flex-1">
-                  <MessageCircle size={20} /> {t('product.chatWithSeller')}
+                <Button onClick={startChat} size="lg" className="flex-1 min-w-[140px]">
+                  <MessageCircle size={18} /> {t('product.chatWithSeller')}
                 </Button>
               ) : (
-                <Link to="/login" className="flex-1">
+                <Link to="/login" className="flex-1 min-w-[140px]">
                   <Button size="lg" className="w-full">
-                    <MessageCircle size={20} /> {t('product.chatWithSeller')}
+                    <MessageCircle size={18} /> {t('product.chatWithSeller')}
                   </Button>
                 </Link>
               )}
+              {product.is_negotiable && (
+                <Button
+                  variant="outline"
+                  size="lg"
+                  onClick={() => setShowMakeOffer(true)}
+                  className="px-3 text-xs font-semibold text-primary-700 border-primary-300 hover:bg-primary-50"
+                  title="Submit a bargaining offer"
+                >
+                  <Tag size={16} className="mr-1 text-primary-600" /> Make Offer
+                </Button>
+              )}
+
               {user && (
                 <Button
                   variant="outline"
                   size="lg"
                   onClick={() => toggleWishlist.mutate()}
-                  className="px-4"
+                  className="px-3"
                 >
-                  <Heart size={20} className={isWishlisted ? 'fill-error-500 text-error-500' : ''} />
+                  <Heart size={18} className={isWishlisted ? 'fill-error-500 text-error-500' : ''} />
                 </Button>
               )}
-              <Button variant="outline" size="lg" onClick={() => setShowShare(true)} className="px-4">
+              <Button variant="outline" size="lg" onClick={() => setShowShare(true)} className="px-3">
                 <Share2 size={18} />
               </Button>
               {user && (
-                <Button variant="ghost" size="lg" onClick={() => setShowReport(true)} className="px-4 text-neutral-400 hover:text-error-500">
+                <Button variant="ghost" size="lg" onClick={() => setShowReport(true)} className="px-3 text-neutral-400 hover:text-error-500">
                   <Flag size={18} />
                 </Button>
               )}
@@ -646,6 +672,13 @@ export function ProductDetailPage() {
           </div>
         </div>
       </Modal>
+
+      {/* Make Offer Bargaining Modal */}
+      <MakeOfferModal
+        open={showMakeOffer}
+        onClose={() => setShowMakeOffer(false)}
+        product={product}
+      />
     </div>
   );
 }

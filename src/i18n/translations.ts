@@ -41,13 +41,11 @@ export const translations = {
     'home.step2Desc': 'Negotiate and answer questions through secure in-app messaging.',
     'home.step3Title': 'Sell & Ship',
     'home.step3Desc': 'Confirm the order, ship it, and get rated by a happy buyer.',
-    'home.sustainabilityTitle': 'Join the Circular Economy',
-    'home.sustainabilityDesc': 'Every resale reduces waste and extends a product\'s life. Be part of the movement.',
     'home.viewAll': 'View All',
 
     // Auth
     'auth.loginTitle': 'Welcome Back',
-    'auth.loginSubtitle': 'Sign in to your RecycleHub account',
+    'auth.loginSubtitle': 'Sign in to your ResellBD account',
     'auth.signupTitle': 'Create Your Account',
     'auth.signupSubtitle': 'Join the sustainable resale community',
     'auth.fullName': 'Full Name',
@@ -283,9 +281,9 @@ export const translations = {
     'common.currency': '৳',
 
     // Chatbot
-    'chatbot.title': 'RecycleHub Assistant',
-    'chatbot.placeholder': 'Ask me anything about RecycleHub...',
-    'chatbot.welcome': 'Hi! I\'m here to help with questions about buying, selling, safety, and more. How can I assist you today?',
+    'chatbot.title': 'ResellBD Assistant',
+    'chatbot.placeholder': 'Ask me anything about ResellBD (e.g. price intelligence, safe meetups)...',
+    'chatbot.welcome': 'Hi! I\'m here to help with questions about buying, selling, safety, and price intelligence. How can I assist you today?',
     'chatbot.escalate': 'I\'ll connect you with a human support agent. In the meantime, you can email support@resellbd.bd',
     'chatbot.unavailable': 'AI assistant is currently unavailable. Please try again later or contact support@resellbd.bd',
 
@@ -412,12 +410,10 @@ export const translations = {
     'home.step2Desc': 'নিরাপদ ইন-অ্যাপ মেসেজিংয়ের মাধ্যমে দরদাম ও প্রশ্নের উত্তর দিন।',
     'home.step3Title': 'বিক্রি ও শিপিং',
     'home.step3Desc': 'অর্ডার কনফার্ম করুন, শিপ করুন, এবং সন্তুষ্ট ক্রেতার রেটিং পান।',
-    'home.sustainabilityTitle': 'সার্কুলার ইকোনমিতে যোগ দিন',
-    'home.sustainabilityDesc': 'প্রতিটি পুনঃবিক্রয় বর্জ্য কমায় এবং পণ্যের আয়ু বাড়ায়। এই আন্দোলনের অংশ হোন।',
     'home.viewAll': 'সব দেখুন',
 
     'auth.loginTitle': 'স্বাগতম',
-    'auth.loginSubtitle': 'আপনার রিসাইকেলহাব অ্যাকাউন্টে সাইন ইন করুন',
+    'auth.loginSubtitle': 'আপনার ResellBD অ্যাকাউন্টে সাইন ইন করুন',
     'auth.signupTitle': 'অ্যাকাউন্ট তৈরি করুন',
     'auth.signupSubtitle': 'টেকসই পুনঃবিক্রয় কমিউনিটিতে যোগ দিন',
     'auth.fullName': 'পুরো নাম',
@@ -638,9 +634,9 @@ export const translations = {
     'common.apply': 'প্রয়োগ',
     'common.currency': '৳',
 
-    'chatbot.title': 'রিসাইকেলহাব সহায়ক',
-    'chatbot.placeholder': 'রিসাইকেলহাব সম্পর্কে কিছু জিজ্ঞাসা করুন...',
-    'chatbot.welcome': 'হ্যালো! আমি কেনা, বেচা, নিরাপত্তা ইত্যাদি বিষয়ে সাহায্য করতে পারি। আমি কীভাবে সাহায্য করতে পারি?',
+    'chatbot.title': 'ResellBD সহায়ক',
+    'chatbot.placeholder': 'ResellBD সম্পর্কে কিছু জিজ্ঞাসা করুন (যেমন বাজারদর, নিরাপদ লেনদেন)...',
+    'chatbot.welcome': 'হ্যালো! আমি কেনা, বেচা, নিরাপত্তা এবং বাজারদর মূল্যায়নে সাহায্য করতে পারি। কীভাবে সাহায্য করতে পারি?',
     'chatbot.escalate': 'আমি আপনাকে একজন মানব সাপোর্ট এজেন্টের সাথে সংযুক্ত করব। এদিকে, support@resellbd.bd ইমেইল করতে পারেন',
     'chatbot.unavailable': 'এআই সহায়ক বর্তমানে অনুপলব্ধ। পরে আবার চেষ্টা করুন বা support@resellbd.bd যোগাযোগ করুন',
 

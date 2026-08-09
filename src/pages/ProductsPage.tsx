@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { SlidersHorizontal, X, Search, ShieldCheck, Sparkles, Clock } from 'lucide-react';
+import { SlidersHorizontal, X, Search, ShieldCheck, Sparkles, Clock, Bell } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useI18n } from '../i18n/I18nContext';
 import { ProductCard } from '../components/ProductCard';
@@ -9,12 +9,14 @@ import { SEO } from '../components/SEO';
 import { ProductGridSkeleton } from '../components/ui/Skeleton';
 import { EmptyState } from '../components/ui/EmptyState';
 import { Button } from '../components/ui';
+import { SmartAlertModal } from '../components/alerts/SmartAlertModal';
 import type { ProductWithRelations, Category } from '../types';
 
 export function ProductsPage() {
   const { t } = useI18n();
   const [searchParams, setSearchParams] = useSearchParams();
   const [showFilters, setShowFilters] = useState(false);
+  const [showSmartAlertModal, setShowSmartAlertModal] = useState(false);
   const [page, setPage] = useState(1);
   const pageSize = 12;
 
@@ -491,6 +493,18 @@ export function ProductsPage() {
               </select>
             </div>
 
+            {/* Smart Alert Button */}
+            <div className="pt-2 border-t border-neutral-100">
+              <Button
+                variant="outline"
+                size="sm"
+                className="w-full text-xs font-semibold border-primary-200 text-primary-700 hover:bg-primary-50"
+                onClick={() => setShowSmartAlertModal(true)}
+              >
+                <Bell size={14} className="mr-1.5" /> Set Search Alert
+              </Button>
+            </div>
+
             {hasFilters && (
               <Button variant="ghost" size="sm" onClick={clearFilters} className="w-full">
                 {t('common.clear')} {t('common.filter')}
@@ -527,6 +541,14 @@ export function ProductsPage() {
           )}
         </div>
       </div>
+
+      {/* Smart Alert Modal */}
+      <SmartAlertModal
+        open={showSmartAlertModal}
+        onClose={() => setShowSmartAlertModal(false)}
+        defaultQuery={q}
+        defaultBrand={brand}
+      />
     </div>
   );
 }

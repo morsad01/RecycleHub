@@ -567,20 +567,39 @@ export function SellNewPage() {
               </div>
 
               {recommendedPrices && (
-                <div className="bg-neutral-50 p-4 rounded-2xl border border-neutral-100 text-xs space-y-1 animate-fade-in max-w-md">
-                  <p className="font-semibold text-neutral-800">AI Pricing Recommendations:</p>
-                  <div className="flex justify-between font-bold py-1 text-neutral-600">
-                    <span>Min: {formatPrice(recommendedPrices.min)}</span>
-                    <span className="text-primary-600">Rec: {formatPrice(recommendedPrices.recommended)}</span>
-                    <span>Max: {formatPrice(recommendedPrices.max)}</span>
+                <div className="bg-neutral-50 p-4 rounded-2xl border border-neutral-100 text-xs space-y-2 animate-fade-in max-w-md">
+                  <p className="font-semibold text-neutral-800 flex items-center gap-1">
+                    <Sparkles size={13} className="text-primary-600" /> ResellBD Price Intelligence Matrix:
+                  </p>
+                  <div className="grid grid-cols-3 gap-2 text-center">
+                    <button
+                      type="button"
+                      onClick={() => setPrice(Math.round(recommendedPrices.recommended * 0.9).toString())}
+                      className="p-2 rounded-xl bg-white border border-neutral-200 hover:border-primary-500 transition-all text-2xs"
+                    >
+                      <span className="text-neutral-400 block">Quick Sale</span>
+                      <span className="font-bold text-neutral-900 block mt-0.5">{formatPrice(Math.round(recommendedPrices.recommended * 0.9))}</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setPrice(recommendedPrices.recommended.toString())}
+                      className="p-2 rounded-xl bg-primary-50 border border-primary-300 hover:bg-primary-100 transition-all text-2xs"
+                    >
+                      <span className="text-primary-700 font-semibold block">Recommended</span>
+                      <span className="font-bold text-primary-900 block mt-0.5">{formatPrice(recommendedPrices.recommended)}</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setPrice(Math.round(recommendedPrices.recommended * 1.12).toString())}
+                      className="p-2 rounded-xl bg-white border border-neutral-200 hover:border-primary-500 transition-all text-2xs"
+                    >
+                      <span className="text-neutral-400 block">Max Target</span>
+                      <span className="font-bold text-neutral-900 block mt-0.5">{formatPrice(Math.round(recommendedPrices.recommended * 1.12))}</span>
+                    </button>
                   </div>
-                  <button
-                    type="button"
-                    onClick={() => setPrice(recommendedPrices.recommended.toString())}
-                    className="text-2xs text-primary-600 hover:underline font-bold block pt-1"
-                  >
-                    Apply recommended price ({formatPrice(recommendedPrices.recommended)})
-                  </button>
+                  <p className="text-3xs text-neutral-500">
+                    Calculated from secondary marketplace transactions in Bangladesh with condition weighting.
+                  </p>
                 </div>
               )}
             </div>

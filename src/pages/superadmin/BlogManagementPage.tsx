@@ -389,7 +389,7 @@ export function BlogManagementPage() {
               <div className="grid grid-cols-2 gap-4">
                 <Input
                   label="Title"
-                  placeholder="Recycling Waste in Dhaka City"
+                  placeholder="How to Safely Buy Used Laptops in Dhaka"
                   value={formFields.title}
                   onChange={(e) => setFormFields(prev => ({ ...prev, title: e.target.value, slug: e.target.value.toLowerCase().replace(/[^a-z0-9]+/g, '-') }))}
                   className="bg-gray-950 border-gray-800 text-white"
@@ -398,7 +398,7 @@ export function BlogManagementPage() {
                 
                 <Input
                   label="URL Slug"
-                  placeholder="recycling-waste-dhaka-city"
+                  placeholder="how-to-safely-buy-used-laptops-dhaka"
                   value={formFields.slug}
                   onChange={(e) => setFormFields(prev => ({ ...prev, slug: e.target.value }))}
                   className="bg-gray-950 border-gray-800 text-white"
@@ -409,7 +409,7 @@ export function BlogManagementPage() {
               <div className="grid grid-cols-2 gap-4">
                 <Input
                   label="Category / Topic"
-                  placeholder="Recycling Guide"
+                  placeholder="Buying Guide"
                   value={formFields.category}
                   onChange={(e) => setFormFields(prev => ({ ...prev, category: e.target.value }))}
                   className="bg-gray-950 border-gray-800 text-white"
@@ -417,7 +417,7 @@ export function BlogManagementPage() {
                 
                 <Input
                   label="Tags (comma separated)"
-                  placeholder="waste, reuse, smartcity"
+                  placeholder="laptops, electronics, secondhand, dhaka"
                   value={formFields.tagsString}
                   onChange={(e) => setFormFields(prev => ({ ...prev, tagsString: e.target.value }))}
                   className="bg-gray-950 border-gray-800 text-white"

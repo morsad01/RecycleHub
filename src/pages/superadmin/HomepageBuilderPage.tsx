@@ -64,7 +64,7 @@ export function HomepageBuilderPage() {
         case 'hero_slider':
           content = {
             slides: [
-              { title: 'Modern Waste Recycling Solutions', subtitle: 'Earn rewards by selling eco-friendly goods', buttonText: 'Browse Marketplace', link: '/products', bgGradient: 'from-green-950 to-gray-950' }
+              { title: 'AI-Powered Second-Hand Marketplace', subtitle: 'Buy smarter. Sell better. Trust more in Bangladesh.', buttonText: 'Browse Marketplace', link: '/products', bgGradient: 'from-primary-950 to-neutral-950' }
             ]
           };
           break;
@@ -76,20 +76,20 @@ export function HomepageBuilderPage() {
           break;
         case 'testimonials':
           content = {
-            title: 'Trusted by Thousand Recyclers',
+            title: 'Trusted by Thousands of Buyers & Sellers',
             reviews: [
-              { name: 'Morsadul Islam', role: 'Premium Buyer', text: 'ResellBD has completely optimized our inventory sourcing!', rating: 5 }
+              { name: 'Morsadul Islam', role: 'Verified Buyer', text: 'ResellBD made finding a verified pre-loved laptop fast and safe with fair price intelligence!', rating: 5 }
             ]
           };
           break;
         case 'partners':
           content = {
-            title: 'Our Clean Tech Partners',
-            logos: ['https://placehold.co/150x80/0f172a/ffffff?text=GreenTech']
+            title: 'Our Trusted Logistics Partners',
+            logos: ['https://placehold.co/150x80/0f172a/ffffff?text=SteadFast']
           };
           break;
         case 'newsletter':
-          content = { title: 'Subscribe to EcoNewsletter', placeholder: 'Enter corporate email address...' };
+          content = { title: 'Subscribe to ResellBD Price Alerts', placeholder: 'Enter your email address...' };
           break;
       }
 

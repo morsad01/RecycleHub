@@ -41,11 +41,15 @@ const BuyerPolicyPage = lazy(() => import('./pages/BuyerPolicyPage').then((m) =>
 const CommunityPage = lazy(() => import('./pages/CommunityPage').then((m) => ({ default: m.CommunityPage })));
 const CookiePolicyPage = lazy(() => import('./pages/CookiePolicyPage').then((m) => ({ default: m.CookiePolicyPage })));
 
+const SafetyCenterPage = lazy(() => import('./pages/SafetyCenterPage').then((m) => ({ default: m.SafetyCenterPage })));
+const IdentityVerificationPage = lazy(() => import('./pages/IdentityVerificationPage').then((m) => ({ default: m.IdentityVerificationPage })));
+
 // Admin pages
 const AdminDashboardPage = lazy(() => import('./pages/admin/AdminDashboardPage').then((m) => ({ default: m.AdminDashboardPage })));
 const AdminUsersPage = lazy(() => import('./pages/admin/AdminUsersPage').then((m) => ({ default: m.AdminUsersPage })));
 const AdminProductsPage = lazy(() => import('./pages/admin/AdminProductsPage').then((m) => ({ default: m.AdminProductsPage })));
 const AdminVerificationsPage = lazy(() => import('./pages/admin/AdminVerificationsPage').then((m) => ({ default: m.AdminVerificationsPage })));
+const AdminIdentityVerificationPage = lazy(() => import('./pages/admin/AdminIdentityVerificationPage').then((m) => ({ default: m.AdminIdentityVerificationPage })));
 const AdminCategoriesPage = lazy(() => import('./pages/admin/AdminCategoriesPage').then((m) => ({ default: m.AdminCategoriesPage })));
 const AdminReportsPage = lazy(() => import('./pages/admin/AdminReportsPage').then((m) => ({ default: m.AdminReportsPage })));
 const AdminOrdersPage = lazy(() => import('./pages/admin/AdminOrdersPage').then((m) => ({ default: m.AdminOrdersPage })));
@@ -128,6 +132,8 @@ export default function App() {
           
           {/* New Public Production Routes */}
           <Route path="/pricing" element={<PricingPage />} />
+
+          <Route path="/safety" element={<SafetyCenterPage />} />
           <Route path="/support" element={<SupportPage />} />
           <Route path="/terms" element={<TermsPage />} />
           <Route path="/privacy" element={<PrivacyPage />} />
@@ -139,6 +145,7 @@ export default function App() {
 
           {/* Authenticated */}
           <Route path="/dashboard" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
+          <Route path="/kyc" element={<ProtectedRoute><IdentityVerificationPage /></ProtectedRoute>} />
           <Route path="/sell/new" element={<ProtectedRoute><SellNewPage /></ProtectedRoute>} />
           <Route path="/sell/:id/edit" element={<ProtectedRoute><SellNewPage /></ProtectedRoute>} />
           <Route path="/my-listings" element={<ProtectedRoute><MyListingsPage /></ProtectedRoute>} />
@@ -163,6 +170,7 @@ export default function App() {
           <Route path="/admin/users" element={<AdminRoute><AdminUsersPage /></AdminRoute>} />
           <Route path="/admin/products" element={<AdminRoute><AdminProductsPage /></AdminRoute>} />
           <Route path="/admin/verifications" element={<AdminRoute><AdminVerificationsPage /></AdminRoute>} />
+          <Route path="/admin/identity-verifications" element={<AdminRoute><AdminIdentityVerificationPage /></AdminRoute>} />
           <Route path="/admin/categories" element={<AdminRoute><AdminCategoriesPage /></AdminRoute>} />
           <Route path="/admin/reports" element={<AdminRoute><AdminReportsPage /></AdminRoute>} />
           <Route path="/admin/orders" element={<AdminRoute><AdminOrdersPage /></AdminRoute>} />

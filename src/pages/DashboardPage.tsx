@@ -881,9 +881,14 @@ export function DashboardPage() {
           {/* TAB 5: DOCUMENT CENTER */}
           {activeTab === 'verification' && (
             <div className="space-y-6">
-              <div className="flex items-center gap-2">
-                <Shield size={20} className="text-primary-600" />
-                <h2 className="text-lg font-bold text-neutral-900">Seller Document Center</h2>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Shield size={20} className="text-primary-600" />
+                  <h2 className="text-lg font-bold text-neutral-900">Seller Document & KYC Center</h2>
+                </div>
+                <Link to="/kyc">
+                  <Button size="sm">Launch 4-Step KYC Wizard</Button>
+                </Link>
               </div>
 
               {verifications ? (

@@ -38,9 +38,15 @@ export class ErrorBoundary extends Component<Props, State> {
               <AlertTriangle size={32} />
             </div>
             <h1 className="text-2xl font-bold text-neutral-900 mb-2">Something went wrong</h1>
-            <p className="text-neutral-600 mb-8">
+            <p className="text-neutral-600 mb-4">
               We've encountered an unexpected error. Our engineering team has been notified.
             </p>
+            {this.state.error && (
+              <div className="text-left bg-neutral-100 p-3 rounded-xl mb-6 text-3xs font-mono text-error-700 overflow-x-auto max-h-48">
+                <p className="font-bold">{this.state.error.name}: {this.state.error.message}</p>
+                <pre className="mt-1 text-neutral-500">{this.state.error.stack}</pre>
+              </div>
+            )}
             <div className="flex flex-col gap-3">
               <button
                 onClick={() => window.location.reload()}

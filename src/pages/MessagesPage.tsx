@@ -11,6 +11,7 @@ import { useI18n } from '../i18n/I18nContext';
 import { useToast } from '../components/ui/Toast';
 import { Avatar } from '../components/ui/Avatar';
 import { EmptyState } from '../components/ui/EmptyState';
+import { SafeMeetupModal } from '../components/chat/SafeMeetupModal';
 import { timeAgo } from '../lib/utils';
 import type { Conversation, Message } from '../types';
 
@@ -24,6 +25,7 @@ export function MessagesPage() {
   const [input, setInput] = useState('');
   const [showEmojis, setShowEmojis] = useState(false);
   const [showArchived, setShowArchived] = useState(false);
+  const [showSafeMeetup, setShowSafeMeetup] = useState(false);
   const [replyMessage, setReplyMessage] = useState<Message | null>(null);
   const [uploadingImage, setUploadingImage] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -269,6 +271,15 @@ export function MessagesPage() {
                     )}
                   </div>
                 </div>
+
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => setShowSafeMeetup(true)}
+                    className="px-3 py-1.5 bg-primary-50 hover:bg-primary-100 text-primary-700 rounded-xl text-3xs font-bold transition-all border border-primary-200"
+                  >
+                    🛡️ Propose Safe Meetup
+                  </button>
+                </div>
               </div>
 
               {/* Chat timeline */}
@@ -307,6 +318,49 @@ export function MessagesPage() {
                           }`}>
                             {msg.image_url ? (
                               <img src={msg.image_url} alt="Sent image" className="max-w-[200px] rounded-lg max-h-[160px] object-cover bg-neutral-100" />
+                            ) : msg.content.includes('🏷️ **OFFER SUBMITTED:') ? (
+                              <div className="space-y-2">
+                                <div className={`p-2.5 rounded-xl border ${isOwn ? 'bg-primary-600/50 border-primary-400' : 'bg-primary-50 border-primary-200 text-primary-950'}`}>
+                                  <p className="font-bold text-xs">{msg.content.split('\n')[0]}</p>
+                                  {msg.content.split('\n').slice(1).join('\n') && (
+                                    <p className="text-3xs opacity-90 mt-1">{msg.content.split('\n').slice(1).join('\n')}</p>
+                                  )}
+                                </div>
+                                {!isOwn && (
+                                  <div className="flex flex-wrap gap-1.5 pt-1">
+                                    <button
+                                      onClick={() => {
+                                        sendMessage('✅ **OFFER ACCEPTED!** You can now proceed to checkout or coordinate a meetup.');
+                                        toast('Offer accepted!', 'success');
+                                      }}
+                                      className="px-2.5 py-1 bg-success-600 hover:bg-success-700 text-white rounded-lg text-3xs font-bold transition-all shadow-sm"
+                                    >
+                                      ✓ Accept
+                                    </button>
+                                    <button
+                                      onClick={() => {
+                                        const counter = prompt('Enter counter-offer price (৳ BDT):');
+                                        if (counter && !isNaN(Number(counter))) {
+                                          sendMessage(`🤝 **COUNTER OFFER: ৳${Number(counter).toLocaleString()}**\n\n"Would this counter-offer work for you?"`);
+                                          toast('Counter offer sent!', 'success');
+                                        }
+                                      }}
+                                      className="px-2.5 py-1 bg-neutral-800 hover:bg-neutral-900 text-white rounded-lg text-3xs font-bold transition-all"
+                                    >
+                                      Counter Offer
+                                    </button>
+                                    <button
+                                      onClick={() => {
+                                        sendMessage('❌ **OFFER DECLINED** — Thank you for the inquiry, but I am firm on the listed price.');
+                                        toast('Offer declined.', 'info');
+                                      }}
+                                      className="px-2 py-1 bg-neutral-200 hover:bg-neutral-300 text-neutral-700 rounded-lg text-3xs font-medium transition-all"
+                                    >
+                                      Decline
+                                    </button>
+                                  </div>
+                                )}
+                              </div>
                             ) : (
                               <p className={msg.is_deleted ? 'italic text-neutral-400' : ''}>{msg.content}</p>
                             )}
@@ -416,6 +470,20 @@ export function MessagesPage() {
           )}
         </div>
       </div>
+
+      {/* Safe Meetup Coordination Modal */}
+      {activeConvo?.product && (
+        <SafeMeetupModal
+          open={showSafeMeetup}
+          onClose={() => setShowSafeMeetup(false)}
+          product={activeConvo.product as any}
+          sellerName={otherUser?.full_name || 'Seller'}
+          onConfirm={(details) => {
+            sendMessage(`🛡️ **PROPOSED SAFE MEETUP**:\n📍 Spot: ${details.spot.name} (${details.spot.address})\n📅 Time: ${details.dateTime}\n${details.notes ? `📝 Note: ${details.notes}` : ''}`);
+            toast('Meetup details posted to conversation', 'success');
+          }}
+        />
+      )}
     </div>
   );
 }
