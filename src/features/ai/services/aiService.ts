@@ -54,6 +54,119 @@ export class AIService {
     } catch {}
   }
 
+  // 1. Generate Smart Ecommerce Description
+  static async generateDescription(title: string, category: string, condition: string): Promise<AIDescriptionResult> {
+    const cleanTitle = (title || 'Item').trim();
+    const cat = category || 'Electronics';
+    const cond = condition || 'good';
+
+    let features: string[] = [
+      '100% Genuine and authentic pre-loved item',
+      `Condition verified as ${cond.toUpperCase()} — carefully maintained`,
+      'Fully tested and functional with all core hardware intact',
+      'Eligible for direct in-person inspection in designated safe meetup points'
+    ];
+
+    const lower = cleanTitle.toLowerCase();
+    if (lower.includes('phone') || lower.includes('iphone') || lower.includes('samsung') || lower.includes('pixel') || lower.includes('xiaomi')) {
+      features = [
+        'Original display & body with clean visual integrity',
+        'Battery health optimized and holds charge for daily usage',
+        'Cameras, speakers, biometric sensors & SIM connectivity 100% tested',
+        'Factory reset and iCloud / Google Account unlocked — ready for immediate use'
+      ];
+    } else if (lower.includes('laptop') || lower.includes('macbook') || lower.includes('computer') || lower.includes('pc')) {
+      features = [
+        'High-speed SSD performance with clean OS installation',
+        'Keyboard, trackpad, display panel, webcam and ports fully operational',
+        'Original charger/adapter included in good condition',
+        'Thermal performance inspected with clean cooling and smooth multitasking'
+      ];
+    } else if (lower.includes('fashion') || lower.includes('shirt') || lower.includes('jacket') || lower.includes('dress') || lower.includes('shoe')) {
+      features = [
+        'Authentic branded merchandise with original tags/fabric integrity',
+        'Professionally cleaned and ready to wear',
+        'No tears, color fading or visible stitching flaws',
+        'Accurate size specifications and comfortable fit'
+      ];
+    } else if (lower.includes('sofa') || lower.includes('table') || lower.includes('chair') || lower.includes('furniture')) {
+      features = [
+        'Solid structural frame with high load-bearing strength',
+        'Clean surface polish with zero termite or wood degradation',
+        'Comfortable cushioning and durable fabric/wood finish',
+        'Easy to assemble and transport'
+      ];
+    }
+
+    const description = `Selling a carefully maintained ${cleanTitle} in ${cond} condition.
+
+🌟 Key Highlights & Features:
+${features.map((f) => `• ${f}`).join('\n')}
+
+📍 Condition & Maintenance Details:
+This item has been well taken care of by the previous owner. The visual condition is ${cond} with smooth daily performance. All components operate as intended with zero hidden defects.
+
+🤝 Meetup & Inspection Safety:
+Available for in-person handover and testing at a secure public location. Cash, bKash or Nagad payment upon direct physical satisfaction. Feel free to message for any inquiries!`;
+
+    const keywords = cleanTitle.toLowerCase().split(/\s+/).filter((w) => w.length > 2);
+    const hashtags = ['#ResellBD', `#${cat.replace(/\s+/g, '')}`, '#PreLoved', '#VerifiedSeller'];
+
+    await this.logUsage('ai_description_generation', 0.96, true);
+
+    return {
+      title: cleanTitle,
+      description,
+      features,
+      keywords,
+      hashtags,
+    };
+  }
+
+  // 2. Recommend Price
+  static async recommendPrice(
+    category: string,
+    brand: string | null,
+    condition: string | null,
+    askingPrice?: number
+  ): Promise<AIPriceRecommendation> {
+    const matrix = await this.getPriceMatrix(category, brand, condition, askingPrice);
+    return {
+      recommended: matrix.recommendedPrice,
+      min: matrix.marketRangeMin,
+      max: matrix.marketRangeMax,
+      avgMarketPrice: matrix.recommendedPrice,
+    };
+  }
+
+  // 3. Detect Risk
+  static async detectRisk(
+    title: string,
+    description: string,
+    price: number,
+    brand: string | null
+  ): Promise<AIFakeDetection> {
+    return this.detectListingRisk(title, description, price, brand);
+  }
+
+  // 4. Recognize Product
+  static async recognizeProduct(title: string): Promise<AIProductInfo> {
+    const listing = await this.generateSmartListing(title);
+    return {
+      productName: listing.title,
+      brand: listing.brand,
+      model: listing.model,
+      category: listing.category,
+      subcategory: listing.subcategory,
+      confidence: 0.94,
+    };
+  }
+
+  // 5. Ask Chatbot
+  static async askChatbot(message: string): Promise<string> {
+    return this.askShoppingAssistant(message);
+  }
+
   // 1. AI Condition Report (Distinguishes Visual from Functional)
   static async getConditionReport(imageUrl: string, declaredCondition = 'good'): Promise<AIConditionReport> {
     const scoreSeed = (imageUrl?.length || 10) % 5;

@@ -4,19 +4,22 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   Package, Shield, Award, BarChart3, ShoppingCart,
   Settings, Plus, FileText, Trash2, Download, FileDown,
-  Sparkles, CheckCircle, AlertTriangle, FileSpreadsheet
+  Sparkles, CheckCircle, AlertTriangle, FileSpreadsheet,
+  CreditCard, Globe, Car, Lock, CheckCircle2, Clock, XCircle, ArrowRight
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../auth/AuthContext';
+import { useI18n } from '../i18n/I18nContext';
 import { useToast } from '../components/ui/Toast';
 import { Button, Badge, Avatar, StarRating, Modal, Input, Textarea, Select } from '../components/ui';
 import { EmptyState } from '../components/ui/EmptyState';
 import { formatPrice, formatDate, statusColors, orderStatusColors } from '../lib/utils';
-import type { ProductWithRelations, Order, Review, Category, SellerVerification } from '../types';
+import type { ProductWithRelations, Order, Review, Category, IdentityVerification } from '../types';
 import { AiDashboardTab } from '../features/ai/components/AiDashboardTab';
 
 export function DashboardPage() {
   const { user, profile } = useAuth();
+  const { lang, t } = useI18n();
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -48,13 +51,6 @@ export function DashboardPage() {
   const [instagramUrl, setInstagramUrl] = useState(profile?.instagram_url ?? '');
   const [businessHours, setBusinessHours] = useState(profile?.business_hours ?? '9:00 AM - 6:00 PM');
   const [updatingProfile, setUpdatingProfile] = useState(false);
-
-  // Verification Documents Form
-  const [nidNumber, setNidNumber] = useState('');
-  const [nidFile, setNidFile] = useState<File | null>(null);
-  const [selfieFile, setSelfieFile] = useState<File | null>(null);
-  const [licenseFile, setLicenseFile] = useState<File | null>(null);
-  const [submittingVerification, setSubmittingVerification] = useState(false);
 
   // General categories query
   const { data: categories } = useQuery({
@@ -107,16 +103,17 @@ export function DashboardPage() {
   });
 
   const { data: verifications } = useQuery({
-    queryKey: ['seller-verification', user?.id],
+    queryKey: ['my-identity-verification', user?.id],
     queryFn: async () => {
+      if (!user) return null;
       const { data } = await supabase
-        .from('seller_verifications')
+        .from('identity_verifications')
         .select('*')
-        .eq('seller_id', user!.id)
+        .eq('user_id', user.id)
         .order('created_at', { ascending: false })
         .limit(1)
         .maybeSingle();
-      return data as SellerVerification | null;
+      return data as IdentityVerification | null;
     },
     enabled: !!user,
   });
@@ -884,95 +881,142 @@ export function DashboardPage() {
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <Shield size={20} className="text-primary-600" />
-                  <h2 className="text-lg font-bold text-neutral-900">Seller Document & KYC Center</h2>
+                  <h2 className="text-lg font-bold text-neutral-900">
+                    {lang === 'bn' ? 'সেলার ডকুমেন্টস ও KYC সেন্টার' : 'Seller Document & KYC Center'}
+                  </h2>
                 </div>
-                <Link to="/kyc">
-                  <Button size="sm">Launch 4-Step KYC Wizard</Button>
+                <Link to="/verify-identity">
+                  <Button size="sm">
+                    {lang === 'bn' ? '৪-ধাপের KYC উইজার্ড খুলুন →' : 'Launch 4-Step KYC Wizard →'}
+                  </Button>
                 </Link>
               </div>
 
-              {verifications ? (
-                <div className="bg-neutral-50 rounded-2xl p-5 space-y-4">
-                  <div className="flex justify-between items-center pb-2 border-b border-neutral-100">
-                    <span className="text-sm font-semibold">Verification Submission Status</span>
-                    <span className={`px-2 py-0.5 text-xs font-bold rounded-full ${
-                      verifications.status === 'approved'
-                        ? 'bg-success-100 text-success-800'
-                        : verifications.status === 'rejected'
-                        ? 'bg-error-100 text-error-800'
-                        : 'bg-warning-100 text-warning-800'
-                    }`}>
-                      {verifications.status.toUpperCase()}
-                    </span>
+              {/* Status Banner */}
+              <div className="bg-white rounded-2xl p-6 shadow-card border border-neutral-100 space-y-5">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-neutral-100">
+                  <div>
+                    <h3 className="font-bold text-base text-neutral-900">
+                      {lang === 'bn' ? 'ভেরিফিকেশন স্টেটাস' : 'Verification Status'}
+                    </h3>
+                    <p className="text-xs text-neutral-500 mt-0.5">
+                      {lang === 'bn'
+                        ? 'সেলার ট্রাস্ট ব্যাজ অর্জন করতে এবং বিক্রয় বাড়াতে সরকারি পরিচয়পত্র দিয়ে ভেরিফিকেশন সম্পন্ন করুন।'
+                        : 'Verify your Bangladesh identity to unlock seller trust badges and increase sales conversion.'}
+                    </p>
                   </div>
+                  <div>
+                    {profile?.is_seller_verified || verifications?.status === 'approved' ? (
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-bold">
+                        <CheckCircle2 size={15} /> {lang === 'bn' ? 'আইডেন্টিটি ভেরিফায়েড ✓' : 'Identity Verified ✓'}
+                      </span>
+                    ) : verifications?.status === 'pending' || verifications?.status === 'under_review' ? (
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-50 border border-amber-200 text-amber-700 text-xs font-bold">
+                        <Clock size={15} /> {lang === 'bn' ? 'পর্যালোচনাধীন (১–২ দিন)' : 'Under Review (1–2 Days)'}
+                      </span>
+                    ) : verifications?.status === 'rejected' ? (
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-error-50 border border-error-200 text-error-700 text-xs font-bold">
+                        <XCircle size={15} /> {lang === 'bn' ? 'পুনরায় চেষ্টা করুন' : 'Action Required'}
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-neutral-100 text-neutral-600 text-xs font-semibold">
+                        {lang === 'bn' ? 'ভেরিফায়েড নয়' : 'Not Verified'}
+                      </span>
+                    )}
+                  </div>
+                </div>
 
-                  <div className="space-y-1.5 text-sm text-neutral-600">
-                    <p>Submitted On: <strong>{formatDate(verifications.created_at)}</strong></p>
-                    <p>NID Card Number: <strong>{verifications.nid_number}</strong></p>
+                {/* Document Information if submitted */}
+                {verifications && (
+                  <div className="p-4 rounded-xl bg-neutral-50 border border-neutral-200/70 space-y-2 text-xs">
+                    <div className="flex justify-between items-center">
+                      <span className="text-neutral-500">{lang === 'bn' ? 'জমাকৃত নথি:' : 'Document Type:'}</span>
+                      <span className="font-bold text-neutral-800 uppercase">
+                        {verifications.document_type === 'nid' ? (lang === 'bn' ? 'জাতীয় পরিচয়পত্র' : 'Bangladesh NID') :
+                         verifications.document_type === 'passport' ? (lang === 'bn' ? 'পাসপোর্ট' : 'Passport') :
+                         (lang === 'bn' ? 'ড্রাইভিং লাইসেন্স (BRTA)' : 'Driving License (BRTA)')}
+                      </span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-neutral-500">{lang === 'bn' ? 'জমা দেওয়ার তারিখ:' : 'Submitted On:'}</span>
+                      <span className="font-medium text-neutral-800">{formatDate(verifications.created_at)}</span>
+                    </div>
+
                     {verifications.admin_feedback && (
-                      <div className="bg-error-50 text-error-800 p-3 rounded-xl border border-error-100 mt-3">
-                        <p className="font-semibold text-xs uppercase tracking-wide">Admin Feedback</p>
-                        <p className="text-xs mt-1 font-medium">{verifications.admin_feedback}</p>
+                      <div className="p-3 rounded-lg bg-amber-50 border border-amber-200 text-amber-900 mt-2">
+                        <span className="font-bold block mb-0.5">{lang === 'bn' ? 'অ্যাডমিন রিভিউ ফিডব্যাক:' : 'Admin Review Feedback:'}</span>
+                        <p>{verifications.admin_feedback}</p>
                       </div>
                     )}
                   </div>
+                )}
 
-                  {verifications.status === 'rejected' && (
-                    <Button variant="outline" size="sm" onClick={() => queryClient.setQueryData(['seller-verification', user?.id], null)}>
-                      Resubmit Documents
-                    </Button>
-                  )}
+                {/* 3 Accepted Document Types */}
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+                  <div className="p-3.5 rounded-xl bg-neutral-50 border border-neutral-200/70 flex items-start gap-2.5">
+                    <CreditCard size={18} className="text-primary-600 shrink-0 mt-0.5" />
+                    <div>
+                      <span className="font-bold text-neutral-900 block">
+                        {lang === 'bn' ? 'জাতীয় পরিচয়পত্র (NID)' : 'Bangladesh NID'}
+                      </span>
+                      <span className="text-2xs text-neutral-500">
+                        {lang === 'bn' ? 'স্মার্ট কার্ড বা লেমিনেটেড এনআইডি' : 'Smart Card or Laminated NID (Front + Back + Selfie)'}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="p-3.5 rounded-xl bg-neutral-50 border border-neutral-200/70 flex items-start gap-2.5">
+                    <Globe size={18} className="text-indigo-600 shrink-0 mt-0.5" />
+                    <div>
+                      <span className="font-bold text-neutral-900 block">
+                        {lang === 'bn' ? 'পাসপোর্ট' : 'Passport'}
+                      </span>
+                      <span className="text-2xs text-neutral-500">
+                        {lang === 'bn' ? 'মেশিন-রিডেবল পাসপোর্ট (বায়ো-ডাটা পাতা)' : 'Machine-Readable Passport (Bio-data page + Selfie)'}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="p-3.5 rounded-xl bg-neutral-50 border border-neutral-200/70 flex items-start gap-2.5">
+                    <Car size={18} className="text-amber-600 shrink-0 mt-0.5" />
+                    <div>
+                      <span className="font-bold text-neutral-900 block">
+                        {lang === 'bn' ? 'ড্রাইভিং লাইসেন্স' : 'Driving License'}
+                      </span>
+                      <span className="text-2xs text-neutral-500">
+                        {lang === 'bn' ? 'বিআরটিএ স্মার্ট ড্রাইভিং লাইসেন্স' : 'BRTA Smart License (Front + Back + Selfie)'}
+                      </span>
+                    </div>
+                  </div>
                 </div>
-              ) : (
-                <form onSubmit={handleVerificationSubmit} className="space-y-4 bg-neutral-50 p-5 rounded-2xl border border-neutral-100">
-                  <h3 className="font-bold text-sm text-neutral-800">Become a Verified Seller</h3>
-                  <p className="text-xs text-neutral-500">Provide official identity files to acquire a seller verification badge.</p>
 
-                  <Input
-                    label="National ID Number (NID)"
-                    value={nidNumber}
-                    onChange={(e) => setNidNumber(e.target.value)}
-                    placeholder="e.g. 1234567890"
-                    required
-                  />
-
-                  <div className="grid sm:grid-cols-3 gap-4">
-                    <div>
-                      <label className="block text-xs font-semibold text-neutral-600 mb-1">NID File</label>
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={(e) => setNidFile(e.target.files?.[0] || null)}
-                        className="text-xs text-neutral-500 w-full"
-                        required
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-xs font-semibold text-neutral-600 mb-1">Selfie Verification</label>
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={(e) => setSelfieFile(e.target.files?.[0] || null)}
-                        className="text-xs text-neutral-500 w-full"
-                        required
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-xs font-semibold text-neutral-600 mb-1">Business License (Optional)</label>
-                      <input
-                        type="file"
-                        accept="image/*,application/pdf"
-                        onChange={(e) => setLicenseFile(e.target.files?.[0] || null)}
-                        className="text-xs text-neutral-500 w-full"
-                      />
-                    </div>
+                {/* Perks & Action */}
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2">
+                  <div className="flex flex-wrap items-center gap-2 text-2xs text-neutral-600 font-medium">
+                    <span className="inline-flex items-center gap-1 bg-emerald-50 text-emerald-800 px-2.5 py-1 rounded-lg border border-emerald-100">
+                      <Sparkles size={12} className="text-emerald-600" />
+                      {lang === 'bn' ? 'ভেরিফায়েড ব্যাজ ✓' : 'Verified Badge ✓'}
+                    </span>
+                    <span className="inline-flex items-center gap-1 bg-primary-50 text-primary-800 px-2.5 py-1 rounded-lg border border-primary-100">
+                      <Shield size={12} className="text-primary-600" />
+                      {lang === 'bn' ? '+২৫ ট্রাস্ট স্কোর' : '+25 Trust Score'}
+                    </span>
+                    <span className="inline-flex items-center gap-1 bg-neutral-100 text-neutral-700 px-2.5 py-1 rounded-lg">
+                      <Lock size={12} />
+                      {lang === 'bn' ? 'এনক্রিপ্টেড স্টোরেজ' : 'Encrypted Storage'}
+                    </span>
                   </div>
 
-                  <div className="flex justify-end pt-2">
-                    <Button type="submit" loading={submittingVerification}>Submit Documents</Button>
-                  </div>
-                </form>
-              )}
+                  <Link to="/verify-identity">
+                    <Button className="w-full sm:w-auto flex items-center gap-1.5">
+                      <Shield size={15} />
+                      {!verifications || verifications.status === 'rejected'
+                        ? (lang === 'bn' ? 'ভেরিফিকেশন উইজার্ড শুরু করুন →' : 'Start Verification Wizard →')
+                        : (lang === 'bn' ? 'ভেরিফিকেশন পরিচালনা করুন →' : 'Manage Verification →')}
+                    </Button>
+                  </Link>
+                </div>
+              </div>
             </div>
           )}
 

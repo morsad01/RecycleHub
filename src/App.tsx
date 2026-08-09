@@ -146,6 +146,7 @@ export default function App() {
           {/* Authenticated */}
           <Route path="/dashboard" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
           <Route path="/kyc" element={<ProtectedRoute><IdentityVerificationPage /></ProtectedRoute>} />
+          <Route path="/verify-identity" element={<ProtectedRoute><IdentityVerificationPage /></ProtectedRoute>} />
           <Route path="/sell/new" element={<ProtectedRoute><SellNewPage /></ProtectedRoute>} />
           <Route path="/sell/:id/edit" element={<ProtectedRoute><SellNewPage /></ProtectedRoute>} />
           <Route path="/my-listings" element={<ProtectedRoute><MyListingsPage /></ProtectedRoute>} />

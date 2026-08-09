@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shopping Cart — ResellBD</title>
+  <meta name="description" content="View items in your shopping cart on ResellBD." />
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="/css/components.css" />
+</head>
+<body>
+
+  <!-- Dynamic Global Header -->
+  <div id="app-header"></div>
+
+  <main class="container-custom py-8">
+    <h1 style="font-size:1.875rem;font-weight:900;margin-bottom:1.5rem;">Shopping Cart</h1>
+
+    <div id="cart-container" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:2rem;align-items:start;">
+      <!-- Left: Cart Items -->
+      <div id="cart-items-list" style="display:flex;flex-direction:column;gap:1rem;">
+        <div class="card" style="padding:2rem;text-align:center;">Loading cart items...</div>
+      </div>
+
+      <!-- Right: Summary -->
+      <div class="card" style="padding:1.5rem;background:#fff;">
+        <h3 style="font-size:1.125rem;font-weight:800;margin-bottom:1rem;">Order Summary</h3>
+        
+        <div style="display:flex;flex-direction:column;gap:0.75rem;font-size:0.875rem;margin-bottom:1rem;">
+          <div style="display:flex;justify-content:space-between;">
+            <span style="color:var(--neutral-500);">Subtotal</span>
+            <strong id="cart-subtotal">৳ 0</strong>
+          </div>
+          <div style="display:flex;justify-content:space-between;">
+            <span style="color:var(--neutral-500);">Estimated Delivery (Dhaka)</span>
+            <strong>৳ 120</strong>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding-top:0.75rem;border-top:1px solid var(--neutral-100);font-size:1.125rem;">
+            <strong>Total</strong>
+            <strong id="cart-total" style="color:var(--primary-600);">৳ 0</strong>
+          </div>
+        </div>
+
+        <a href="/checkout.html" id="checkout-btn" class="btn btn-primary btn-lg" style="width:100%;text-align:center;">Proceed to Checkout →</a>
+      </div>
+    </div>
+  </main>
+
+  <!-- Dynamic Global Footer -->
+  <div id="app-footer"></div>
+
+  <!-- Page Logic -->
+  <script type="module" src="/js/pages/cart.js"></script>
+</body>
+</html>

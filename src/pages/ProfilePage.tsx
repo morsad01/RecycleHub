@@ -1,16 +1,21 @@
 import { useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { Shield, MapPin, Plus, Trash2, Star, Upload, Check } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { 
+  Shield, MapPin, Plus, Trash2, Star, Upload, ArrowRight, CheckCircle2, 
+  Clock, XCircle, CreditCard, Globe, Car, Lock, Sparkles, AlertCircle, EyeOff
+} from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../auth/AuthContext';
 import { useI18n } from '../i18n/I18nContext';
 import { useToast } from '../components/ui/Toast';
-import { Button, Input, Textarea, Badge, Avatar, Modal } from '../components/ui';
-import type { Address, SellerVerification } from '../types';
+import { Button, Input, Textarea, Avatar, Modal, Badge } from '../components/ui';
+import { formatDate } from '../lib/utils';
+import type { Address, IdentityVerification } from '../types';
 
 export function ProfilePage() {
   const { user, profile, refreshProfile } = useAuth();
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -21,11 +26,7 @@ export function ProfilePage() {
   const [city, setCity] = useState(profile?.city ?? '');
   const [saving, setSaving] = useState(false);
 
-  const [showVerification, setShowVerification] = useState(false);
-  const [nidNumber, setNidNumber] = useState('');
-  const [businessInfo, setBusinessInfo] = useState('');
-  const [nidImage, setNidImage] = useState<string | null>(null);
-  const [submittingVerification, setSubmittingVerification] = useState(false);
+  const navigate = useNavigate();
 
   const [showAddressModal, setShowAddressModal] = useState(false);
   const [editingAddress, setEditingAddress] = useState<Address | null>(null);
@@ -35,17 +36,19 @@ export function ProfilePage() {
   const [addrArea, setAddrArea] = useState('');
   const [addrPhone, setAddrPhone] = useState('');
 
+  // Fetch identity verification status from identity_verifications table
   const { data: verification } = useQuery({
-    queryKey: ['my-verification'],
+    queryKey: ['my-identity-verification', user?.id],
     queryFn: async () => {
+      if (!user) return null;
       const { data } = await supabase
-        .from('seller_verifications')
+        .from('identity_verifications')
         .select('*')
-        .eq('seller_id', user!.id)
+        .eq('user_id', user.id)
         .order('created_at', { ascending: false })
         .limit(1)
         .maybeSingle();
-      return data as SellerVerification | null;
+      return data as IdentityVerification | null;
     },
     enabled: !!user,
   });
@@ -72,12 +75,12 @@ export function ProfilePage() {
       const { error } = await supabase.from('profiles').update({ avatar_url: directUrl }).eq('id', user.id);
       if (!error) {
         refreshProfile();
-        toast('Avatar updated', 'success');
+        toast(lang === 'bn' ? 'প্রোফাইল ছবি আপডেট হয়েছে' : 'Avatar updated', 'success');
       } else {
-        toast('Failed to update avatar: ' + error.message, 'error');
+        toast((lang === 'bn' ? 'আপডেট ব্যর্থ: ' : 'Failed to update avatar: ') + error.message, 'error');
       }
     } catch (err: any) {
-      toast('Failed to upload avatar: ' + (err.message || err), 'error');
+      toast((lang === 'bn' ? 'আপলোড ব্যর্থ: ' : 'Failed to upload avatar: ') + (err.message || err), 'error');
     }
   };
 
@@ -93,41 +96,6 @@ export function ProfilePage() {
     setSaving(false);
     refreshProfile();
     toast(t('profile.saved'), 'success');
-  };
-
-  const submitVerification = async () => {
-    if (!user) return;
-    setSubmittingVerification(true);
-    const nidImageUrl = nidImage;
-    if (nidImage === null && nidImage !== undefined) {
-      // No new image uploaded
-    }
-    await supabase.from('seller_verifications').insert({
-      seller_id: user.id,
-      nid_number: nidNumber,
-      nid_image_url: nidImageUrl,
-      business_info: businessInfo,
-    });
-    setSubmittingVerification(false);
-    setShowVerification(false);
-    setNidNumber('');
-    setBusinessInfo('');
-    setNidImage(null);
-    queryClient.invalidateQueries({ queryKey: ['my-verification'] });
-    toast('Verification submitted! We\'ll review it shortly.', 'success');
-  };
-
-  const uploadNidImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!e.target.files?.[0] || !user) return;
-    const file = e.target.files[0];
-    try {
-      const { uploadToGoogleDrive } = await import('../lib/googleDrive');
-      const directUrl = await uploadToGoogleDrive(file);
-      setNidImage(directUrl);
-      toast('NID image uploaded successfully', 'success');
-    } catch (err: any) {
-      toast('Failed to upload NID image: ' + (err.message || err), 'error');
-    }
   };
 
   const saveAddress = async () => {
@@ -149,7 +117,7 @@ export function ProfilePage() {
     setEditingAddress(null);
     setAddrLabel(''); setAddrFull(''); setAddrCity(''); setAddrArea(''); setAddrPhone('');
     queryClient.invalidateQueries({ queryKey: ['my-addresses'] });
-    toast('Address saved', 'success');
+    toast(lang === 'bn' ? 'ঠিকানা সংরক্ষিত হয়েছে' : 'Address saved', 'success');
   };
 
   const deleteAddress = async (id: string) => {
@@ -201,28 +169,154 @@ export function ProfilePage() {
         <Button onClick={saveProfile} loading={saving} className="mt-4">{t('profile.save')}</Button>
       </div>
 
-      {/* Seller verification */}
-      <div className="bg-white rounded-2xl shadow-card p-6">
-        <div className="flex items-start gap-4">
-          <div className="w-12 h-12 rounded-xl bg-primary-50 flex items-center justify-center text-primary-600 shrink-0">
-            <Shield size={24} />
+      {/* Seller verification — Full Bangladesh KYC Hub */}
+      <div className="bg-white rounded-2xl shadow-card p-6 border border-neutral-100 space-y-5">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-neutral-100">
+          <div className="flex items-center gap-3.5">
+            <div className="w-12 h-12 rounded-2xl bg-primary-50 flex items-center justify-center text-primary-600 shrink-0 shadow-sm">
+              <Shield size={24} />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <h3 className="font-bold text-base text-neutral-900">
+                  {lang === 'bn' ? 'ভেরিফায়েড সেলার ভেরিফিকেশন' : 'Become a Verified Seller'}
+                </h3>
+                <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-primary-100 text-primary-800">
+                  KYC Verification
+                </span>
+              </div>
+              <p className="text-xs text-neutral-500 mt-0.5">
+                {lang === 'bn'
+                  ? 'উচ্চ ট্রাস্ট স্কোর অর্জন করতে এবং ক্রেতাদের আস্থা বাড়াতে সরকারি পরিচয়পত্র দিয়ে ভেরিফিকেশন সম্পন্ন করুন।'
+                  : 'Verify your identity using official Bangladesh government documents to build trust and increase sales.'}
+              </p>
+            </div>
           </div>
-          <div className="flex-1">
-            <h3 className="font-semibold text-neutral-900">{t('profile.becomeVerified')}</h3>
-            <p className="text-sm text-neutral-500 mt-1">{t('profile.verificationDesc')}</p>
-            {verification && (
-              <div className="mt-2">
-                <Badge variant={verification.status === 'approved' ? 'success' : verification.status === 'rejected' ? 'error' : 'warning'}>
-                  {t('profile.verificationStatus')}: {verification.status}
-                </Badge>
+
+          {/* Status badge */}
+          <div>
+            {profile?.is_seller_verified || verification?.status === 'approved' ? (
+              <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-bold">
+                <CheckCircle2 size={15} /> {lang === 'bn' ? 'আইডেন্টিটি ভেরিফায়েড ✓' : 'Identity Verified ✓'}
+              </div>
+            ) : verification?.status === 'pending' || verification?.status === 'under_review' ? (
+              <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-50 border border-amber-200 text-amber-700 text-xs font-bold">
+                <Clock size={15} /> {lang === 'bn' ? 'পর্যালোচনাধীন (১–২ দিন)' : 'Under Review (1–2 Days)'}
+              </div>
+            ) : verification?.status === 'rejected' ? (
+              <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-error-50 border border-error-200 text-error-700 text-xs font-bold">
+                <XCircle size={15} /> {lang === 'bn' ? 'পুনরায় চেষ্টা করুন' : 'Action Required'}
+              </div>
+            ) : (
+              <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-neutral-100 text-neutral-600 text-xs font-semibold">
+                {lang === 'bn' ? 'ভেরিফায়েড নয়' : 'Not Verified'}
               </div>
             )}
-            {!verification || verification.status === 'rejected' ? (
-              <Button variant="outline" className="mt-3" onClick={() => setShowVerification(true)}>
-                {t('profile.submitVerification')}
-              </Button>
-            ) : null}
           </div>
+        </div>
+
+        {/* Accepted Bangladesh Documents */}
+        <div className="space-y-2">
+          <p className="text-xs font-bold text-neutral-700 uppercase tracking-wide">
+            {lang === 'bn' ? 'বাংলাদেশে অনুমোদিত পরিচয়পত্র:' : 'Accepted Documents in Bangladesh:'}
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+            <div className="p-3.5 rounded-xl bg-neutral-50 border border-neutral-200/70 flex items-start gap-2.5">
+              <CreditCard size={18} className="text-primary-600 shrink-0 mt-0.5" />
+              <div>
+                <span className="font-bold text-neutral-900 block">
+                  {lang === 'bn' ? 'জাতীয় পরিচয়পত্র (NID)' : 'Bangladesh NID'}
+                </span>
+                <span className="text-2xs text-neutral-500">
+                  {lang === 'bn' ? 'স্মার্ট কার্ড বা লেমিনেটেড এনআইডি' : 'Smart Card or Laminated NID (Front + Back + Selfie)'}
+                </span>
+              </div>
+            </div>
+
+            <div className="p-3.5 rounded-xl bg-neutral-50 border border-neutral-200/70 flex items-start gap-2.5">
+              <Globe size={18} className="text-indigo-600 shrink-0 mt-0.5" />
+              <div>
+                <span className="font-bold text-neutral-900 block">
+                  {lang === 'bn' ? 'পাসপোর্ট' : 'Passport'}
+                </span>
+                <span className="text-2xs text-neutral-500">
+                  {lang === 'bn' ? 'মেশিন-রিডেবল পাসপোর্ট (বায়ো-ডাটা পাতা)' : 'Machine-Readable Passport (Bio-data page + Selfie)'}
+                </span>
+              </div>
+            </div>
+
+            <div className="p-3.5 rounded-xl bg-neutral-50 border border-neutral-200/70 flex items-start gap-2.5">
+              <Car size={18} className="text-amber-600 shrink-0 mt-0.5" />
+              <div>
+                <span className="font-bold text-neutral-900 block">
+                  {lang === 'bn' ? 'ড্রাইভিং লাইসেন্স' : 'Driving License'}
+                </span>
+                <span className="text-2xs text-neutral-500">
+                  {lang === 'bn' ? 'বিআরটিএ স্মার্ট ড্রাইভিং লাইসেন্স' : 'BRTA Smart License (Front + Back + Selfie)'}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Trust Perks */}
+        <div className="flex flex-wrap items-center gap-3 pt-1 text-2xs text-neutral-600 font-medium">
+          <span className="inline-flex items-center gap-1 bg-emerald-50 text-emerald-800 px-2.5 py-1 rounded-lg border border-emerald-100">
+            <Sparkles size={13} className="text-emerald-600" />
+            {lang === 'bn' ? 'ভেরিফায়েড সেলার ব্যাজ ✓' : 'Verified Seller Badge ✓'}
+          </span>
+          <span className="inline-flex items-center gap-1 bg-primary-50 text-primary-800 px-2.5 py-1 rounded-lg border border-primary-100">
+            <Shield size={13} className="text-primary-600" />
+            {lang === 'bn' ? '+২৫ ট্রাস্ট স্কোর পয়েন্ট' : '+25 Trust Score Points'}
+          </span>
+          <span className="inline-flex items-center gap-1 bg-neutral-100 text-neutral-700 px-2.5 py-1 rounded-lg">
+            <Lock size={13} />
+            {lang === 'bn' ? 'এনক্রিপ্টেড প্রাইভেট স্টোরেজ' : 'Privacy-First Encrypted Storage'}
+          </span>
+        </div>
+
+        {/* Live Submission Status Details if exists */}
+        {verification && (
+          <div className="p-4 rounded-xl bg-neutral-50 border border-neutral-200/70 space-y-2 text-xs">
+            <div className="flex justify-between items-center">
+              <span className="text-neutral-500">{lang === 'bn' ? 'জমাকৃত নথি:' : 'Submitted Document:'}</span>
+              <span className="font-bold text-neutral-800 uppercase">
+                {verification.document_type === 'nid' ? (lang === 'bn' ? 'জাতীয় পরিচয়পত্র' : 'Bangladesh NID') :
+                 verification.document_type === 'passport' ? (lang === 'bn' ? 'পাসপোর্ট' : 'Passport') :
+                 (lang === 'bn' ? 'ড্রাইভিং লাইসেন্স (BRTA)' : 'Driving License (BRTA)')}
+              </span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-neutral-500">{lang === 'bn' ? 'জমা দেওয়ার তারিখ:' : 'Submission Date:'}</span>
+              <span className="font-medium text-neutral-800">{formatDate(verification.created_at)}</span>
+            </div>
+
+            {verification.admin_feedback && (
+              <div className="p-3 rounded-lg bg-amber-50 border border-amber-200 text-amber-900 mt-2">
+                <span className="font-bold block mb-0.5">{lang === 'bn' ? 'অ্যাডমিন রিভিউ ফিডব্যাক:' : 'Admin Review Feedback:'}</span>
+                <p>{verification.admin_feedback}</p>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Action Button */}
+        <div className="pt-2 flex justify-end">
+          {profile?.is_seller_verified || verification?.status === 'approved' ? (
+            <div className="flex items-center gap-2 text-xs font-bold text-emerald-600 bg-emerald-50 px-4 py-2.5 rounded-xl border border-emerald-200">
+              <CheckCircle2 size={16} /> {lang === 'bn' ? 'আপনার একাউন্ট ভেরিফায়েড ব্যাজ প্রাপ্ত' : 'Your account has the Identity Verified Badge'}
+            </div>
+          ) : (
+            <Button
+              className="w-full sm:w-auto flex items-center justify-center gap-2"
+              onClick={() => navigate('/verify-identity')}
+            >
+              <Shield size={16} />
+              {!verification || verification.status === 'rejected'
+                ? (lang === 'bn' ? 'বাংলাদেশ আইডেন্টিটি ভেরিফিকেশন শুরু করুন →' : 'Start Bangladesh Identity Verification →')
+                : (lang === 'bn' ? 'ভেরিফিকেশন স্টেটাস দেখুন →' : 'View Verification Progress →')}
+            </Button>
+          )}
         </div>
       </div>
 
@@ -260,22 +354,7 @@ export function ProfilePage() {
         )}
       </div>
 
-      {/* Verification modal */}
-      <Modal open={showVerification} onClose={() => setShowVerification(false)} title={t('profile.becomeVerified')}>
-        <div className="space-y-4">
-          <Input label={t('profile.nidNumber')} value={nidNumber} onChange={(e) => setNidNumber(e.target.value)} placeholder="NID number" />
-          <div>
-            <label className="block text-sm font-medium text-neutral-700 mb-1.5">{t('profile.uploadNid')}</label>
-            <input type="file" accept="image/*" onChange={uploadNidImage} className="block w-full text-sm text-neutral-500 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-primary-50 file:text-primary-700 hover:file:bg-primary-100" />
-            {nidImage && <p className="text-xs text-success-600 mt-1 flex items-center gap-1"><Check size={12} /> Uploaded</p>}
-          </div>
-          <Textarea label={t('profile.businessInfo')} value={businessInfo} onChange={(e) => setBusinessInfo(e.target.value)} rows={3} />
-          <div className="flex gap-2 justify-end">
-            <Button variant="ghost" onClick={() => setShowVerification(false)}>{t('common.cancel')}</Button>
-            <Button onClick={submitVerification} loading={submittingVerification}>{t('profile.submitVerification')}</Button>
-          </div>
-        </div>
-      </Modal>
+
 
       {/* Address modal */}
       <Modal open={showAddressModal} onClose={() => setShowAddressModal(false)} title={editingAddress ? t('profile.editAddress') : t('profile.addAddress')}>

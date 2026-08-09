@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { Heart, MapPin, Sparkles, Shield } from 'lucide-react';
 import type { ProductWithRelations } from '../types';
-import { formatPrice, conditionColors } from '../lib/utils';
+import { formatPrice, conditionColors, toDirectGoogleDriveUrl } from '../lib/utils';
 import { Badge } from './ui/Badge';
 import { useAuth } from '../auth/AuthContext';
 import { useI18n } from '../i18n/I18nContext';
@@ -23,7 +23,7 @@ export function ProductCard({ product }: { product: ProductWithRelations }) {
         .eq('user_id', user.id)
         .eq('product_id', product.id)
         .maybeSingle();
-      return !!data;
+      return data;
     },
     enabled: !!user,
   });
@@ -47,15 +47,16 @@ export function ProductCard({ product }: { product: ProductWithRelations }) {
 
   const primaryImage = product.product_images?.find((img) => img.is_primary) ?? product.product_images?.[0];
   const conditionKey = product.condition ? `condition.${product.condition}` : null;
+  const imageUrl = toDirectGoogleDriveUrl(primaryImage?.url);
 
   return (
     <Link to={`/products/${product.id}`} className="group block">
       <div className="bg-white rounded-2xl shadow-card hover:shadow-card-hover transition-all duration-200 overflow-hidden">
         {/* Image */}
         <div className="relative aspect-[4/3] overflow-hidden bg-neutral-100">
-          {primaryImage ? (
+          {imageUrl ? (
             <img
-              src={primaryImage.url}
+              src={imageUrl}
               alt={product.title}
               loading="lazy"
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"

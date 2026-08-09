@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Checkout — ResellBD</title>
+  <meta name="description" content="Secure checkout with Cash on Delivery, bKash, and Nagad on ResellBD." />
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="/css/components.css" />
+</head>
+<body>
+
+  <!-- Dynamic Global Header -->
+  <div id="app-header"></div>
+
+  <main class="container-custom py-8" style="max-width:44rem;">
+    <h1 style="font-size:1.875rem;font-weight:900;margin-bottom:1.5rem;">Secure Checkout</h1>
+
+    <form id="checkout-form" style="display:flex;flex-direction:column;gap:1.5rem;">
+      <!-- Delivery Address -->
+      <div class="card" style="padding:1.5rem;">
+        <h2 style="font-size:1.125rem;font-weight:800;margin-bottom:1rem;">1. Delivery & Contact Details</h2>
+        <div style="display:flex;flex-direction:column;gap:1rem;">
+          <div class="input-group">
+            <label class="input-label">Full Name *</label>
+            <input type="text" id="chk-name" class="input-field" required />
+          </div>
+          <div class="input-group">
+            <label class="input-label">Contact Phone (Bangladesh) *</label>
+            <input type="text" id="chk-phone" class="input-field" placeholder="+880 17XXXXXXXX" required />
+          </div>
+          <div class="input-group">
+            <label class="input-label">Full Delivery Address *</label>
+            <textarea id="chk-address" class="textarea-field" rows="3" placeholder="House, Road, Area, Dhaka" required></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- Payment Method -->
+      <div class="card" style="padding:1.5rem;">
+        <h2 style="font-size:1.125rem;font-weight:800;margin-bottom:1rem;">2. Payment Method</h2>
+        <div style="display:flex;flex-direction:column;gap:0.75rem;">
+          <label class="card" style="display:flex;align-items:center;gap:1rem;padding:1rem;cursor:pointer;border:2px solid var(--primary-500);background:var(--primary-50);">
+            <input type="radio" name="payment_method" value="cod" checked style="accent-color:var(--primary-500);" />
+            <div>
+              <div style="font-weight:800;font-size:0.9375rem;">Cash on Delivery (COD) / Inspection Handover</div>
+              <div style="font-size:0.75rem;color:var(--neutral-500);">Inspect the product before completing payment in person</div>
+            </div>
+          </label>
+
+          <label class="card" style="display:flex;align-items:center;gap:1rem;padding:1rem;cursor:pointer;border:1.5px solid var(--neutral-200);background:#fff;">
+            <input type="radio" name="payment_method" value="bkash" style="accent-color:var(--primary-500);" />
+            <div>
+              <div style="font-weight:800;font-size:0.9375rem;">bKash Mobile Payment</div>
+              <div style="font-size:0.75rem;color:var(--neutral-500);">Direct peer wallet transfer upon physical inspection</div>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <!-- Submit -->
+      <button type="submit" id="place-order-btn" class="btn btn-primary btn-lg" style="box-shadow:0 4px 14px rgba(15,122,92,0.3);">
+        ✓ Place Verified Order
+      </button>
+    </form>
+  </main>
+
+  <!-- Dynamic Global Footer -->
+  <div id="app-footer"></div>
+
+  <!-- Page Logic -->
+  <script type="module" src="/js/pages/checkout.js"></script>
+</body>
+</html>

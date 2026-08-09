@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Safety Center — ResellBD</title>
+  <meta name="description" content="Guidelines for safe peer-to-peer meetups and fraud prevention on ResellBD." />
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="/css/components.css" />
+</head>
+<body>
+  <div id="app-header"></div>
+  <main class="container-custom py-12" style="max-width:44rem;">
+    <div class="card" style="padding:2.5rem;">
+      <h1 style="font-size:1.875rem;font-weight:900;margin-bottom:1rem;">🛡️ Safety Center & Meetup Guidelines</h1>
+      <p style="font-size:0.9375rem;color:var(--neutral-600);line-height:1.7;margin-bottom:1.5rem;">
+        ResellBD is committed to making peer-to-peer resale in Bangladesh 100% secure. Follow these essential safety tips when trading:
+      </p>
+
+      <div style="display:flex;flex-direction:column;gap:1.25rem;font-size:0.875rem;color:var(--neutral-700);line-height:1.7;">
+        <div class="card" style="background:var(--neutral-50);padding:1rem;">
+          <strong style="color:var(--primary-700);">1. Meet in Well-Lit Public Spaces</strong>
+          <p style="margin-top:0.25rem;">Always choose shopping malls, metro stations, police station perimeters, or crowded university areas for item handovers.</p>
+        </div>
+        <div class="card" style="background:var(--neutral-50);padding:1rem;">
+          <strong style="color:var(--primary-700);">2. Inspect Hardware Thoroughly Before Paying</strong>
+          <p style="margin-top:0.25rem;">Check device screens, cameras, battery health, IMEI/serial numbers, and charger ports before handing over payment.</p>
+        </div>
+        <div class="card" style="background:var(--neutral-50);padding:1rem;">
+          <strong style="color:var(--error-600);">3. Never Send Advance Payments</strong>
+          <p style="margin-top:0.25rem;">Never send bKash/Nagad advance money for "courier fees" or "booking reservations" to unknown persons.</p>
+        </div>
+      </div>
+    </div>
+  </main>
+  <div id="app-footer"></div>
+  <script type="module">
+    import { auth } from './js/auth.js';
+    import { UIEngine } from './js/ui.js';
+    document.addEventListener('DOMContentLoaded', async () => {
+      await auth.init();
+      UIEngine.init();
+    });
+  </script>
+</body>
+</html>

@@ -13,7 +13,7 @@ import { useToast } from '../components/ui/Toast';
 import { Button, Badge, Avatar, StarRating, Modal, Textarea } from '../components/ui';
 import { EmptyState } from '../components/ui/EmptyState';
 import { ProductCard } from '../components/ProductCard';
-import { formatPrice, formatDate, conditionColors } from '../lib/utils';
+import { formatPrice, formatDate, conditionColors, toDirectGoogleDriveUrl } from '../lib/utils';
 import type { ProductWithRelations, Review } from '../types';
 import { AiBuyerAssistant } from '../features/ai/components/AiBuyerAssistant';
 import { SEO } from '../components/SEO';
@@ -278,21 +278,21 @@ export function ProductDetailPage() {
     }
   } catch {}
 
-  const activeImageUrl = images[activeImage]?.url;
+  const activeImageUrl = toDirectGoogleDriveUrl(images[activeImage]?.url);
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
       <SEO
         title={product.title}
         description={product.description ?? `Buy ${product.title} on ResellBD. Condition: ${product.condition}. Price: ৳${product.price}.`}
-        image={images[0]?.url}
+        image={images[0]?.url ? toDirectGoogleDriveUrl(images[0]?.url) : undefined}
         canonical={`https://resellbd.app/products/${product.id}`}
         schema={{
           "@context": "https://schema.org",
           "@type": "Product",
           "name": product.title,
           "description": product.description ?? '',
-          "image": images[0]?.url ?? '',
+          "image": images[0]?.url ? toDirectGoogleDriveUrl(images[0]?.url) : '',
           "offers": {
             "@type": "Offer",
             "price": product.price,
@@ -359,7 +359,7 @@ export function ProductDetailPage() {
                   onClick={() => setActiveImage(i)}
                   className={`w-16 h-16 rounded-lg overflow-hidden border-2 shrink-0 ${i === activeImage ? 'border-primary-500' : 'border-transparent'}`}
                 >
-                  <img src={img.url} alt="" className="w-full h-full object-cover" />
+                  <img src={toDirectGoogleDriveUrl(img.url)} alt="" className="w-full h-full object-cover" />
                 </button>
               ))}
             </div>

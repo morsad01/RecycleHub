@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>User Profile — ResellBD</title>
+  <meta name="description" content="View and update your ResellBD account profile and verification badges." />
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="/css/components.css" />
+</head>
+<body>
+
+  <!-- Dynamic Global Header -->
+  <div id="app-header"></div>
+
+  <main class="container-custom py-8" style="max-width:38rem;">
+    <div class="card" style="padding:2rem;">
+      <h1 style="font-size:1.5rem;font-weight:900;margin-bottom:1.5rem;" data-i18n="profile.title">My Profile</h1>
+
+      <form id="profile-form" style="display:flex;flex-direction:column;gap:1.25rem;">
+        
+        <div class="input-group">
+          <label class="input-label" data-i18n="profile.fullName">Full Name</label>
+          <input type="text" id="prof-name" class="input-field" required />
+        </div>
+
+        <div class="input-group">
+          <label class="input-label">Email Address</label>
+          <input type="email" id="prof-email" class="input-field" disabled style="background:var(--neutral-100);" />
+        </div>
+
+        <div class="input-group">
+          <label class="input-label" data-i18n="profile.phone">Phone Number</label>
+          <input type="text" id="prof-phone" class="input-field" placeholder="+880 17XXXXXXXX" />
+        </div>
+
+        <div class="input-group">
+          <label class="input-label" data-i18n="profile.city">City / Division</label>
+          <input type="text" id="prof-city" class="input-field" placeholder="e.g. Dhaka, Bangladesh" />
+        </div>
+
+        <div class="input-group">
+          <label class="input-label" data-i18n="profile.address">Full Delivery Address</label>
+          <textarea id="prof-address" class="textarea-field" rows="3" placeholder="House, Road, Area..."></textarea>
+        </div>
+
+        <!-- KYC Verification Status Card -->
+        <div style="background:var(--neutral-50);border-radius:1rem;padding:1.25rem;border:1px solid var(--neutral-200);display:flex;align-items:center;justify-content:space-between;">
+          <div>
+            <div style="font-weight:800;font-size:0.875rem;">Identity Verification</div>
+            <div style="font-size:0.75rem;color:var(--neutral-500);margin-top:0.25rem;">Verify your Bangladesh NID/Passport for trusted seller badge</div>
+          </div>
+          <a href="/verify-identity.html" class="btn btn-outline btn-sm">KYC Hub →</a>
+        </div>
+
+        <button type="submit" id="save-prof-btn" class="btn btn-primary btn-lg" style="margin-top:0.5rem;" data-i18n="profile.save">
+          Save Profile Changes
+        </button>
+      </form>
+    </div>
+  </main>
+
+  <!-- Dynamic Global Footer -->
+  <div id="app-footer"></div>
+
+  <!-- Page Logic -->
+  <script type="module" src="/js/pages/profile.js"></script>
+</body>
+</html>

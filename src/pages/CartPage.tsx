@@ -6,7 +6,7 @@ import { useAuth } from '../auth/AuthContext';
 import { useToast } from '../components/ui/Toast';
 import { Button } from '../components/ui/Button';
 import { EmptyState } from '../components/ui/EmptyState';
-import { formatPrice } from '../lib/utils';
+import { formatPrice, toDirectGoogleDriveUrl } from '../lib/utils';
 
 export function CartPage() {
   const { user } = useAuth();
@@ -95,7 +95,7 @@ export function CartPage() {
             {items.map((item) => {
               const prod = item.product;
               if (!prod) return null;
-              const img = prod.product_images?.[0]?.url;
+              const img = toDirectGoogleDriveUrl(prod.product_images?.[0]?.url);
               return (
                 <div key={item.id} className="bg-white border border-neutral-100 rounded-3xl p-4 flex flex-col sm:flex-row gap-4 shadow-sm relative hover:shadow-md transition-shadow">
                   {/* Image */}

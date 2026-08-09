@@ -7,7 +7,7 @@ import { useI18n } from '../i18n/I18nContext';
 import { useToast } from '../components/ui/Toast';
 import { Button } from '../components/ui';
 import { EmptyState } from '../components/ui/EmptyState';
-import { formatPrice, statusColors } from '../lib/utils';
+import { formatPrice, statusColors, toDirectGoogleDriveUrl } from '../lib/utils';
 import type { ProductWithRelations } from '../types';
 
 export function MyListingsPage() {
@@ -111,7 +111,7 @@ export function MyListingsPage() {
               <div key={product.id} className="flex flex-col sm:flex-row sm:items-center gap-4 p-4 bg-white rounded-2xl shadow-card">
                 <div className="flex items-center gap-4 flex-1 min-w-0">
                   <div className="w-20 h-20 rounded-xl overflow-hidden bg-neutral-100 shrink-0">
-                    {img ? <img src={img.url} alt="" className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center text-neutral-300"><Package size={24} /></div>}
+                    {img ? <img src={toDirectGoogleDriveUrl(img.url)} alt="" className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center text-neutral-300"><Package size={24} /></div>}
                   </div>
                   <div className="flex-1 min-w-0">
                     <Link to={`/products/${product.id}`} className="font-medium text-neutral-900 hover:text-primary-600 truncate block">

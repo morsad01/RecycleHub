@@ -19,6 +19,27 @@ export async function fileToBase64(file: File): Promise<string> {
 }
 
 /**
+ * Transforms any Google Drive URL into a direct, embeddable image CDN URL.
+ */
+export function toDirectGoogleDriveUrl(url?: string | null): string {
+  if (!url) return '';
+  if (url.startsWith('blob:') || url.startsWith('data:')) return url;
+  if (url.includes('googleusercontent.com') || url.includes('thumbnail?id=')) return url;
+
+  const fileIdMatch = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+  if (fileIdMatch && fileIdMatch[1]) {
+    return `https://lh3.googleusercontent.com/d/${fileIdMatch[1]}`;
+  }
+
+  const idParamMatch = url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+  if (idParamMatch && idParamMatch[1]) {
+    return `https://lh3.googleusercontent.com/d/${idParamMatch[1]}`;
+  }
+
+  return url;
+}
+
+/**
  * Uploads a file to Google Drive using the Google Apps Script Web App.
  * Returns the direct preview URL of the uploaded file.
  */
@@ -55,5 +76,11 @@ export async function uploadToGoogleDrive(file: File): Promise<string> {
     throw new Error(result.error || 'Failed to upload to Google Drive.');
   }
 
-  return result.url;
+  const fileId = result.id || result.fileId || result.docId;
+  if (fileId) {
+    return `https://lh3.googleusercontent.com/d/${fileId}`;
+  }
+
+  const rawUrl = result.url || result.directUrl || '';
+  return toDirectGoogleDriveUrl(rawUrl) || rawUrl;
 }

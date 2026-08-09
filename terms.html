@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Terms of Service — ResellBD</title>
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="/css/components.css" />
+</head>
+<body>
+  <div id="app-header"></div>
+  <main class="container-custom py-12" style="max-width:44rem;">
+    <div class="card" style="padding:2.5rem;">
+      <h1 style="font-size:1.875rem;font-weight:900;margin-bottom:1rem;">Terms of Service</h1>
+      <p style="font-size:0.875rem;color:var(--neutral-600);line-height:1.8;">
+        By listing or buying items on ResellBD, users agree to uphold fair trading standards. Listings containing counterfeit goods, stolen electronics, or misleading specifications are strictly prohibited and will result in immediate account termination.
+      </p>
+    </div>
+  </main>
+  <div id="app-footer"></div>
+  <script type="module">
+    import { auth } from './js/auth.js';
+    import { UIEngine } from './js/ui.js';
+    document.addEventListener('DOMContentLoaded', async () => {
+      await auth.init();
+      UIEngine.init();
+    });
+  </script>
+</body>
+</html>

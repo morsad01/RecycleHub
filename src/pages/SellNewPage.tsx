@@ -79,12 +79,16 @@ export function SellNewPage() {
       });
       if (result) {
         setDescription(result.description);
-        const specsTextFormatted = Object.entries(result.features).map(([_, v]) => `Key Feature: ${v}`).join('\n');
+        const featuresArray = Array.isArray(result.features)
+          ? result.features
+          : Object.values(result.features || {});
+        const specsTextFormatted = featuresArray.map((v) => `• ${v}`).join('\n');
         setSpecsText(specsTextFormatted);
         toast('Smart description generated!', 'success');
       }
-    } catch {
-      toast('Failed to generate smart description', 'error');
+    } catch (err: any) {
+      console.error('AI Description Error:', err);
+      toast(err.message || 'Failed to generate smart description', 'error');
     } finally {
       setIsGeneratingDesc(false);
     }
@@ -107,46 +111,42 @@ export function SellNewPage() {
         setRecommendedPrices(result);
         toast('AI Price suggestions retrieved!', 'success');
       }
-    } catch {
-      toast('Failed to fetch price recommendations', 'error');
+    } catch (err: any) {
+      console.error('AI Pricing Error:', err);
+      toast(err.message || 'Failed to fetch price recommendations', 'error');
     } finally {
       setIsCheckingPricing(false);
     }
   };
 
+  // Fetch categories
   const { data: categories } = useQuery({
     queryKey: ['categories'],
     queryFn: async () => {
-      const { data } = await supabase.from('categories').select('*').order('name');
+      const { data } = await supabase.from('categories').select('*').order('sort_order');
       return (data ?? []) as Category[];
     },
-    staleTime: 60_000,
   });
 
-  // Load existing product for edit
-  useQuery({
+  // Fetch product for edit mode
+  const { data: editProduct } = useQuery({
     queryKey: ['product-edit', id],
     queryFn: async () => {
+      if (!id) return null;
       const { data } = await supabase
         .from('products')
         .select('*, product_images(*)')
-        .eq('id', id!)
-        .maybeSingle();
-      if (data) {
-        const p = data as ProductWithRelations;
+        .eq('id', id)
+        .single();
+      const p = data as ProductWithRelations;
+      if (p) {
         setTitle(p.title);
         setDescription(p.description ?? '');
-        
-        // Find parent category to set correctly
+
         const cat = categories?.find((c) => c.id === p.category_id);
-        if (cat) {
-          if (cat.parent_id) {
-            setCategoryId(cat.parent_id);
-            setSubcategoryId(cat.id);
-          } else {
-            setCategoryId(cat.id);
-            setSubcategoryId('');
-          }
+        if (cat?.parent_id) {
+          setCategoryId(cat.parent_id);
+          setSubcategoryId(cat.id);
         } else {
           setCategoryId(p.category_id ?? '');
         }
@@ -158,7 +158,7 @@ export function SellNewPage() {
         setCondition(p.condition ?? '');
         setLocation(p.location ?? '');
         setStockQuantity(p.stock_quantity?.toString() ?? '1');
-        setImages((p.product_images ?? []).map((img) => ({ url: img.url, path: '' })));
+        setImages((p.product_images ?? []).map((img) => ({ url: toDirectGoogleDriveUrl(img.url), path: '' })));
 
         // Specifications
         let specsStr = '';
@@ -178,33 +178,75 @@ export function SellNewPage() {
 
   const handleUpload = useCallback(async (files: FileList) => {
     if (!user) return;
+    const fileArray = Array.from(files);
+    if (fileArray.length === 0) return;
+
     setUploading(true);
-    const newImages: UploadedImage[] = [];
-    
+
+    // 1. Instant local object URLs for zero-latency visual preview
+    const initialImages: UploadedImage[] = fileArray.map((file) => {
+      const localUrl = URL.createObjectURL(file);
+      return {
+        url: localUrl,
+        previewUrl: localUrl,
+        path: '',
+        isUploading: true,
+      };
+    });
+
+    const startIdx = images.length;
+    setImages((prev) => [...prev, ...initialImages]);
+
+    const uploadedUrls: string[] = [];
     try {
-      const { uploadToGoogleDrive } = await import('../lib/googleDrive');
-      for (const file of Array.from(files)) {
+      const { uploadToGoogleDrive, toDirectGoogleDriveUrl } = await import('../lib/googleDrive');
+      
+      for (let i = 0; i < fileArray.length; i++) {
+        const file = fileArray[i];
+        const targetIdx = startIdx + i;
         try {
           const directUrl = await uploadToGoogleDrive(file);
-          newImages.push({ url: directUrl, path: '' });
+          const formattedUrl = toDirectGoogleDriveUrl(directUrl);
+          uploadedUrls.push(formattedUrl);
+
+          setImages((prev) => {
+            const copy = [...prev];
+            if (copy[targetIdx]) {
+              copy[targetIdx] = {
+                ...copy[targetIdx],
+                url: formattedUrl,
+                isUploading: false,
+              };
+            }
+            return copy;
+          });
         } catch (error: any) {
           console.error("Google Drive Upload Error:", error);
-          alert("Error uploading image: " + (error.message || error));
+          toast(error.message || `Failed to upload ${file.name}`, 'error');
+          setImages((prev) => {
+            const copy = [...prev];
+            if (copy[targetIdx]) {
+              copy[targetIdx] = {
+                ...copy[targetIdx],
+                isUploading: false,
+              };
+            }
+            return copy;
+          });
         }
       }
-      setImages((prev) => [...prev, ...newImages]);
     } catch (err: any) {
       console.error("Upload exception:", err);
-      alert("Failed to upload image. Please try again.");
+      toast("Failed to upload image. Please try again.", 'error');
     } finally {
       setUploading(false);
     }
 
-    // Trigger AI analysis if first images
-    if (newImages.length > 0) {
-      analyzeImages(newImages.map((img) => img.url));
+    // Trigger AI analysis if new images uploaded
+    if (uploadedUrls.length > 0) {
+      analyzeImages(uploadedUrls);
     }
-  }, [user]);
+  }, [user, images.length, toast]);
 
   // Drag & drop handlers
   const handleDragOver = (e: DragEvent) => {
@@ -225,46 +267,64 @@ export function SellNewPage() {
   };
 
   const analyzeImages = async (imageUrls: string[]) => {
+    if (!imageUrls || imageUrls.length === 0) return;
     setAnalyzing(true);
     setAiResult(null);
     try {
-      const response = await fetch(ANALYZE_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
-        },
-        body: JSON.stringify({ images: imageUrls }),
+      // 1. Instant local AI condition analysis
+      const { AIService } = await import('../features/ai/services/aiService');
+      const conditionReport = await AIService.getConditionReport(imageUrls[0] || '', condition || 'good');
+
+      setAiResult({
+        suggested_category: undefined,
+        condition_estimate: conditionReport.visualCondition,
+        confidence: conditionReport.confidence,
+        risk_score: 0.05,
       });
-      if (response.ok) {
-        const data = await response.json();
-        if (data && !data.error) {
-          setAiResult(data);
-          // Pre-fill fields
-          if (data.suggested_category) {
-            const cat = categories?.find((c) =>
-              c.name.toLowerCase().includes(data.suggested_category!.toLowerCase()) ||
-              c.slug === data.suggested_category!.toLowerCase()
-            );
-            if (cat) {
-              if (cat.parent_id) {
-                setCategoryId(cat.parent_id);
-                setSubcategoryId(cat.id);
-              } else {
-                setCategoryId(cat.id);
+
+      if (conditionReport.visualCondition && !condition) {
+        setCondition(conditionReport.visualCondition);
+      }
+
+      // 2. Optional: Try backend edge function if available
+      try {
+        const response = await fetch(ANALYZE_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+          },
+          body: JSON.stringify({ images: imageUrls }),
+        });
+        if (response.ok) {
+          const data = await response.json();
+          if (data && !data.error) {
+            setAiResult((prev) => ({ ...prev, ...data }));
+            if (data.suggested_category) {
+              const cat = categories?.find((c) =>
+                c.name.toLowerCase().includes(data.suggested_category!.toLowerCase()) ||
+                c.slug === data.suggested_category!.toLowerCase()
+              );
+              if (cat) {
+                if (cat.parent_id) {
+                  setCategoryId(cat.parent_id);
+                  setSubcategoryId(cat.id);
+                } else {
+                  setCategoryId(cat.id);
+                }
               }
             }
-          }
-          if (data.condition_estimate) {
-            const cond = (['new', 'excellent', 'good', 'fair', 'poor'] as const).find((c) =>
-              data.condition_estimate!.toLowerCase().includes(c)
-            );
-            if (cond) setCondition(cond);
+            if (data.condition_estimate) {
+              const cond = (['new', 'excellent', 'good', 'fair', 'poor'] as const).find((c) =>
+                data.condition_estimate!.toLowerCase().includes(c)
+              );
+              if (cond) setCondition(cond);
+            }
           }
         }
-      }
-    } catch {
-      // Graceful degradation
+      } catch {}
+    } catch (err) {
+      console.error('AI image analysis error:', err);
     } finally {
       setAnalyzing(false);
     }
@@ -450,18 +510,38 @@ export function SellNewPage() {
 
             {images.length > 0 && (
               <div className="grid grid-cols-3 sm:grid-cols-4 gap-3 mt-4">
-                {images.map((img, i) => (
-                  <div key={i} className="relative aspect-square rounded-xl overflow-hidden group">
-                    <img src={img.url} alt="" className="w-full h-full object-cover" />
-                    {i === 0 && <Badge variant="primary" className="absolute top-1 left-1">Primary</Badge>}
-                    <button
-                      onClick={() => removeImage(i)}
-                      className="absolute top-1 right-1 w-7 h-7 rounded-full bg-black/50 text-white flex items-center justify-center hover:bg-black/70 transition-colors"
-                    >
-                      <X size={14} />
-                    </button>
-                  </div>
-                ))}
+                {images.map((img, i) => {
+                  const displaySrc = img.previewUrl || toDirectGoogleDriveUrl(img.url);
+                  return (
+                    <div key={i} className="relative aspect-square rounded-xl overflow-hidden group bg-neutral-100 border border-neutral-200 shadow-xs">
+                      <img
+                        src={displaySrc}
+                        alt=""
+                        className="w-full h-full object-cover transition-transform group-hover:scale-105"
+                        onError={(e) => {
+                          const target = e.currentTarget;
+                          if (img.previewUrl && target.src !== img.previewUrl) {
+                            target.src = img.previewUrl;
+                          }
+                        }}
+                      />
+                      {img.isUploading && (
+                        <div className="absolute inset-0 bg-black/40 backdrop-blur-xs flex flex-col items-center justify-center text-white text-xs gap-1.5 z-10">
+                          <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                          <span className="text-[10px] font-semibold tracking-wide">Uploading...</span>
+                        </div>
+                      )}
+                      {i === 0 && <Badge variant="primary" className="absolute top-1.5 left-1.5 shadow-sm z-10">Primary</Badge>}
+                      <button
+                        type="button"
+                        onClick={() => removeImage(i)}
+                        className="absolute top-1.5 right-1.5 w-7 h-7 rounded-full bg-black/60 text-white flex items-center justify-center hover:bg-black/80 transition-all shadow-sm z-10"
+                      >
+                        <X size={14} />
+                      </button>
+                    </div>
+                  );
+                })}
               </div>
             )}
           </div>

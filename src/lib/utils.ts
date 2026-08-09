@@ -54,3 +54,27 @@ export const orderTimeline: OrderStatus[] = ['pending', 'confirmed', 'shipped', 
 export function getStockPhotoUrl(query: string, w = 800, h = 600): string {
   return `https://picsum.photos/seed/${encodeURIComponent(query)}/${w}/${h}`;
 }
+
+/**
+ * Transforms any Google Drive view/open/share URL into a direct, embeddable image CDN URL.
+ * Handles /file/d/{id}, id={id}, drive.google.com, etc.
+ */
+export function toDirectGoogleDriveUrl(url?: string | null): string {
+  if (!url) return '';
+  if (url.startsWith('blob:') || url.startsWith('data:')) return url;
+  if (url.includes('googleusercontent.com') || url.includes('thumbnail?id=')) return url;
+
+  // Extract file ID from /file/d/{id}/...
+  const fileIdMatch = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+  if (fileIdMatch && fileIdMatch[1]) {
+    return `https://lh3.googleusercontent.com/d/${fileIdMatch[1]}`;
+  }
+
+  // Extract file ID from id={id} or open?id={id} or uc?id={id}
+  const idParamMatch = url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+  if (idParamMatch && idParamMatch[1]) {
+    return `https://lh3.googleusercontent.com/d/${idParamMatch[1]}`;
+  }
+
+  return url;
+}
