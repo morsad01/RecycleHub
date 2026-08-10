@@ -41,7 +41,7 @@
     top: -100px;
     left: 0;
     padding: 8px 16px;
-    background: #10b981;
+    background: #16B368;
     color: white;
     font-weight: 700;
     font-size: 14px;
@@ -55,7 +55,7 @@
 
   /* Accessibility: visible focus ring for keyboard navigation */
   :focus-visible {
-    outline: 2px solid #10b981;
+    outline: 2px solid #16B368;
     outline-offset: 2px;
     border-radius: 4px;
   }
