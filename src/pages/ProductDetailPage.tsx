@@ -227,6 +227,7 @@ export function ProductDetailPage() {
       navigate(`/login?redirect=/products/${id}`);
       return;
     }
+    if (!product) return;
     if (isOwner) {
       toast('You cannot purchase your own listing', 'info');
       return;
@@ -266,6 +267,7 @@ export function ProductDetailPage() {
       navigate(`/login?redirect=/products/${id}`);
       return;
     }
+    if (!product) return;
     if (isOwner) {
       toast('You cannot purchase your own listing', 'info');
       return;
