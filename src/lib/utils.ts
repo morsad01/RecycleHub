@@ -62,7 +62,7 @@ export function getStockPhotoUrl(query: string, w = 800, h = 600): string {
 export function toDirectGoogleDriveUrl(url?: string | null): string {
   if (!url) return '';
   if (url.startsWith('blob:') || url.startsWith('data:')) return url;
-  if (url.includes('googleusercontent.com') || url.includes('thumbnail?id=')) return url;
+  if (url.includes('googleusercontent.com')) return url;
 
   // Extract file ID from /file/d/{id}/...
   const fileIdMatch = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);

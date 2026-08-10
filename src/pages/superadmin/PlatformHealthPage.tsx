@@ -155,63 +155,64 @@ export function PlatformHealthPage() {
   return (
     <div className="space-y-6">
       {/* Title */}
-      <div className="flex justify-between items-center border-b border-gray-800 pb-4">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-[#1F2937] pb-4">
         <div>
-          <h2 className="text-xl font-bold tracking-tight text-white flex items-center gap-2">
-            <Activity size={20} className="text-red-500" /> Platform NOC Operations Center
+          <h2 className="text-lg font-bold text-white flex items-center gap-2">
+            <Activity size={18} className="text-emerald-400" /> Platform NOC Operations Center
           </h2>
-          <p className="text-xs text-gray-500 font-mono">Monitor platform status, load indicators, and pending workflows.</p>
+          <p className="text-xs text-slate-400 font-mono mt-0.5">Monitor system status, operational load, and moderation workflows.</p>
         </div>
-        <Badge variant="success" className="bg-emerald-950/60 border border-emerald-500/30 text-emerald-500 py-1 px-3">
-          SECURE CONNECTION ACTIVE
-        </Badge>
+        <div className="flex items-center gap-2 px-3 py-1.5 bg-[#162A22] border border-[#1B4D3E] text-emerald-400 text-xs font-semibold rounded-lg">
+          <span className="w-2 h-2 rounded-full bg-emerald-400" />
+          SYSTEM OPERATIONAL
+        </div>
       </div>
 
       {/* Grid 1: Infrastructure Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card className="p-5 bg-gray-950 border-gray-800 border-l-4 border-l-emerald-500">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <Card className="p-5 bg-[#161F30] border border-[#22304A]">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-3xs font-mono text-gray-500 uppercase tracking-widest">System Health</p>
+              <p className="text-[11px] font-mono text-slate-400 uppercase tracking-wider">System Health</p>
               <p className="text-xl font-bold text-white mt-1">{stats.operationalStatus}</p>
             </div>
-            <div className="h-10 w-10 bg-emerald-950/50 border border-emerald-500/20 rounded-lg flex items-center justify-center text-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.15)]">
+            <div className="h-10 w-10 bg-[#1E293B] border border-[#334155] rounded-lg flex items-center justify-center text-emerald-400">
               <CheckCircle size={20} />
             </div>
           </div>
         </Card>
 
-        <Card className="p-5 bg-gray-950 border-gray-800 border-l-4 border-l-blue-500">
+        <Card className="p-5 bg-[#161F30] border border-[#22304A]">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-3xs font-mono text-gray-500 uppercase tracking-widest">Live Connections</p>
+              <p className="text-[11px] font-mono text-slate-400 uppercase tracking-wider">Live Connections</p>
               <p className="text-xl font-bold text-white mt-1">{stats.liveConnections}</p>
             </div>
-            <div className="h-10 w-10 bg-blue-950/50 border border-blue-500/20 rounded-lg flex items-center justify-center text-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.15)]">
+            <div className="h-10 w-10 bg-[#1E293B] border border-[#334155] rounded-lg flex items-center justify-center text-slate-300">
               <Users size={20} />
             </div>
           </div>
         </Card>
 
-        <Card className="p-5 bg-gray-950 border-gray-800 border-l-4 border-l-purple-500">
+        <Card className="p-5 bg-[#161F30] border border-[#22304A]">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-3xs font-mono text-gray-500 uppercase tracking-widest">DB Server Load</p>
+              <p className="text-[11px] font-mono text-slate-400 uppercase tracking-wider">DB Server Load</p>
               <p className="text-xl font-bold text-white mt-1">{stats.dbLoad}%</p>
             </div>
-            <div className="h-10 w-10 bg-purple-950/50 border border-purple-500/20 rounded-lg flex items-center justify-center text-purple-500 shadow-[0_0_10px_rgba(168,85,247,0.15)]">
+            <div className="h-10 w-10 bg-[#1E293B] border border-[#334155] rounded-lg flex items-center justify-center text-slate-300">
               <Database size={20} />
             </div>
           </div>
         </Card>
 
-        <Card className="p-5 bg-gray-950 border-gray-800 border-l-4 border-l-red-500">
+        <Card className="p-5 bg-[#161F30] border border-[#22304A]">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-3xs font-mono text-gray-500 uppercase tracking-widest">Security Alerts</p>
+              <p className="text-[11px] font-mono text-slate-400 uppercase tracking-wider">Security Alerts</p>
               <p className="text-xl font-bold text-white mt-1">{stats.securityAlertsCount}</p>
             </div>
-            <div className="h-10 w-10 bg-red-950/50 border border-red-500/20 rounded-lg flex items-center justify-center text-red-500 shadow-[0_0_10px_rgba(239,68,68,0.15)]">
+            <div className="h-10 w-10 bg-[#1E293B] border border-[#334155] rounded-lg flex items-center justify-center text-rose-400">
               <ShieldAlert size={20} />
             </div>
           </div>
@@ -219,37 +220,39 @@ export function PlatformHealthPage() {
       </div>
 
       {/* Grid 2: Workflows and Financials */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Pending Tasks */}
-        <Card className="p-5 bg-gray-950 border-gray-800 md:col-span-2">
-          <h3 className="text-sm font-bold text-white tracking-wider font-mono mb-4 border-b border-gray-800 pb-2">PENDING WORKFLOW QUEUES</h3>
+        <Card className="p-5 bg-[#161F30] border border-[#22304A] lg:col-span-2">
+          <h3 className="text-xs font-bold text-slate-300 tracking-wider font-mono mb-4 border-b border-[#22304A] pb-2 uppercase">
+            Pending Workflow Queues
+          </h3>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div className="p-4 bg-gray-900 border border-gray-800 rounded-2xl flex items-center gap-3">
-              <div className="p-3 bg-yellow-950/40 border border-yellow-500/20 text-yellow-500 rounded-xl">
-                <ClipboardCheck size={20} />
+            <div className="p-4 bg-[#111827] border border-[#1F2937] rounded-xl flex items-center gap-3">
+              <div className="p-2.5 bg-[#1E293B] border border-[#334155] text-amber-400 rounded-lg">
+                <ClipboardCheck size={18} />
               </div>
               <div>
-                <p className="text-2xs text-gray-400 font-medium">Product Reviews</p>
+                <p className="text-xs text-slate-400">Product Reviews</p>
                 <p className="text-lg font-bold text-white">{stats.pendingProducts}</p>
               </div>
             </div>
 
-            <div className="p-4 bg-gray-900 border border-gray-800 rounded-2xl flex items-center gap-3">
-              <div className="p-3 bg-blue-950/40 border border-blue-500/20 text-blue-500 rounded-xl">
-                <ShieldAlert size={20} />
+            <div className="p-4 bg-[#111827] border border-[#1F2937] rounded-xl flex items-center gap-3">
+              <div className="p-2.5 bg-[#1E293B] border border-[#334155] text-sky-400 rounded-lg">
+                <ShieldAlert size={18} />
               </div>
               <div>
-                <p className="text-2xs text-gray-400 font-medium">Seller Verifications</p>
+                <p className="text-xs text-slate-400">Seller Verifications</p>
                 <p className="text-lg font-bold text-white">{stats.pendingVerifications}</p>
               </div>
             </div>
 
-            <div className="p-4 bg-gray-900 border border-gray-800 rounded-2xl flex items-center gap-3">
-              <div className="p-3 bg-red-950/40 border border-red-500/20 text-red-500 rounded-xl">
-                <Ticket size={20} />
+            <div className="p-4 bg-[#111827] border border-[#1F2937] rounded-xl flex items-center gap-3">
+              <div className="p-2.5 bg-[#1E293B] border border-[#334155] text-rose-400 rounded-lg">
+                <Ticket size={18} />
               </div>
               <div>
-                <p className="text-2xs text-gray-400 font-medium">Open Reports</p>
+                <p className="text-xs text-slate-400">Open Reports</p>
                 <p className="text-lg font-bold text-white">{stats.pendingReports}</p>
               </div>
             </div>
@@ -257,20 +260,22 @@ export function PlatformHealthPage() {
         </Card>
 
         {/* Platform Growth */}
-        <Card className="p-5 bg-gray-950 border-gray-800">
-          <h3 className="text-sm font-bold text-white tracking-wider font-mono mb-4 border-b border-gray-800 pb-2">REVENUE & GROWTH</h3>
+        <Card className="p-5 bg-[#161F30] border border-[#22304A]">
+          <h3 className="text-xs font-bold text-slate-300 tracking-wider font-mono mb-4 border-b border-[#22304A] pb-2 uppercase">
+            Revenue & Growth
+          </h3>
           <div className="space-y-3">
-            <div className="flex justify-between items-center bg-gray-900/60 p-2.5 rounded-xl border border-gray-800/40">
-              <span className="text-xs text-gray-400 flex items-center gap-1.5"><DollarSign size={14} /> Total Revenue</span>
+            <div className="flex justify-between items-center bg-[#111827] p-3 rounded-lg border border-[#1F2937]">
+              <span className="text-xs text-slate-400 flex items-center gap-2"><DollarSign size={14} className="text-emerald-400" /> Total Revenue</span>
               <span className="text-sm font-bold text-white">{formatPrice(stats.totalRevenue)}</span>
             </div>
-            <div className="flex justify-between items-center bg-gray-900/60 p-2.5 rounded-xl border border-gray-800/40">
-              <span className="text-xs text-gray-400 flex items-center gap-1.5"><Users size={14} /> Total Platform Users</span>
+            <div className="flex justify-between items-center bg-[#111827] p-3 rounded-lg border border-[#1F2937]">
+              <span className="text-xs text-slate-400 flex items-center gap-2"><Users size={14} className="text-sky-400" /> Platform Users</span>
               <span className="text-sm font-bold text-white">{stats.totalUsers}</span>
             </div>
-            <div className="flex justify-between items-center bg-gray-900/60 p-2.5 rounded-xl border border-gray-800/40">
-              <span className="text-xs text-gray-400 flex items-center gap-1.5"><Activity size={14} /> New Users Today</span>
-              <span className="text-sm font-bold text-white">+{stats.newUsersToday}</span>
+            <div className="flex justify-between items-center bg-[#111827] p-3 rounded-lg border border-[#1F2937]">
+              <span className="text-xs text-slate-400 flex items-center gap-2"><Activity size={14} className="text-emerald-400" /> New Users Today</span>
+              <span className="text-sm font-bold text-emerald-400">+{stats.newUsersToday}</span>
             </div>
           </div>
         </Card>
@@ -278,61 +283,61 @@ export function PlatformHealthPage() {
 
       {/* Grid 3: Realtime Infrastructure Monitoring Details */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Card className="p-5 bg-gray-950 border-gray-800">
-          <h3 className="text-sm font-bold text-white tracking-wider font-mono mb-4 border-b border-gray-800 pb-2 flex items-center gap-2">
-            <Cpu size={16} className="text-red-500" /> Infrastructure Node Status
+        <Card className="p-5 bg-[#161F30] border border-[#22304A]">
+          <h3 className="text-xs font-bold text-slate-300 tracking-wider font-mono mb-4 border-b border-[#22304A] pb-2 flex items-center gap-2 uppercase">
+            <Cpu size={15} className="text-slate-400" /> Infrastructure Node Status
           </h3>
           <div className="space-y-4">
             <div>
-              <div className="flex justify-between text-2xs font-mono text-gray-400 mb-1">
+              <div className="flex justify-between text-xs font-mono text-slate-400 mb-1.5">
                 <span>Vercel Edge Node (Asia South)</span>
-                <span className="text-green-500 font-bold">ACTIVE (100% OK)</span>
+                <span className="text-emerald-400 font-semibold">ACTIVE (100%)</span>
               </div>
-              <div className="w-full bg-gray-900 h-1.5 rounded-full overflow-hidden">
+              <div className="w-full bg-[#111827] h-2 rounded-full overflow-hidden border border-[#1F2937]">
                 <div className="bg-emerald-500 h-full w-[100%]" />
               </div>
             </div>
             <div>
-              <div className="flex justify-between text-2xs font-mono text-gray-400 mb-1">
+              <div className="flex justify-between text-xs font-mono text-slate-400 mb-1.5">
                 <span>Supabase Deno Edge Runtime</span>
-                <span className="text-green-500 font-bold">HEALTHY (99.8%)</span>
+                <span className="text-emerald-400 font-semibold">HEALTHY (99.8%)</span>
               </div>
-              <div className="w-full bg-gray-900 h-1.5 rounded-full overflow-hidden">
+              <div className="w-full bg-[#111827] h-2 rounded-full overflow-hidden border border-[#1F2937]">
                 <div className="bg-emerald-500 h-full w-[99.8%]" />
               </div>
             </div>
             <div>
-              <div className="flex justify-between text-2xs font-mono text-gray-400 mb-1">
+              <div className="flex justify-between text-xs font-mono text-slate-400 mb-1.5">
                 <span>Vercel Storage CDN Usage</span>
-                <span className="text-gray-400">1.2 GB / 10 GB</span>
+                <span className="text-slate-300">1.2 GB / 10 GB</span>
               </div>
-              <div className="w-full bg-gray-900 h-1.5 rounded-full overflow-hidden">
-                <div className="bg-blue-500 h-full w-[12%]" />
+              <div className="w-full bg-[#111827] h-2 rounded-full overflow-hidden border border-[#1F2937]">
+                <div className="bg-[#3B82F6] h-full w-[12%]" />
               </div>
             </div>
           </div>
         </Card>
 
-        <Card className="p-5 bg-gray-950 border-gray-800">
-          <h3 className="text-sm font-bold text-white tracking-wider font-mono mb-4 border-b border-gray-800 pb-2 flex items-center gap-2">
-            <Server size={16} className="text-red-500" /> AI API Engine Stats
+        <Card className="p-5 bg-[#161F30] border border-[#22304A]">
+          <h3 className="text-xs font-bold text-slate-300 tracking-wider font-mono mb-4 border-b border-[#22304A] pb-2 flex items-center gap-2 uppercase">
+            <Server size={15} className="text-slate-400" /> AI API Engine Stats
           </h3>
           <div className="space-y-3">
-            <div className="flex justify-between items-center text-xs">
-              <span className="text-gray-400">AI Model Provider</span>
-              <span className="text-white font-semibold">OpenAI (gpt-4o-mini)</span>
+            <div className="flex justify-between items-center text-xs bg-[#111827] p-2.5 rounded-lg border border-[#1F2937]">
+              <span className="text-slate-400">AI Model Provider</span>
+              <span className="text-white font-semibold">Google Gemini (gemini-1.5-flash)</span>
             </div>
-            <div className="flex justify-between items-center text-xs">
-              <span className="text-gray-400">Total API Queries Today</span>
+            <div className="flex justify-between items-center text-xs bg-[#111827] p-2.5 rounded-lg border border-[#1F2937]">
+              <span className="text-slate-400">API Queries Today</span>
               <span className="text-white font-semibold font-mono">{stats.aiUsageToday} Calls</span>
             </div>
-            <div className="flex justify-between items-center text-xs">
-              <span className="text-gray-400">API Threshold Limits</span>
-              <span className="text-white font-semibold font-mono text-emerald-400">NORMAL</span>
+            <div className="flex justify-between items-center text-xs bg-[#111827] p-2.5 rounded-lg border border-[#1F2937]">
+              <span className="text-slate-400">API Threshold Limits</span>
+              <span className="text-emerald-400 font-semibold font-mono">NORMAL</span>
             </div>
-            <div className="flex justify-between items-center text-xs">
-              <span className="text-gray-400">Web App API Connection</span>
-              <span className="text-white font-semibold font-mono text-emerald-400">CONNECTED</span>
+            <div className="flex justify-between items-center text-xs bg-[#111827] p-2.5 rounded-lg border border-[#1F2937]">
+              <span className="text-slate-400">Backend Connection</span>
+              <span className="text-emerald-400 font-semibold font-mono">CONNECTED</span>
             </div>
           </div>
         </Card>

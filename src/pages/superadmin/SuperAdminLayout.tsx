@@ -73,58 +73,58 @@ export function SuperAdminLayout({ children }: { children: ReactNode }) {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-950 text-gray-100 flex flex-col font-sans">
-      {/* Premium Operations Topbar */}
-      <header className="bg-gray-900 border-b border-gray-800 sticky top-0 z-50 shadow-lg">
+    <div className="min-h-screen bg-[#0B0F19] text-slate-100 flex flex-col font-sans">
+      {/* Operations Topbar */}
+      <header className="bg-[#111827] border-b border-[#1F2937] sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <img src={logoImg} alt="ResellBD Logo" className="w-8 h-8 object-contain rounded-lg bg-white/10 p-0.5 shadow-sm" />
+            <img src={logoImg} alt="ResellBD Logo" className="w-8 h-8 object-contain rounded-lg bg-[#1E293B] p-0.5 border border-[#374151]" />
             <div>
-              <h1 className="text-md font-bold tracking-tight text-white">Super Admin Control Center</h1>
-              <p className="text-3xs font-mono text-red-500/80 uppercase tracking-widest leading-none">Ops Dashboard</p>
+              <h1 className="text-sm font-bold text-white tracking-wide">Super Admin Control Center</h1>
+              <p className="text-[10px] font-mono text-slate-400 uppercase tracking-wider leading-none">Operations Hub</p>
             </div>
           </div>
-          <div className="flex items-center gap-4">
-            <div className="hidden md:flex items-center gap-2 px-3 py-1 bg-gray-950 border border-gray-800 rounded-full">
-              <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-ping" />
-              <span className="text-3xs font-mono text-gray-400">SECURE CONTEXT: {user?.email}</span>
+          <div className="flex items-center gap-3">
+            <div className="hidden md:flex items-center gap-2 px-3 py-1.5 bg-[#0B0F19] border border-[#1F2937] rounded-lg">
+              <span className="w-2 h-2 rounded-full bg-emerald-500" />
+              <span className="text-xs font-mono text-slate-300">{user?.email}</span>
             </div>
             <Link 
               to="/" 
-              className="text-xs font-medium text-gray-400 hover:text-white flex items-center gap-1.5 transition-colors"
+              className="text-xs font-medium text-slate-300 hover:text-white px-3 py-1.5 rounded-lg bg-[#1F2937] hover:bg-[#374151] border border-[#374151] flex items-center gap-1.5 transition-colors"
             >
               <Home size={14} /> Back to Site
             </Link>
             <button 
               onClick={handleSignOut}
-              className="text-xs font-semibold text-red-500 hover:bg-red-950/40 border border-red-950/20 hover:border-red-900/40 px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition-all"
+              className="text-xs font-semibold text-rose-400 hover:text-white bg-[#1F2937] hover:bg-rose-900/50 border border-[#374151] hover:border-rose-700/50 px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition-colors"
             >
-              <LogOut size={14} /> Terminate
+              <LogOut size={14} /> Logout
             </button>
           </div>
         </div>
       </header>
 
       {/* Main Body */}
-      <div className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-8 flex flex-col lg:flex-row gap-8">
+      <div className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-6 flex flex-col lg:flex-row gap-6">
         {/* Navigation Sidebar */}
-        <aside className="lg:w-64 shrink-0">
-          <div className="bg-gray-900 border border-gray-800 rounded-2xl p-4 sticky top-24 shadow-2xl max-h-[82vh] overflow-y-auto scrollbar-thin">
-            <nav className="flex lg:flex-col gap-5">
+        <aside className="lg:w-60 shrink-0">
+          <div className="bg-[#111827] border border-[#1F2937] rounded-xl p-3.5 sticky top-22 shadow-sm max-h-[85vh] overflow-y-auto scrollbar-thin">
+            <nav className="flex lg:flex-col gap-4">
               {/* Group 1: Core Ops */}
               <div>
-                <p className="text-4xs font-mono font-bold text-gray-500 uppercase tracking-widest mb-1.5 px-3">Core Operations</p>
-                <div className="flex lg:flex-col gap-0.5">
+                <p className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-wider mb-1.5 px-2.5">Core Operations</p>
+                <div className="flex lg:flex-col gap-1">
                   {coreLinks.map((link) => (
                     <NavLink
                       key={link.to}
                       to={link.to}
                       end={link.end}
                       className={({ isActive }) =>
-                        `flex items-center gap-2.5 px-3 py-2 rounded-lg text-2xs font-semibold whitespace-nowrap transition-all ${
+                        `flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium whitespace-nowrap transition-colors ${
                           isActive 
-                            ? 'bg-red-600/90 text-white shadow-[0_0_15px_rgba(220,38,38,0.25)] border border-red-500/20' 
-                            : 'text-gray-400 hover:bg-gray-850 hover:text-white border border-transparent'
+                            ? 'bg-[#1E293B] text-white border border-[#334155]' 
+                            : 'text-slate-400 hover:bg-[#1A2234] hover:text-white border border-transparent'
                         }`
                       }
                     >
@@ -136,17 +136,17 @@ export function SuperAdminLayout({ children }: { children: ReactNode }) {
 
               {/* Group 2: Compliance */}
               <div>
-                <p className="text-4xs font-mono font-bold text-gray-500 uppercase tracking-widest mb-1.5 px-3">Compliance</p>
-                <div className="flex lg:flex-col gap-0.5">
+                <p className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-wider mb-1.5 px-2.5">Compliance</p>
+                <div className="flex lg:flex-col gap-1">
                   {complianceLinks.map((link) => (
                     <NavLink
                       key={link.to}
                       to={link.to}
                       className={({ isActive }) =>
-                        `flex items-center gap-2.5 px-3 py-2 rounded-lg text-2xs font-semibold whitespace-nowrap transition-all ${
+                        `flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium whitespace-nowrap transition-colors ${
                           isActive 
-                            ? 'bg-red-600/90 text-white shadow-[0_0_15px_rgba(220,38,38,0.25)] border border-red-500/20' 
-                            : 'text-gray-400 hover:bg-gray-850 hover:text-white border border-transparent'
+                            ? 'bg-[#1E293B] text-white border border-[#334155]' 
+                            : 'text-slate-400 hover:bg-[#1A2234] hover:text-white border border-transparent'
                         }`
                       }
                     >
@@ -158,17 +158,17 @@ export function SuperAdminLayout({ children }: { children: ReactNode }) {
 
               {/* Group 3: CMS Content */}
               <div>
-                <p className="text-4xs font-mono font-bold text-gray-500 uppercase tracking-widest mb-1.5 px-3">CMS Pages</p>
-                <div className="flex lg:flex-col gap-0.5">
+                <p className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-wider mb-1.5 px-2.5">CMS Pages</p>
+                <div className="flex lg:flex-col gap-1">
                   {cmsLinks.map((link) => (
                     <NavLink
                       key={link.to}
                       to={link.to}
                       className={({ isActive }) =>
-                        `flex items-center gap-2.5 px-3 py-2 rounded-lg text-2xs font-semibold whitespace-nowrap transition-all ${
+                        `flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium whitespace-nowrap transition-colors ${
                           isActive 
-                            ? 'bg-red-600/90 text-white shadow-[0_0_15px_rgba(220,38,38,0.25)] border border-red-500/20' 
-                            : 'text-gray-400 hover:bg-gray-850 hover:text-white border border-transparent'
+                            ? 'bg-[#1E293B] text-white border border-[#334155]' 
+                            : 'text-slate-400 hover:bg-[#1A2234] hover:text-white border border-transparent'
                         }`
                       }
                     >
@@ -180,17 +180,17 @@ export function SuperAdminLayout({ children }: { children: ReactNode }) {
 
               {/* Group 4: CRM & Marketing */}
               <div>
-                <p className="text-4xs font-mono font-bold text-gray-500 uppercase tracking-widest mb-1.5 px-3">CRM & Marketing</p>
-                <div className="flex lg:flex-col gap-0.5">
+                <p className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-wider mb-1.5 px-2.5">CRM & Marketing</p>
+                <div className="flex lg:flex-col gap-1">
                   {marketingLinks.map((link) => (
                     <NavLink
                       key={link.to}
                       to={link.to}
                       className={({ isActive }) =>
-                        `flex items-center gap-2.5 px-3 py-2 rounded-lg text-2xs font-semibold whitespace-nowrap transition-all ${
+                        `flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium whitespace-nowrap transition-colors ${
                           isActive 
-                            ? 'bg-red-600/90 text-white shadow-[0_0_15px_rgba(220,38,38,0.25)] border border-red-500/20' 
-                            : 'text-gray-400 hover:bg-gray-850 hover:text-white border border-transparent'
+                            ? 'bg-[#1E293B] text-white border border-[#334155]' 
+                            : 'text-slate-400 hover:bg-[#1A2234] hover:text-white border border-transparent'
                         }`
                       }
                     >
@@ -202,17 +202,17 @@ export function SuperAdminLayout({ children }: { children: ReactNode }) {
 
               {/* Group 5: Infrastructure */}
               <div>
-                <p className="text-4xs font-mono font-bold text-gray-500 uppercase tracking-widest mb-1.5 px-3">Infrastructure</p>
-                <div className="flex lg:flex-col gap-0.5">
+                <p className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-wider mb-1.5 px-2.5">Infrastructure</p>
+                <div className="flex lg:flex-col gap-1">
                   {infrastructureLinks.map((link) => (
                     <NavLink
                       key={link.to}
                       to={link.to}
                       className={({ isActive }) =>
-                        `flex items-center gap-2.5 px-3 py-2 rounded-lg text-2xs font-semibold whitespace-nowrap transition-all ${
+                        `flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium whitespace-nowrap transition-colors ${
                           isActive 
-                            ? 'bg-red-600/90 text-white shadow-[0_0_15px_rgba(220,38,38,0.25)] border border-red-500/20' 
-                            : 'text-gray-400 hover:bg-gray-850 hover:text-white border border-transparent'
+                            ? 'bg-[#1E293B] text-white border border-[#334155]' 
+                            : 'text-slate-400 hover:bg-[#1A2234] hover:text-white border border-transparent'
                         }`
                       }
                     >
@@ -226,8 +226,7 @@ export function SuperAdminLayout({ children }: { children: ReactNode }) {
         </aside>
         
         {/* Page Content viewport */}
-        <main className="flex-1 min-w-0 bg-gray-900 border border-gray-800 rounded-3xl p-6 shadow-2xl relative">
-          <div className="absolute top-0 right-0 w-24 h-[1px] bg-gradient-to-l from-red-500/20 to-transparent" />
+        <main className="flex-1 min-w-0 bg-[#111827] border border-[#1F2937] rounded-xl p-6 shadow-sm">
           {children}
         </main>
       </div>

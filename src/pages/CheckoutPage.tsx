@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
-import { CreditCard, MapPin, Truck, CheckCircle2, ArrowLeft, ArrowRight, ShieldCheck } from 'lucide-react';
+import { CreditCard, MapPin, Truck, CheckCircle2, ArrowLeft, ArrowRight, ShieldCheck, Sparkles, ExternalLink } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../auth/AuthContext';
 import { useToast } from '../components/ui/Toast';
 import { Button, Input } from '../components/ui';
 import { formatPrice } from '../lib/utils';
+import { SSLCommerzService } from '../services/sslcommerz';
 import type { Address } from '../types';
 
 export function CheckoutPage() {
@@ -30,8 +31,9 @@ export function CheckoutPage() {
   // Delivery Method state
   const [deliveryMethod, setDeliveryMethod] = useState<'standard' | 'pickup'>('standard');
 
-  // Payment Provider state
-  const [paymentMethod, setPaymentMethod] = useState<'cod' | 'bkash' | 'nagad' | 'stripe'>('cod');
+  // Payment Provider state - default to SSLCommerz
+  const [paymentMethod, setPaymentMethod] = useState<'sslcommerz' | 'cod' | 'bkash' | 'nagad'>('sslcommerz');
+  const [isRedirectingSSL, setIsRedirectingSSL] = useState(false);
 
   // Fetch cart items
   const { data: cartItems } = useQuery({
@@ -91,23 +93,26 @@ export function CheckoutPage() {
     mutationFn: async () => {
       const items = cartItems ?? [];
       const orderIds: string[] = [];
+      let totalOrderAmount = 0;
 
       for (const item of items) {
         if (!item.product) continue;
         const totalAmount = item.product.price * item.quantity;
         const deliveryCharge = deliveryMethod === 'standard' ? 120 : 0;
+        const itemTotal = totalAmount + deliveryCharge;
+        totalOrderAmount += itemTotal;
 
         const orderData = {
           buyer_id: user!.id,
           seller_id: item.product.seller_id,
           product_id: item.product.id,
           quantity: item.quantity,
-          total_amount: totalAmount + deliveryCharge,
+          total_amount: itemTotal,
           delivery_charge: deliveryCharge,
           delivery_address_id: deliveryMethod === 'standard' ? selectedAddressId : null,
           delivery_method: deliveryMethod,
           payment_method: paymentMethod,
-          payment_status: paymentMethod === 'cod' ? 'unpaid' : 'paid',
+          payment_status: paymentMethod === 'cod' ? 'unpaid' : 'unpaid',
           status: 'pending',
         };
 
@@ -119,43 +124,73 @@ export function CheckoutPage() {
 
         if (orderError) throw orderError;
 
-        // Persist transaction if paid online
-        if (paymentMethod !== 'cod' && order) {
-          const transactionData = {
-            user_id: user!.id,
-            order_id: order.id,
-            amount: totalAmount + deliveryCharge,
-            provider: paymentMethod,
-            transaction_id: `TXN-${crypto.randomUUID().slice(0, 18).toUpperCase()}`,
-            status: 'success',
-          };
-          await supabase.from('transactions').insert(transactionData);
-        }
+        orderIds.push(order.id);
+      }
 
-        // Notify seller
+      // If SSLCommerz / Online payment selected, initiate SSL session and redirect
+      if (paymentMethod === 'sslcommerz' || paymentMethod === 'bkash' || paymentMethod === 'nagad') {
+        setIsRedirectingSSL(true);
+        const activeAddr = addresses?.find((a) => a.id === selectedAddressId);
+        
+        // Calculate tax 5%
+        const sub = items.reduce((s, it) => s + (it.product?.price ?? 0) * it.quantity, 0);
+        const shipping = deliveryMethod === 'standard' ? 120 : 0;
+        const taxVal = sub * 0.05;
+        const finalGrandTotal = sub + shipping + taxVal;
+
+        const firstProductTitle = items[0]?.product?.title || 'ResellBD Products';
+
+        const sslRes = await SSLCommerzService.initiateOrderPayment({
+          order_ids: orderIds,
+          user_id: user!.id,
+          total_amount: finalGrandTotal,
+          cus_name: user?.user_metadata?.full_name || 'Customer',
+          cus_email: user!.email || 'customer@resellbd.app',
+          cus_phone: activeAddr?.phone || '01700000000',
+          cus_add1: activeAddr?.full_address || 'Dhaka',
+          cus_city: activeAddr?.city || 'Dhaka',
+          product_name: items.length > 1 ? `${firstProductTitle} + ${items.length - 1} more` : firstProductTitle,
+          product_category: 'Second-hand Goods',
+        });
+
+        // Delete cart items
+        await supabase.from('cart_items').delete().eq('user_id', user!.id);
+
+        if (sslRes.gateway_url) {
+          window.location.href = sslRes.gateway_url;
+          return { isSSL: true, gateway_url: sslRes.gateway_url };
+        }
+      }
+
+      // COD Flow
+      // Notify seller
+      for (const item of items) {
+        if (!item.product) continue;
         const notifyData = {
           user_id: item.product.seller_id,
-          title: 'New Purchase Order Received',
+          title: 'New Cash on Delivery Order Received',
           message: `Buyer placed an order for your listing: "${item.product.title}".`,
           type: 'order',
           is_read: false,
         };
         await supabase.from('notifications').insert(notifyData);
-
-        orderIds.push(order.id);
       }
 
       // Delete cart items
       await supabase.from('cart_items').delete().eq('user_id', user!.id);
-      return orderIds;
+      return { isSSL: false, orderIds };
     },
-    onSuccess: () => {
+    onSuccess: (result: any) => {
       queryClient.invalidateQueries({ queryKey: ['cart-items'] });
       queryClient.invalidateQueries({ queryKey: ['orders'] });
-      toast('Order placed successfully!', 'success');
-      navigate('/orders');
+
+      if (!result?.isSSL) {
+        toast('Order placed successfully via Cash on Delivery!', 'success');
+        navigate('/orders');
+      }
     },
     onError: (err: any) => {
+      setIsRedirectingSSL(false);
       toast(err.message || 'Error placing order', 'error');
     },
   });
@@ -278,22 +313,78 @@ export function CheckoutPage() {
           {/* STEP 2: PAYMENT */}
           {step === 2 && (
             <div className="space-y-4">
-              <h2 className="text-sm font-bold text-neutral-800 flex items-center gap-1.5"><CreditCard size={16} className="text-primary-500" /> Payment Provider</h2>
-              <div className="space-y-2">
-                {[
-                  { id: 'cod', name: 'Cash on Delivery (COD)', desc: 'Pay directly during courier transit drops.' },
-                  { id: 'bkash', name: 'bKash Merchant Pay', desc: 'Secure mobile payment with OTP verification.' },
-                  { id: 'nagad', name: 'Nagad Mobile Finance', desc: 'Settle securely using bKash/Nagad digital channels.' },
-                  { id: 'stripe', name: 'Stripe International Cards', desc: 'Pay instantly using secure credit or debit cards.' }
-                ].map((prov) => (
-                  <label key={prov.id} className={`flex items-start gap-3 p-3 rounded-2xl border cursor-pointer hover:bg-neutral-50 transition-colors ${paymentMethod === prov.id ? 'border-primary-500 bg-primary-50/20' : 'border-neutral-200'}`}>
-                    <input type="radio" checked={paymentMethod === prov.id} onChange={() => setPaymentMethod(prov.id as any)} className="mt-1" />
-                    <div className="text-xs">
-                      <span className="font-bold text-neutral-900">{prov.name}</span>
-                      <p className="text-neutral-500 mt-0.5">{prov.desc}</p>
+              <div className="flex items-center justify-between">
+                <h2 className="text-sm font-bold text-neutral-800 flex items-center gap-1.5">
+                  <CreditCard size={16} className="text-primary-500" /> Select Payment Method
+                </h2>
+                <span className="text-2xs font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-100">
+                  256-bit Encrypted
+                </span>
+              </div>
+
+              <div className="space-y-3">
+                {/* SSLCommerz All-in-one Gateway */}
+                <label className={`flex items-start gap-3.5 p-4 rounded-2xl border cursor-pointer hover:bg-neutral-50/80 transition-all ${
+                  paymentMethod === 'sslcommerz' ? 'border-primary-500 bg-primary-50/20 ring-2 ring-primary-500/10 shadow-xs' : 'border-neutral-200'
+                }`}>
+                  <input
+                    type="radio"
+                    name="payment"
+                    checked={paymentMethod === 'sslcommerz'}
+                    onChange={() => setPaymentMethod('sslcommerz')}
+                    className="mt-1 text-primary-600 focus:ring-primary-500"
+                  />
+                  <div className="flex-1 text-xs">
+                    <div className="flex items-center justify-between gap-2 flex-wrap">
+                      <span className="font-bold text-neutral-900 text-sm flex items-center gap-1.5">
+                        SSLCommerz Gateway
+                        <span className="text-[10px] font-extrabold bg-gradient-to-r from-amber-500 to-primary-600 text-white px-2 py-0.5 rounded-full shadow-xs">
+                          RECOMMENDED
+                        </span>
+                      </span>
                     </div>
-                  </label>
-                ))}
+                    <p className="text-neutral-500 mt-1">
+                      Pay instantly & securely with any Bangladeshi Debit/Credit Card, Mobile Banking, or Net Banking.
+                    </p>
+                    {/* Method Badges */}
+                    <div className="flex items-center gap-1.5 mt-2.5 flex-wrap">
+                      <span className="px-2 py-0.5 rounded-md bg-rose-50 text-rose-700 font-bold text-[10px] border border-rose-100">
+                        bKash
+                      </span>
+                      <span className="px-2 py-0.5 rounded-md bg-orange-50 text-orange-700 font-bold text-[10px] border border-orange-100">
+                        Nagad
+                      </span>
+                      <span className="px-2 py-0.5 rounded-md bg-purple-50 text-purple-700 font-bold text-[10px] border border-purple-100">
+                        Rocket
+                      </span>
+                      <span className="px-2 py-0.5 rounded-md bg-blue-50 text-blue-700 font-bold text-[10px] border border-blue-100">
+                        Visa / Mastercard
+                      </span>
+                      <span className="px-2 py-0.5 rounded-md bg-cyan-50 text-cyan-700 font-bold text-[10px] border border-cyan-100">
+                        Net Banking
+                      </span>
+                    </div>
+                  </div>
+                </label>
+
+                {/* Cash on Delivery */}
+                <label className={`flex items-start gap-3.5 p-4 rounded-2xl border cursor-pointer hover:bg-neutral-50 transition-all ${
+                  paymentMethod === 'cod' ? 'border-primary-500 bg-primary-50/20 ring-2 ring-primary-500/10' : 'border-neutral-200'
+                }`}>
+                  <input
+                    type="radio"
+                    name="payment"
+                    checked={paymentMethod === 'cod'}
+                    onChange={() => setPaymentMethod('cod')}
+                    className="mt-1 text-primary-600 focus:ring-primary-500"
+                  />
+                  <div className="text-xs">
+                    <span className="font-bold text-neutral-900 text-sm">Cash on Delivery (COD)</span>
+                    <p className="text-neutral-500 mt-1">
+                      Pay with cash when courier delivery personnel drops your package at your doorstep.
+                    </p>
+                  </div>
+                </label>
               </div>
             </div>
           )}
@@ -303,7 +394,7 @@ export function CheckoutPage() {
             <div className="space-y-5">
               <h2 className="text-sm font-bold text-neutral-800">Review Your Purchase</h2>
 
-              <div className="text-xs space-y-2.5 bg-neutral-50 p-4 rounded-2xl">
+              <div className="text-xs space-y-2.5 bg-neutral-50 p-4 rounded-2xl border border-neutral-100">
                 {deliveryMethod === 'standard' && activeAddress && (
                   <div className="flex justify-between border-b border-neutral-100 pb-2">
                     <span className="text-neutral-500 font-semibold">Shipping To</span>
@@ -316,13 +407,17 @@ export function CheckoutPage() {
                 </div>
                 <div className="flex justify-between">
                   <span className="text-neutral-500 font-semibold">Payment Method</span>
-                  <span className="font-medium uppercase">{paymentMethod}</span>
+                  <span className="font-bold text-primary-600 uppercase">
+                    {paymentMethod === 'sslcommerz' ? 'SSLCommerz (Cards & Mobile Banking)' : 'Cash on Delivery'}
+                  </span>
                 </div>
               </div>
 
               <div className="flex items-center gap-2 p-3 bg-success-50 text-success-800 rounded-2xl border border-success-100">
                 <ShieldCheck size={18} className="shrink-0" />
-                <span className="text-2xs font-semibold">ResellBD secure buyer protection guarantees authentic products.</span>
+                <span className="text-2xs font-semibold">
+                  ResellBD Buyer Guarantee: 100% verified transaction security and escrow protection.
+                </span>
               </div>
             </div>
           )}
@@ -331,6 +426,7 @@ export function CheckoutPage() {
           <div className="flex justify-between pt-6 border-t border-neutral-100 mt-6">
             <Button
               variant="outline"
+              disabled={placeOrderMutation.isPending || isRedirectingSSL}
               onClick={() => {
                 if (step > 0) setStep((step - 1) as any);
                 else navigate('/cart');
@@ -344,8 +440,19 @@ export function CheckoutPage() {
                 Next <ArrowRight size={16} className="ml-1" />
               </Button>
             ) : (
-              <Button onClick={() => placeOrderMutation.mutate()} loading={placeOrderMutation.isPending}>
-                Place Order (Confirm)
+              <Button
+                onClick={() => placeOrderMutation.mutate()}
+                loading={placeOrderMutation.isPending || isRedirectingSSL}
+                size="lg"
+                className="font-bold shadow-md"
+              >
+                {paymentMethod === 'sslcommerz' ? (
+                  <span className="flex items-center gap-1.5">
+                    Pay Now with SSLCommerz <ExternalLink size={15} />
+                  </span>
+                ) : (
+                  'Place Order (Cash on Delivery)'
+                )}
               </Button>
             )}
           </div>

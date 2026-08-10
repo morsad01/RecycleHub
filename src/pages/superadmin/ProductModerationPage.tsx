@@ -14,7 +14,7 @@ import {
   MapPin,
   Maximize2
 } from 'lucide-react';
-import { formatPrice } from '../../lib/utils';
+import { formatPrice, toDirectGoogleDriveUrl } from '../../lib/utils';
 import type { ProductWithRelations } from '../../types';
 
 export function ProductModerationPage() {
@@ -139,7 +139,7 @@ export function ProductModerationPage() {
                       {/* Image Thumbnail */}
                       <div className="aspect-video w-full bg-gray-900 relative">
                         {primaryImage ? (
-                          <img src={primaryImage} alt="" className="w-full h-full object-cover" />
+                          <img src={toDirectGoogleDriveUrl(primaryImage)} alt="" className="w-full h-full object-cover" />
                         ) : (
                           <div className="w-full h-full flex items-center justify-center text-gray-700 text-xs">No media provided</div>
                         )}
@@ -203,8 +203,8 @@ export function ProductModerationPage() {
               {/* Images Grid Carousel */}
               <div className="grid grid-cols-3 gap-2">
                 {selectedProduct.product_images?.map((img) => (
-                  <a key={img.id} href={img.url} target="_blank" rel="noreferrer" className="block aspect-square border border-gray-800 rounded-lg overflow-hidden relative group bg-gray-900">
-                    <img src={img.url} alt="" className="w-full h-full object-cover" />
+                  <a key={img.id} href={toDirectGoogleDriveUrl(img.url)} target="_blank" rel="noreferrer" className="block aspect-square border border-gray-800 rounded-lg overflow-hidden relative group bg-gray-900">
+                    <img src={toDirectGoogleDriveUrl(img.url)} alt="" className="w-full h-full object-cover" />
                   </a>
                 ))}
               </div>

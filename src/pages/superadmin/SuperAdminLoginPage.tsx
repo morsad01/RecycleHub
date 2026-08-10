@@ -33,30 +33,26 @@ export function SuperAdminLoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-950 px-4 relative overflow-hidden">
-      {/* Cyber Grid Background Accent */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(220,38,38,0.07),transparent)] pointer-events-none" />
-      <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-red-500/20 to-transparent" />
-
-      <div className="w-full max-w-md z-10">
+    <div className="min-h-screen flex items-center justify-center bg-[#0B0F19] px-4">
+      <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <div className="inline-flex w-16 h-16 rounded-2xl bg-red-950/60 border border-red-500/30 items-center justify-center mb-4 shadow-[0_0_20px_rgba(220,38,38,0.2)]">
-            <ShieldCheck size={32} className="text-red-500 animate-pulse" />
+          <div className="inline-flex w-14 h-14 rounded-xl bg-[#161F30] border border-[#22304A] items-center justify-center mb-4 text-emerald-400">
+            <ShieldCheck size={28} />
           </div>
-          <h1 className="text-3xl font-extrabold text-white tracking-tight">Super Admin Portal</h1>
-          <p className="text-xs text-red-500/80 font-mono mt-1 uppercase tracking-widest">Platform Owner Login — Secure Access Only</p>
+          <h1 className="text-2xl font-bold text-white tracking-tight">Super Admin Portal</h1>
+          <p className="text-xs text-slate-400 font-mono mt-1 uppercase tracking-wider">Platform Owner Login — Secure Access</p>
         </div>
 
-        <div className="bg-gray-900/90 border border-gray-800 rounded-3xl p-8 shadow-2xl backdrop-blur-md">
-          <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="bg-[#111827] border border-[#1F2937] rounded-xl p-8 shadow-sm">
+          <form onSubmit={handleSubmit} className="space-y-5">
             <Input
-              label="Secure Email Address"
+              label="Email Address"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              icon={<Mail size={18} className="text-gray-500" />}
+              icon={<Mail size={18} className="text-slate-400" />}
               required
-              className="bg-gray-950 border-gray-800 text-white placeholder-gray-600 focus:border-red-500/50"
+              className="bg-[#0B0F19] border-[#1F2937] text-white placeholder-slate-500 focus:border-[#0F7A5C]"
               placeholder="admin@resellbd.com"
             />
             
@@ -67,22 +63,22 @@ export function SuperAdminLoginPage() {
               onChange={(e) => setPassword(e.target.value)}
               icon={<Lock size={18} className="text-gray-500" />}
               required
-              className="bg-gray-950 border-gray-800 text-white placeholder-gray-600 focus:border-red-500/50"
+              className="bg-[#0B0F19] border-[#1F2937] text-white placeholder-slate-500 focus:border-[#0F7A5C]"
               placeholder="••••••••"
             />
 
             <Button 
               type="submit" 
               loading={loading} 
-              className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-3 rounded-xl border border-red-500/30 transition-all shadow-[0_0_15px_rgba(220,38,38,0.25)] hover:shadow-[0_0_25px_rgba(220,38,38,0.45)]"
+              className="w-full bg-[#0F7A5C] hover:bg-[#0D6B50] text-white font-medium py-2.5 rounded-lg transition-colors"
               size="lg"
             >
               Verify & Connect
             </Button>
           </form>
           
-          <div className="mt-6 pt-6 border-t border-gray-800/60 text-center">
-            <p className="text-2xs text-gray-500 font-mono">
+          <div className="mt-5 pt-5 border-t border-[#1F2937] text-center">
+            <p className="text-xs text-slate-500 font-mono">
               SYSTEM IP: LOGGED FOR SECURITY AUDIT
             </p>
           </div>

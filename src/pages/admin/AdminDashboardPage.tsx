@@ -67,25 +67,25 @@ export function AdminDashboardPage() {
   });
 
   const kpiCards = [
-    { label: t('admin.totalUsers'), value: stats?.totalUsers ?? 0, icon: <Users size={20} />, color: 'bg-primary-500' },
-    { label: t('admin.totalListings'), value: stats?.totalListings ?? 0, icon: <Package size={20} />, color: 'bg-blue-500' },
-    { label: t('admin.gmv'), value: formatPrice(stats?.gmv ?? 0), icon: <DollarSign size={20} />, color: 'bg-accent-500' },
-    { label: t('admin.flagged'), value: stats?.flagged ?? 0, icon: <Flag size={20} />, color: 'bg-error-500' },
+    { label: t('admin.totalUsers'), value: stats?.totalUsers ?? 0, icon: <Users size={18} /> },
+    { label: t('admin.totalListings'), value: stats?.totalListings ?? 0, icon: <Package size={18} /> },
+    { label: t('admin.gmv'), value: formatPrice(stats?.gmv ?? 0), icon: <DollarSign size={18} /> },
+    { label: t('admin.flagged'), value: stats?.flagged ?? 0, icon: <Flag size={18} /> },
   ];
 
   return (
     <AdminLayout>
-      <h1 className="text-2xl font-bold text-neutral-900 mb-6">{t('admin.dashboard')}</h1>
+      <h1 className="text-xl font-bold text-neutral-900 mb-6">{t('admin.dashboard')}</h1>
 
       {/* KPI cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         {kpiCards.map((kpi, i) => (
-          <div key={i} className="bg-white rounded-2xl shadow-card p-5">
-            <div className={`w-10 h-10 rounded-xl ${kpi.color} text-white flex items-center justify-center mb-3`}>
+          <div key={i} className="bg-white rounded-xl shadow-xs border border-neutral-200 p-5">
+            <div className="w-9 h-9 rounded-lg bg-neutral-100 text-neutral-700 flex items-center justify-center mb-3">
               {kpi.icon}
             </div>
-            <p className="text-sm text-neutral-500">{kpi.label}</p>
-            <p className="text-2xl font-bold text-neutral-900 mt-1">{kpi.value}</p>
+            <p className="text-xs text-neutral-500 font-medium">{kpi.label}</p>
+            <p className="text-xl font-bold text-neutral-900 mt-1">{kpi.value}</p>
           </div>
         ))}
       </div>

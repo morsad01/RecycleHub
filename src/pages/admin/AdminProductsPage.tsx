@@ -6,7 +6,7 @@ import { useI18n } from '../../i18n/I18nContext';
 import { useToast } from '../../components/ui/Toast';
 import { AdminLayout } from './AdminLayout';
 import { Badge, Button } from '../../components/ui';
-import { formatPrice, statusColors } from '../../lib/utils';
+import { formatPrice, statusColors, toDirectGoogleDriveUrl } from '../../lib/utils';
 import type { ProductWithRelations } from '../../types';
 
 export function AdminProductsPage() {
@@ -67,7 +67,13 @@ export function AdminProductsPage() {
         {products?.map((p) => (
           <div key={p.id} className="bg-white rounded-2xl shadow-card p-4 flex items-center gap-4">
             <div className="w-16 h-16 rounded-xl bg-neutral-100 overflow-hidden shrink-0">
-              {p.product_images?.[0] && <img src={p.product_images[0].url} alt="" className="w-full h-full object-cover" />}
+              {p.product_images?.[0] && (
+                <img
+                  src={toDirectGoogleDriveUrl(p.product_images[0].url)}
+                  alt=""
+                  className="w-full h-full object-cover"
+                />
+              )}
             </div>
             <div className="flex-1 min-w-0">
               <p className="font-medium text-neutral-900 truncate">{p.title}</p>

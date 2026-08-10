@@ -67,7 +67,13 @@ export function AdminUsersPage() {
                   </div>
                 </td>
                 <td className="px-4 py-3 hidden sm:table-cell">
-                  {u.role === 'admin' ? <Badge variant="primary">{t('nav.admin')}</Badge> : <Badge variant="neutral">User</Badge>}
+                  {u.role === 'super_admin' ? (
+                    <Badge variant="primary" className="bg-red-900/40 text-red-500 border border-red-500/20">Super Admin</Badge>
+                  ) : u.role === 'admin' ? (
+                    <Badge variant="primary">{t('nav.admin')}</Badge>
+                  ) : (
+                    <Badge variant="neutral">User</Badge>
+                  )}
                   {u.is_seller_verified && <Badge variant="success" className="ml-1"><ShieldCheck size={10} /> Verified</Badge>}
                 </td>
                 <td className="px-4 py-3 text-sm text-neutral-500 hidden sm:table-cell">{formatDate(u.created_at)}</td>
@@ -75,7 +81,7 @@ export function AdminUsersPage() {
                   {u.is_banned ? <Badge variant="error">Banned</Badge> : <Badge variant="success">Active</Badge>}
                 </td>
                 <td className="px-4 py-3 text-right">
-                  {u.role !== 'admin' && (
+                  {u.role !== 'admin' && u.role !== 'super_admin' && (
                     <Button
                       variant={u.is_banned ? 'outline' : 'ghost'}
                       size="sm"

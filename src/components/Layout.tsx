@@ -1,9 +1,9 @@
-import { ReactNode, useState } from 'react';
+import { ReactNode, useState, useEffect, useRef } from 'react';
 import { Link, NavLink, useNavigate, useLocation } from 'react-router-dom';
 import {
   Search, Menu, X, Bell, Heart, MessageCircle, Package, LayoutDashboard,
-  PlusCircle, LogOut, User as UserIcon, Shield, Globe, ChevronDown, ShoppingCart,
-  Sparkles,
+  LogOut, User as UserIcon, Shield, Globe, ChevronDown, ShoppingCart,
+  Sparkles, PlusCircle,
 } from 'lucide-react';
 import { useAuth } from '../auth/AuthContext';
 import { useI18n } from '../i18n/I18nContext';
@@ -21,6 +21,44 @@ export function Layout({ children }: { children: ReactNode }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+
+  const userMenuRef = useRef<HTMLDivElement>(null);
+  const mobileMenuRef = useRef<HTMLDivElement>(null);
+
+  // Close menus on click outside or Escape key press
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent | TouchEvent) => {
+      if (userMenuRef.current && !userMenuRef.current.contains(event.target as Node)) {
+        setUserMenuOpen(false);
+      }
+      if (mobileMenuRef.current && !mobileMenuRef.current.contains(event.target as Node)) {
+        setMobileMenuOpen(false);
+      }
+    };
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setUserMenuOpen(false);
+        setMobileMenuOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('touchstart', handleClickOutside);
+    document.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
+
+  // Close dropdown on route change
+  useEffect(() => {
+    setUserMenuOpen(false);
+    setMobileMenuOpen(false);
+  }, [location.pathname]);
 
   const { data: unreadCount } = useQuery({
     queryKey: ['unread-notifications'],
@@ -89,7 +127,6 @@ export function Layout({ children }: { children: ReactNode }) {
     { to: '/dashboard', label: t('nav.dashboard'), icon: <LayoutDashboard size={18} /> },
     { to: '/sell/new', label: t('nav.sell'), icon: <PlusCircle size={18} /> },
     { to: '/my-listings', label: t('nav.myListings'), icon: <Package size={18} /> },
-
     { to: '/wishlist', label: t('nav.wishlist'), icon: <Heart size={18} /> },
     { to: '/messages', label: t('nav.messages'), icon: <MessageCircle size={18} />, badge: unreadMessages },
     { to: '/orders', label: t('nav.orders'), icon: <Package size={18} /> },
@@ -138,25 +175,6 @@ export function Layout({ children }: { children: ReactNode }) {
 
               {/* Header Right Actions */}
               <div className="flex items-center gap-1.5 sm:gap-2">
-                {/* Sell Item Button */}
-                <Link
-                  to="/sell/new"
-                  className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl text-xs font-bold bg-amber-400 hover:bg-amber-500 text-neutral-950 transition-all shadow-xs shrink-0"
-                >
-                  <PlusCircle size={14} />
-                  <span>+ Sell</span>
-                </Link>
-
-                {/* Language toggle */}
-                <button
-                  onClick={() => setLang(lang === 'en' ? 'bn' : 'en')}
-                  className="flex items-center gap-1 px-2 py-1.5 rounded-lg text-xs font-semibold text-neutral-600 hover:bg-neutral-100 transition-colors"
-                  title="Switch language"
-                >
-                  <Globe size={15} />
-                  <span>{lang === 'en' ? 'EN' : 'বাং'}</span>
-                </button>
-
                 {user ? (
                   <>
                     <Link to="/cart" className="relative p-2 rounded-lg text-neutral-600 hover:bg-neutral-100 transition-colors">
@@ -178,51 +196,112 @@ export function Layout({ children }: { children: ReactNode }) {
                     </Link>
 
                     {/* User menu */}
-                    <div className="relative">
+                    <div className="relative" ref={userMenuRef}>
                       <button
-                        onClick={() => setUserMenuOpen(!userMenuOpen)}
-                        className="flex items-center gap-2 p-1 pr-2 rounded-lg hover:bg-neutral-100 transition-colors"
+                        onClick={() => setUserMenuOpen((prev) => !prev)}
+                        className={`flex items-center gap-2 p-1.5 pr-2 rounded-xl transition-all duration-200 ${
+                          userMenuOpen ? 'bg-neutral-100 ring-2 ring-primary-500/20 shadow-xs' : 'hover:bg-neutral-100'
+                        }`}
+                        aria-expanded={userMenuOpen}
+                        aria-haspopup="true"
                       >
                         <Avatar src={profile?.avatar_url} name={profile?.full_name} size={32} />
-                        <ChevronDown size={16} className="text-neutral-400 hidden sm:block" />
+                        <ChevronDown
+                          size={16}
+                          className={`text-neutral-400 hidden sm:block transition-transform duration-200 ${
+                            userMenuOpen ? 'rotate-180 text-primary-600' : ''
+                          }`}
+                        />
                       </button>
-                      {userMenuOpen && (
-                        <>
-                          <div className="fixed inset-0 z-10" onClick={() => setUserMenuOpen(false)} />
-                          <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-lg border border-neutral-100 py-2 z-20 animate-scale-in">
-                            <div className="px-4 py-2 border-b border-neutral-100">
-                              <p className="text-sm font-medium text-neutral-900 truncate">{profile?.full_name}</p>
-                              <p className="text-xs text-neutral-500 truncate">{user.email}</p>
-                              {profile?.is_seller_verified && (
-                                <Badge variant="success" className="mt-1">
-                                  <Shield size={12} /> {t('product.verifiedSeller')}
-                                </Badge>
-                              )}
+
+                      {/* Smooth animated dropdown */}
+                      <div
+                        className={`absolute right-0 mt-2 w-60 bg-white/95 backdrop-blur-md rounded-2xl shadow-xl border border-neutral-100 py-2 z-30 transition-all duration-200 origin-top-right ${
+                          userMenuOpen
+                            ? 'opacity-100 scale-100 translate-y-0 pointer-events-auto'
+                            : 'opacity-0 scale-95 -translate-y-2 pointer-events-none'
+                        }`}
+                      >
+                        <div className="px-4 py-2.5 border-b border-neutral-100">
+                          <p className="text-sm font-bold text-neutral-900 truncate">{profile?.full_name}</p>
+                          <p className="text-xs text-neutral-500 truncate mt-0.5">{user.email}</p>
+                          {profile?.is_seller_verified && (
+                            <Badge variant="success" className="mt-1.5">
+                              <Shield size={12} /> {t('product.verifiedSeller')}
+                            </Badge>
+                          )}
+                        </div>
+
+                        <div className="py-1">
+                          <Link
+                            to="/profile"
+                            onClick={() => setUserMenuOpen(false)}
+                            className="flex items-center gap-3 px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-50 hover:text-primary-600 transition-colors"
+                          >
+                            <UserIcon size={16} className="text-neutral-400" /> {t('nav.profile')}
+                          </Link>
+                          <Link
+                            to="/kyc"
+                            onClick={() => setUserMenuOpen(false)}
+                            className="flex items-center gap-3 px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-50 hover:text-primary-600 transition-colors"
+                          >
+                            <Shield size={16} className="text-primary-600" /> Identity KYC
+                          </Link>
+                          <Link
+                            to="/dashboard"
+                            onClick={() => setUserMenuOpen(false)}
+                            className="flex items-center gap-3 px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-50 hover:text-primary-600 transition-colors"
+                          >
+                            <LayoutDashboard size={16} className="text-neutral-400" /> {t('nav.dashboard')}
+                          </Link>
+                          {isAdmin && (
+                            <Link
+                              to="/admin"
+                              onClick={() => setUserMenuOpen(false)}
+                              className="flex items-center gap-3 px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-50 hover:text-primary-600 transition-colors"
+                            >
+                              <Shield size={16} className="text-amber-500" /> {t('nav.admin')}
+                            </Link>
+                          )}
+                        </div>
+
+                        <div className="border-t border-neutral-100 pt-1">
+                          <button
+                            onClick={() => {
+                              setLang(lang === 'en' ? 'bn' : 'en');
+                              setUserMenuOpen(false);
+                            }}
+                            className="w-full flex items-center justify-between px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-50 transition-colors"
+                          >
+                            <div className="flex items-center gap-3">
+                              <Globe size={16} className="text-neutral-400" />
+                              <span>{lang === 'en' ? 'English' : 'বাংলা'}</span>
                             </div>
-                            <Link to="/profile" onClick={() => setUserMenuOpen(false)} className="flex items-center gap-3 px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-50">
-                              <UserIcon size={16} /> {t('nav.profile')}
-                            </Link>
-                            <Link to="/kyc" onClick={() => setUserMenuOpen(false)} className="flex items-center gap-3 px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-50">
-                              <Shield size={16} className="text-primary-600" /> Identity KYC
-                            </Link>
-                            <Link to="/dashboard" onClick={() => setUserMenuOpen(false)} className="flex items-center gap-3 px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-50">
-                              <LayoutDashboard size={16} /> {t('nav.dashboard')}
-                            </Link>
-                            {isAdmin && (
-                              <Link to="/admin" onClick={() => setUserMenuOpen(false)} className="flex items-center gap-3 px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-50">
-                                <Shield size={16} /> {t('nav.admin')}
-                              </Link>
-                            )}
-                            <button onClick={handleSignOut} className="w-full flex items-center gap-3 px-4 py-2 text-sm text-error-500 hover:bg-error-50">
-                              <LogOut size={16} /> {t('nav.logout')}
-                            </button>
-                          </div>
-                        </>
-                      )}
+                            <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-neutral-100 text-neutral-700 border border-neutral-200">
+                              {lang === 'en' ? 'Switch to বাং' : 'Switch to EN'}
+                            </span>
+                          </button>
+                          <button
+                            onClick={handleSignOut}
+                            className="w-full flex items-center gap-3 px-4 py-2 text-sm text-error-500 hover:bg-error-50 transition-colors"
+                          >
+                            <LogOut size={16} /> {t('nav.logout')}
+                          </button>
+                        </div>
+                      </div>
                     </div>
                   </>
                 ) : (
                   <div className="flex items-center gap-2">
+                    {/* Language toggle for guest */}
+                    <button
+                      onClick={() => setLang(lang === 'en' ? 'bn' : 'en')}
+                      className="flex items-center gap-1 px-2 py-1.5 rounded-lg text-xs font-semibold text-neutral-600 hover:bg-neutral-100 transition-colors"
+                      title="Switch language"
+                    >
+                      <Globe size={15} />
+                      <span>{lang === 'en' ? 'EN' : 'বাং'}</span>
+                    </button>
                     <Link to="/login" className="px-3 py-2 text-sm font-medium text-neutral-600 hover:text-neutral-900 transition-colors">
                       {t('nav.login')}
                     </Link>
@@ -286,28 +365,56 @@ export function Layout({ children }: { children: ReactNode }) {
 
       {/* Mobile menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden fixed inset-0 z-30 bg-black/20" onClick={() => setMobileMenuOpen(false)}>
-          <div className="absolute top-16 left-0 right-0 bg-white border-b border-neutral-100 p-4 space-y-1 animate-slide-up" onClick={(e) => e.stopPropagation()}>
+        <div
+          className="md:hidden fixed inset-0 z-40 bg-black/30 backdrop-blur-xs transition-opacity duration-200"
+          onClick={() => setMobileMenuOpen(false)}
+        >
+          <div
+            ref={mobileMenuRef}
+            className="absolute top-16 left-0 right-0 bg-white/95 backdrop-blur-md border-b border-neutral-100 p-4 space-y-1 shadow-xl animate-slide-up"
+            onClick={(e) => e.stopPropagation()}
+          >
             {user ? (
               navLinks.map((link) => (
-                <Link key={link.to} to={link.to} onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-neutral-700 hover:bg-neutral-50 rounded-lg">
+                <Link
+                  key={link.to}
+                  to={link.to}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-neutral-700 hover:bg-neutral-50 rounded-xl transition-colors"
+                >
                   {link.icon} {link.label}
-                  {link.badge ? <span className="ml-auto w-5 h-5 rounded-full bg-error-500 text-white text-xs font-bold flex items-center justify-center">{link.badge}</span> : null}
+                  {link.badge ? (
+                    <span className="ml-auto w-5 h-5 rounded-full bg-error-500 text-white text-xs font-bold flex items-center justify-center">
+                      {link.badge}
+                    </span>
+                  ) : null}
                 </Link>
               ))
             ) : (
               <>
-                <Link to="/products" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-neutral-700 hover:bg-neutral-50 rounded-lg">
+                <Link
+                  to="/products"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-neutral-700 hover:bg-neutral-50 rounded-xl transition-colors"
+                >
                   <Search size={18} /> {t('nav.browse')}
                 </Link>
 
-                <Link to="/help" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-neutral-700 hover:bg-neutral-50 rounded-lg">
+                <Link
+                  to="/help"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-neutral-700 hover:bg-neutral-50 rounded-xl transition-colors"
+                >
                   <Package size={18} /> {t('nav.help')}
                 </Link>
               </>
             )}
             {isAdmin && (
-              <Link to="/admin" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-neutral-700 hover:bg-neutral-50 rounded-lg">
+              <Link
+                to="/admin"
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-neutral-700 hover:bg-neutral-50 rounded-xl transition-colors"
+              >
                 <Shield size={18} /> {t('nav.admin')}
               </Link>
             )}

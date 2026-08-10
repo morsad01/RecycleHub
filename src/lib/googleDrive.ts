@@ -24,7 +24,7 @@ export async function fileToBase64(file: File): Promise<string> {
 export function toDirectGoogleDriveUrl(url?: string | null): string {
   if (!url) return '';
   if (url.startsWith('blob:') || url.startsWith('data:')) return url;
-  if (url.includes('googleusercontent.com') || url.includes('thumbnail?id=')) return url;
+  if (url.includes('googleusercontent.com')) return url;
 
   const fileIdMatch = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
   if (fileIdMatch && fileIdMatch[1]) {

@@ -12,15 +12,47 @@ export function PricingPage() {
   const { plans, subscription, isLoading, subscribe } = useSubscription();
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('monthly');
 
+  const [subscribingPlanId, setSubscribingPlanId] = useState<string | null>(null);
+
   const handleSubscribe = async (plan: any) => {
     if (!user) {
       navigate('/login?redirect=/pricing');
       return;
     }
-    // Simulate flow
-    const success = await subscribe(plan.id, billingCycle);
-    if (success) {
-      navigate('/dashboard');
+
+    const price = billingCycle === 'monthly' ? plan.price_monthly : plan.price_yearly;
+
+    // If free plan, activate directly
+    if (price === 0) {
+      const success = await subscribe(plan.id, billingCycle);
+      if (success) {
+        navigate('/dashboard');
+      }
+      return;
+    }
+
+    // For paid plans, redirect to SSLCommerz
+    setSubscribingPlanId(plan.id);
+    try {
+      const { SSLCommerzService } = await import('../services/sslcommerz');
+      const res = await SSLCommerzService.initiateSubscriptionPayment({
+        user_id: user.id,
+        plan_id: plan.id,
+        billing_cycle: billingCycle,
+        total_amount: price,
+        cus_name: user.user_metadata?.full_name || 'Seller',
+        cus_email: user.email || 'seller@resellbd.app',
+        plan_name: plan.name,
+      });
+
+      if (res.gateway_url) {
+        window.location.href = res.gateway_url;
+      }
+    } catch (err: any) {
+      console.error('Subscription SSL error:', err);
+      alert(err.message || 'Failed to start payment. Please ensure backend server is running.');
+    } finally {
+      setSubscribingPlanId(null);
     }
   };
 

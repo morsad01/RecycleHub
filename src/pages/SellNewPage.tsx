@@ -125,7 +125,11 @@ export function SellNewPage() {
   const { data: categories } = useQuery({
     queryKey: ['categories'],
     queryFn: async () => {
-      const { data } = await supabase.from('categories').select('*').order('sort_order');
+      const { data, error } = await supabase.from('categories').select('*').order('name');
+      if (error) {
+        console.error('Error fetching categories:', error);
+        return [];
+      }
       return (data ?? []) as Category[];
     },
   });
@@ -586,23 +590,50 @@ export function SellNewPage() {
             </div>
 
             <div className="grid sm:grid-cols-3 gap-4">
-              <Select label={t('sell.category')} value={categoryId} onChange={(e) => { setCategoryId(e.target.value); setSubcategoryId(''); }} required>
+              <Select
+                label={t('sell.category')}
+                value={categoryId}
+                onChange={(e) => {
+                  setCategoryId(e.target.value);
+                  setSubcategoryId('');
+                }}
+                required
+              >
                 <option value="">{t('sell.selectCategory')}</option>
-                {parentCategories.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
+                {parentCategories.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.name}
+                  </option>
+                ))}
               </Select>
 
               <Select
                 label="Subcategory"
                 value={subcategoryId}
                 onChange={(e) => setSubcategoryId(e.target.value)}
-                disabled={subcategories.length === 0}
+                disabled={!categoryId || subcategories.length === 0}
               >
-                <option value="">Select subcategory</option>
-                {subcategories.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
+                <option value="">
+                  {!categoryId
+                    ? 'Select category first'
+                    : subcategories.length === 0
+                    ? 'None (Optional)'
+                    : 'Select subcategory (Optional)'}
+                </option>
+                {subcategories.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.name}
+                  </option>
+                ))}
               </Select>
 
-              <Select label={t('sell.condition')} value={condition} onChange={(e) => setCondition(e.target.value)} required>
-                <option value="">{t('sell.selectCategory')}</option>
+              <Select
+                label={t('sell.condition')}
+                value={condition}
+                onChange={(e) => setCondition(e.target.value)}
+                required
+              >
+                <option value="">Select condition</option>
                 <option value="new">{t('condition.new')}</option>
                 <option value="excellent">{t('condition.excellent')}</option>
                 <option value="good">{t('condition.good')}</option>

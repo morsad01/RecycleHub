@@ -4,7 +4,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   Heart, MapPin, Shield, Sparkles, MessageCircle, Flag, Eye,
   ChevronLeft, ChevronRight, Package, Share2, Copy, Facebook,
-  Send, Twitter, Tag
+  Send, Twitter, Tag, ShoppingCart, Zap, CreditCard, Truck, ShieldCheck, Plus, Minus
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../auth/AuthContext';
@@ -38,6 +38,11 @@ export function ProductDetailPage() {
   const [zoomOpen, setZoomOpen] = useState(false);
   const [showSafeMeetup, setShowSafeMeetup] = useState(false);
   const [showMakeOffer, setShowMakeOffer] = useState(false);
+
+  // Cart & Purchase state
+  const [quantity, setQuantity] = useState(1);
+  const [addingToCart, setAddingToCart] = useState(false);
+  const [buyingNow, setBuyingNow] = useState(false);
 
   // Review submission state
   const [showReviewModal, setShowReviewModal] = useState(false);
@@ -215,6 +220,79 @@ export function ProductDetailPage() {
   const copyShareLink = () => {
     navigator.clipboard.writeText(window.location.href);
     toast('Link copied to clipboard!', 'success');
+  };
+
+  const handleAddToCart = async () => {
+    if (!user) {
+      navigate(`/login?redirect=/products/${id}`);
+      return;
+    }
+    if (isOwner) {
+      toast('You cannot purchase your own listing', 'info');
+      return;
+    }
+    setAddingToCart(true);
+    try {
+      const { data: existing } = await supabase
+        .from('cart_items')
+        .select('id, quantity')
+        .eq('user_id', user.id)
+        .eq('product_id', product.id)
+        .maybeSingle();
+
+      if (existing) {
+        await supabase
+          .from('cart_items')
+          .update({ quantity: existing.quantity + quantity })
+          .eq('id', existing.id);
+      } else {
+        await supabase
+          .from('cart_items')
+          .insert({ user_id: user.id, product_id: product.id, quantity });
+      }
+
+      queryClient.invalidateQueries({ queryKey: ['cart-items'] });
+      queryClient.invalidateQueries({ queryKey: ['cart-count'] });
+      toast('Item added to cart! 🛒', 'success');
+    } catch (err: any) {
+      toast(err.message || 'Failed to add to cart', 'error');
+    } finally {
+      setAddingToCart(false);
+    }
+  };
+
+  const handleBuyNow = async () => {
+    if (!user) {
+      navigate(`/login?redirect=/products/${id}`);
+      return;
+    }
+    if (isOwner) {
+      toast('You cannot purchase your own listing', 'info');
+      return;
+    }
+    setBuyingNow(true);
+    try {
+      const { data: existing } = await supabase
+        .from('cart_items')
+        .select('id')
+        .eq('user_id', user.id)
+        .eq('product_id', product.id)
+        .maybeSingle();
+
+      if (!existing) {
+        await supabase
+          .from('cart_items')
+          .insert({ user_id: user.id, product_id: product.id, quantity });
+      }
+
+      queryClient.invalidateQueries({ queryKey: ['cart-items'] });
+      queryClient.invalidateQueries({ queryKey: ['cart-count'] });
+      navigate('/checkout');
+    } catch (err: any) {
+      toast(err.message || 'Failed to start purchase', 'error');
+    } finally {
+      setBuyingNow(false);
+    }
   };
 
   const handleReviewSubmit = async () => {
@@ -461,61 +539,158 @@ export function ProductDetailPage() {
             <TrustScoreCard profile={product.seller} />
           </div>
 
-          {/* Actions */}
+          {/* Actions & Purchase Box */}
           {!isOwner && (
-            <div className="flex flex-wrap gap-2.5">
-              {user ? (
-                <Button onClick={startChat} size="lg" className="flex-1 min-w-[140px]">
-                  <MessageCircle size={18} /> {t('product.chatWithSeller')}
+            <div className="space-y-4 pt-2">
+              {/* Quantity Selector */}
+              <div className="flex items-center justify-between p-3 bg-neutral-50 rounded-2xl border border-neutral-100">
+                <span className="text-xs font-bold text-neutral-700">Quantity</span>
+                <div className="flex items-center gap-3 bg-white px-3 py-1.5 rounded-xl border border-neutral-200 shadow-xs">
+                  <button
+                    type="button"
+                    onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+                    disabled={quantity <= 1}
+                    className="text-neutral-500 hover:text-neutral-900 disabled:opacity-30 p-0.5"
+                    aria-label="Decrease quantity"
+                  >
+                    <Minus size={14} />
+                  </button>
+                  <span className="font-bold text-sm text-neutral-900 w-6 text-center">{quantity}</span>
+                  <button
+                    type="button"
+                    onClick={() => setQuantity((q) => q + 1)}
+                    className="text-neutral-500 hover:text-neutral-900 p-0.5"
+                    aria-label="Increase quantity"
+                  >
+                    <Plus size={14} />
+                  </button>
+                </div>
+              </div>
+
+              {/* Main Primary Buy Now & Add to Cart Buttons */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <Button
+                  onClick={handleBuyNow}
+                  loading={buyingNow}
+                  size="lg"
+                  className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-black shadow-md flex items-center justify-center gap-2"
+                >
+                  <Zap size={18} className="fill-current" /> Buy Now (SSL / COD)
                 </Button>
-              ) : (
-                <Link to="/login" className="flex-1 min-w-[140px]">
-                  <Button size="lg" className="w-full">
+
+                <Button
+                  onClick={handleAddToCart}
+                  loading={addingToCart}
+                  variant="outline"
+                  size="lg"
+                  className="w-full border-2 border-primary-600 text-primary-700 hover:bg-primary-50 font-bold flex items-center justify-center gap-2"
+                >
+                  <ShoppingCart size={18} /> Add to Cart
+                </Button>
+              </div>
+
+              {/* Secondary Chat, Make Offer & Wishlist Buttons */}
+              <div className="flex flex-wrap gap-2.5">
+                {user ? (
+                  <Button onClick={startChat} variant="secondary" size="lg" className="flex-1 min-w-[140px]">
                     <MessageCircle size={18} /> {t('product.chatWithSeller')}
                   </Button>
-                </Link>
-              )}
-              {product.is_negotiable && (
-                <Button
-                  variant="outline"
-                  size="lg"
-                  onClick={() => setShowMakeOffer(true)}
-                  className="px-3 text-xs font-semibold text-primary-700 border-primary-300 hover:bg-primary-50"
-                  title="Submit a bargaining offer"
-                >
-                  <Tag size={16} className="mr-1 text-primary-600" /> Make Offer
-                </Button>
-              )}
+                ) : (
+                  <Link to={`/login?redirect=/products/${id}`} className="flex-1 min-w-[140px]">
+                    <Button variant="secondary" size="lg" className="w-full">
+                      <MessageCircle size={18} /> {t('product.chatWithSeller')}
+                    </Button>
+                  </Link>
+                )}
 
-              {user && (
-                <Button
-                  variant="outline"
-                  size="lg"
-                  onClick={() => toggleWishlist.mutate()}
-                  className="px-3"
-                >
-                  <Heart size={18} className={isWishlisted ? 'fill-error-500 text-error-500' : ''} />
+                {product.is_negotiable && (
+                  <Button
+                    variant="outline"
+                    size="lg"
+                    onClick={() => setShowMakeOffer(true)}
+                    className="px-3.5 text-xs font-semibold text-primary-700 border-primary-300 hover:bg-primary-50"
+                    title="Submit a bargaining offer"
+                  >
+                    <Tag size={16} className="mr-1 text-primary-600" /> Make Offer
+                  </Button>
+                )}
+
+                {user && (
+                  <Button
+                    variant="outline"
+                    size="lg"
+                    onClick={() => toggleWishlist.mutate()}
+                    className="px-3"
+                    title="Save to Wishlist"
+                  >
+                    <Heart size={18} className={isWishlisted ? 'fill-error-500 text-error-500' : ''} />
+                  </Button>
+                )}
+                <Button variant="outline" size="lg" onClick={() => setShowShare(true)} className="px-3" title="Share">
+                  <Share2 size={18} />
                 </Button>
-              )}
-              <Button variant="outline" size="lg" onClick={() => setShowShare(true)} className="px-3">
-                <Share2 size={18} />
-              </Button>
-              {user && (
-                <Button variant="ghost" size="lg" onClick={() => setShowReport(true)} className="px-3 text-neutral-400 hover:text-error-500">
-                  <Flag size={18} />
-                </Button>
-              )}
+                {user && (
+                  <Button variant="ghost" size="lg" onClick={() => setShowReport(true)} className="px-3 text-neutral-400 hover:text-error-500" title="Report">
+                    <Flag size={18} />
+                  </Button>
+                )}
+              </div>
+
+              {/* Accepted Payment Methods & Buyer Protection Box */}
+              <div className="bg-gradient-to-br from-neutral-50 to-emerald-50/50 rounded-2xl p-4 border border-neutral-200/80 space-y-2.5">
+                <div className="flex items-center justify-between text-xs font-bold text-neutral-800">
+                  <span className="flex items-center gap-1.5">
+                    <CreditCard size={15} className="text-primary-600" /> Accepted Payment Methods
+                  </span>
+                  <span className="text-2xs font-extrabold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full">
+                    SSLCommerz Verified
+                  </span>
+                </div>
+
+                <div className="flex items-center gap-1.5 flex-wrap">
+                  <span className="px-2.5 py-1 rounded-md bg-white border border-neutral-200 text-rose-700 font-extrabold text-[11px] shadow-xs">
+                    bKash
+                  </span>
+                  <span className="px-2.5 py-1 rounded-md bg-white border border-neutral-200 text-orange-700 font-extrabold text-[11px] shadow-xs">
+                    Nagad
+                  </span>
+                  <span className="px-2.5 py-1 rounded-md bg-white border border-neutral-200 text-purple-700 font-extrabold text-[11px] shadow-xs">
+                    Rocket
+                  </span>
+                  <span className="px-2.5 py-1 rounded-md bg-white border border-neutral-200 text-blue-700 font-extrabold text-[11px] shadow-xs">
+                    Visa / Mastercard
+                  </span>
+                  <span className="px-2.5 py-1 rounded-md bg-white border border-neutral-200 text-teal-800 font-extrabold text-[11px] shadow-xs">
+                    Net Banking
+                  </span>
+                  <span className="px-2.5 py-1 rounded-md bg-white border border-neutral-200 text-emerald-800 font-extrabold text-[11px] shadow-xs">
+                    Cash on Delivery (COD)
+                  </span>
+                </div>
+
+                <div className="pt-2 border-t border-neutral-200/60 flex items-center gap-2 text-2xs text-neutral-600">
+                  <ShieldCheck size={16} className="text-emerald-600 shrink-0" />
+                  <span>
+                    <strong>ResellBD Escrow Guarantee:</strong> 100% money back if the product is not as described.
+                  </span>
+                </div>
+              </div>
             </div>
           )}
 
           {isOwner && (
-            <div className="flex gap-3">
-              <Link to={`/sell/${product.id}/edit`} className="flex-1">
-                <Button variant="outline" size="lg" className="w-full">{t('common.edit')}</Button>
-              </Link>
-              <Link to="/my-listings" className="flex-1">
-                <Button variant="ghost" size="lg" className="w-full">{t('nav.myListings')}</Button>
-              </Link>
+            <div className="space-y-3 pt-2">
+              <div className="p-3 bg-amber-50 rounded-xl border border-amber-100 text-xs text-amber-800 font-medium">
+                You are the seller of this listing.
+              </div>
+              <div className="flex gap-3">
+                <Link to={`/sell/${product.id}/edit`} className="flex-1">
+                  <Button variant="outline" size="lg" className="w-full">{t('common.edit')}</Button>
+                </Link>
+                <Link to="/my-listings" className="flex-1">
+                  <Button variant="ghost" size="lg" className="w-full">{t('nav.myListings')}</Button>
+                </Link>
+              </div>
             </div>
           )}
         </div>

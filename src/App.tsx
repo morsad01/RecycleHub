@@ -43,6 +43,8 @@ const CookiePolicyPage = lazy(() => import('./pages/CookiePolicyPage').then((m) 
 
 const SafetyCenterPage = lazy(() => import('./pages/SafetyCenterPage').then((m) => ({ default: m.SafetyCenterPage })));
 const IdentityVerificationPage = lazy(() => import('./pages/IdentityVerificationPage').then((m) => ({ default: m.IdentityVerificationPage })));
+const PaymentSuccessPage = lazy(() => import('./pages/PaymentSuccessPage').then((m) => ({ default: m.PaymentSuccessPage })));
+const PaymentFailedPage = lazy(() => import('./pages/PaymentFailedPage').then((m) => ({ default: m.PaymentFailedPage })));
 
 // Admin pages
 const AdminDashboardPage = lazy(() => import('./pages/admin/AdminDashboardPage').then((m) => ({ default: m.AdminDashboardPage })));
@@ -158,6 +160,11 @@ export default function App() {
           <Route path="/notifications" element={<ProtectedRoute><NotificationsPage /></ProtectedRoute>} />
           <Route path="/cart" element={<ProtectedRoute><CartPage /></ProtectedRoute>} />
           <Route path="/checkout" element={<ProtectedRoute><CheckoutPage /></ProtectedRoute>} />
+          
+          {/* Payment Gateway Routes */}
+          <Route path="/payment/success" element={<PaymentSuccessPage />} />
+          <Route path="/payment/fail" element={<PaymentFailedPage status="failed" />} />
+          <Route path="/payment/cancel" element={<PaymentFailedPage status="cancelled" />} />
           
           {/* New Auth Production Routes */}
           <Route path="/subscription" element={<ProtectedRoute><SubscriptionPage /></ProtectedRoute>} />

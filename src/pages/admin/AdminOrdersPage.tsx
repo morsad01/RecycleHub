@@ -13,10 +13,10 @@ export function AdminOrdersPage() {
     queryFn: async () => {
       const { data } = await supabase
         .from('orders')
-        .select('*, buyer:profiles!buyer_id(*), seller:profiles!seller_id(*), product:products(*)')
+        .select('*, buyer:profiles!buyer_id(*), seller:profiles!seller_id(*), order_items(*, product:products(*))')
         .order('created_at', { ascending: false })
         .limit(50);
-      return (data ?? []) as Order[];
+      return (data ?? []) as any[];
     },
   });
 
@@ -37,20 +37,23 @@ export function AdminOrdersPage() {
             </tr>
           </thead>
           <tbody className="divide-y divide-neutral-50">
-            {orders?.map((o) => (
-              <tr key={o.id} className="hover:bg-neutral-50">
-                <td className="px-4 py-3 text-sm font-medium text-neutral-900 truncate max-w-32">{o.product?.title ?? '-'}</td>
-                <td className="px-4 py-3 text-sm text-neutral-500 hidden sm:table-cell">{o.buyer?.full_name}</td>
-                <td className="px-4 py-3 text-sm text-neutral-500 hidden sm:table-cell">{o.seller?.full_name}</td>
-                <td className="px-4 py-3 text-sm font-medium text-neutral-900">{formatPrice(o.total_amount)}</td>
-                <td className="px-4 py-3">
-                  <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${orderStatusColors[o.status as keyof typeof orderStatusColors] ?? 'bg-neutral-200'}`}>
-                    {t(`orderStatus.${o.status}` as any)}
-                  </span>
-                </td>
-                <td className="px-4 py-3 text-sm text-neutral-500 hidden sm:table-cell">{formatDate(o.created_at)}</td>
-              </tr>
-            ))}
+            {orders?.map((o) => {
+              const productTitle = o.product?.title || o.order_items?.[0]?.product?.title || `Order #${o.id.slice(0, 8)}`;
+              return (
+                <tr key={o.id} className="hover:bg-neutral-50">
+                  <td className="px-4 py-3 text-sm font-medium text-neutral-900 truncate max-w-48" title={productTitle}>{productTitle}</td>
+                  <td className="px-4 py-3 text-sm text-neutral-500 hidden sm:table-cell">{o.buyer?.full_name}</td>
+                  <td className="px-4 py-3 text-sm text-neutral-500 hidden sm:table-cell">{o.seller?.full_name}</td>
+                  <td className="px-4 py-3 text-sm font-medium text-neutral-900">{formatPrice(o.total_amount)}</td>
+                  <td className="px-4 py-3">
+                    <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${orderStatusColors[o.status as keyof typeof orderStatusColors] ?? 'bg-neutral-200'}`}>
+                      {t(`orderStatus.${o.status}` as any)}
+                    </span>
+                  </td>
+                  <td className="px-4 py-3 text-sm text-neutral-500 hidden sm:table-cell">{formatDate(o.created_at)}</td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>

@@ -6,7 +6,7 @@ import { useI18n } from '../../i18n/I18nContext';
 import { useToast } from '../../components/ui/Toast';
 import { AdminLayout } from './AdminLayout';
 import { Avatar, Badge, Button } from '../../components/ui';
-import { formatDate } from '../../lib/utils';
+import { formatDate, toDirectGoogleDriveUrl } from '../../lib/utils';
 import type { SellerVerification, Profile } from '../../types';
 
 export function AdminVerificationsPage() {
@@ -55,7 +55,16 @@ export function AdminVerificationsPage() {
                 <div className="mt-2 space-y-1">
                   {v.nid_number && <p className="text-sm text-neutral-600">NID: {v.nid_number}</p>}
                   {v.business_info && <p className="text-sm text-neutral-600">Business: {v.business_info}</p>}
-                  {v.nid_image_url && <a href={v.nid_image_url} target="_blank" rel="noopener noreferrer" className="text-sm text-primary-600 hover:underline">View NID Document</a>}
+                  {v.nid_image_url && (
+                    <a
+                      href={toDirectGoogleDriveUrl(v.nid_image_url)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm text-primary-600 hover:underline"
+                    >
+                      View NID Document
+                    </a>
+                  )}
                 </div>
                 <div className="mt-2">
                   <Badge variant={v.status === 'approved' ? 'success' : v.status === 'rejected' ? 'error' : 'warning'}>
