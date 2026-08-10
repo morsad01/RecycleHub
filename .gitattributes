@@ -1,0 +1,27 @@
+# Custom GitHub Linguist Language Overrides
+# Treat TypeScript (.ts, .tsx) files as JavaScript
+*.ts linguist-language=JavaScript
+*.tsx linguist-language=JavaScript
+*.js linguist-language=JavaScript
+*.jsx linguist-language=JavaScript
+*.mjs linguist-language=JavaScript
+*.cjs linguist-language=JavaScript
+
+# Stylesheets
+*.css linguist-language=CSS
+*.scss linguist-language=CSS
+
+# HTML templates
+*.html linguist-language=HTML
+
+# Hide documentation, configs, and SQL scripts from the GitHub Language bar
+*.sql linguist-detectable=false
+supabase/** linguist-detectable=false
+docs/** linguist-detectable=false
+*.md linguist-detectable=false
+*.json linguist-detectable=false
+*.yml linguist-detectable=false
+*.yaml linguist-detectable=false
+*.svg linguist-detectable=false
+dist/** linguist-detectable=false
+cypress/** linguist-detectable=false
