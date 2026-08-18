@@ -13,7 +13,7 @@ export function AdminProductsPage() {
   const { t } = useI18n();
   const { toast } = useToast();
   const queryClient = useQueryClient();
-  const [filter, setFilter] = useState<'flagged' | 'pending' | 'all'>('flagged');
+  const [filter, setFilter] = useState<'flagged' | 'pending' | 'all'>('pending');
 
   const { data: products } = useQuery({
     queryKey: ['admin-products', filter],
